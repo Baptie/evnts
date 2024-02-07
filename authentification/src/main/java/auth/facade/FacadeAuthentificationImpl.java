@@ -2,10 +2,12 @@ package auth.facade;
 
 import auth.exception.*;
 import auth.modele.Utilisateur;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.UUID;
 
+@Component("facadeAuth")
 public class FacadeAuthentificationImpl implements FacadeAuthentificationInterface {
 
     private Map<String, Utilisateur> utilisateurs;
@@ -26,14 +28,14 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
     }
 
     @Override
-    public String connexion(String pseudo, String mdp) throws UtilisateurInexistantException, mdpIncorrecteException {
+    public String connexion(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException {
         if (!utilisateurs.containsKey(pseudo))
             throw new UtilisateurInexistantException();
 
         Utilisateur u = utilisateurs.get(pseudo);
 
         if (!u.getMdp().equals(mdp))
-            throw new mdpIncorrecteException();
+            throw new MdpIncorrecteException();
 
         String idConnection = UUID.randomUUID().toString();
         this.utilisateursConnectes.put(idConnection, u);
