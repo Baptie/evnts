@@ -22,9 +22,9 @@ public interface FacadeAuthentificationInterface {
          * @param mdp
          * @return
          * @throws UtilisateurInexistantException
-         * @throws mdpIncorrecteException
+         * @throws MdpIncorrecteException
          */
-        String connexion(String pseudo, String mdp) throws UtilisateurInexistantException, mdpIncorrecteException;
+        String connexion(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException;
 
         /**
          * Permet de récupérer le pseudo de l'utilisateur possédant ce token
