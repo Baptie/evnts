@@ -9,9 +9,9 @@ public class Salon {
     private String nomSalon,nomCreateur,logo;
     private List<Utilisateur> listeMembre, listeModerateur;
     private List<Message> conversation;
-    private Evenement evenement;
+    private List<Evenement> lesEvenements;
 
-    public Salon(int idSalon, int numSalon, String nomSalon, String nomCreateur, String logo, List<Utilisateur> listeMembre, List<Utilisateur> listeModerateur, List<Message> conversation, Evenement evenement) {
+    public Salon(int idSalon, int numSalon, String nomSalon, String nomCreateur, String logo, List<Utilisateur> listeMembre, List<Utilisateur> listeModerateur, List<Message> conversation, List<Evenement> lesEvenements) {
         this.idSalon = idSalon;
         this.numSalon = numSalon;
         this.nomSalon = nomSalon;
@@ -20,7 +20,7 @@ public class Salon {
         this.listeMembre = listeMembre;
         this.listeModerateur = listeModerateur;
         this.conversation = conversation;
-        this.evenement = evenement;
+        this.lesEvenements = lesEvenements;
     }
 
     public Salon() {
@@ -86,11 +86,11 @@ public class Salon {
         this.conversation = conversation;
     }
 
-    public Evenement getEvenement() {
-        return evenement;
+    public List<Evenement> getLesEvenements() {
+        return lesEvenements;
     }
 
-    public void setEvenement(Evenement evenement) {
-        this.evenement = evenement;
+    public void setLesEvenements(List<Evenement> lesEvenements) {
+        this.lesEvenements = lesEvenements;
     }
 }

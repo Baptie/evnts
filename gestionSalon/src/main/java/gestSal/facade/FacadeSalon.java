@@ -25,13 +25,13 @@ public interface FacadeSalon {
     /**
      * Permet de modifier un salon
      * @param choix Choix du champ à modifier
-     * @param numeroSalon Numéro du salon
+     * @param salon Numéro du salon
      * @return Le salon modifié
      * @throws SalonInexistantException
      * @throws NomSalonVideException
      * @throws NumeroSalonVideException
      */
-    Salon modifierSalon(int numeroSalon, String choix) throws SalonInexistantException, NomSalonVideException, NumeroSalonVideException;
+    Salon modifierSalon(Salon salon, String choix, String valeur) throws SalonInexistantException, NomSalonVideException, NumeroSalonVideException;
 
     /**
      * Permet de rejoindre un salon après acceptation de celle ci
@@ -41,8 +41,9 @@ public interface FacadeSalon {
      * @throws NomSalonVideException
      * @throws UtilisateurInexistantException
      * @throws NomUtilisateurVideException
+     * @throws UtilisateurDejaPresentException
      */
-    void rejoindreSalon(Utilisateur utilisateur, Salon salonRejoint) throws SalonInexistantException, NomSalonVideException, UtilisateurInexistantException,NomUtilisateurVideException;
+    void rejoindreSalon(Utilisateur utilisateur, Salon salonRejoint) throws SalonInexistantException, NomSalonVideException, UtilisateurInexistantException,NomUtilisateurVideException,UtilisateurDejaPresentException;
 
     /**
      * Génère un lien d'invitation pour rejoidnre un salon
@@ -80,7 +81,7 @@ public interface FacadeSalon {
      * @throws NomSalonVideException
      * @throws NomUtilisateurVideException
      */
-    void retirerModerateurDuSalon(Salon nomSalon, Utilisateur utilisateurPlusModo) throws NomSalonVideException, NomUtilisateurVideException;
+    void retirerModerateurDuSalon(Salon nomSalon, Utilisateur utilisateurPlusModo) throws NomSalonVideException, NomUtilisateurVideException,UtilisateurPasModoException;
 
 
     /**
@@ -91,7 +92,7 @@ public interface FacadeSalon {
      * @throws NomSalonVideException
      * @throws PasAdminException
      */
-    void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws NomUtilisateurVideException, NomSalonVideException, PasAdminException;
+    void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws NomUtilisateurVideException, NomSalonVideException, PasAdminException,UtilisateurDejaModoException;
 
 
     /**
@@ -144,7 +145,7 @@ public interface FacadeSalon {
      * @return L'évènement modifié
      * @throws EvenementInexistantException
      */
-    Evenement modifierEvenement(String choix) throws EvenementInexistantException;
+    Evenement modifierEvenement(Evenement evenement, String choix, String valeur) throws EvenementInexistantException;
 
 
     /**
