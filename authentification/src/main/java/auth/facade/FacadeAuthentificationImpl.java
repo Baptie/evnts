@@ -2,6 +2,7 @@ package auth.facade;
 
 import auth.exception.*;
 import auth.modele.Utilisateur;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -11,13 +12,17 @@ import java.util.UUID;
 @Component("facadeAuth")
 public class FacadeAuthentificationImpl implements FacadeAuthentificationInterface {
 
+    private PasswordEncoder passwordEncoder;
+
     private Map<String, Utilisateur> utilisateurs;
 
     private Map<String, Utilisateur> utilisateursConnectes;
 
-    public FacadeAuthentificationImpl() {
+    public FacadeAuthentificationImpl(PasswordEncoder passwordEncoder) {
         this.utilisateurs = new HashMap<>();
-        this.utilisateursConnectes = new HashMap<>();
+        this.utilisateursConnectes   = new HashMap<>();
+        this.passwordEncoder=passwordEncoder;
+
     }
 
     @Override
@@ -40,7 +45,7 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
 
         Utilisateur u = utilisateurs.get(pseudo);
 
-        if (!u.getMdp().equals(mdp))
+        if (!passwordEncoder.matches(mdp, u.getMdp()))
             throw new MdpIncorrecteException();
 
         String idConnection = UUID.randomUUID().toString();

@@ -5,6 +5,7 @@ import auth.facade.FacadeAuthentificationInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,12 +13,19 @@ import org.springframework.web.bind.annotation.*;
 public class ControleurAuthentification {
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     FacadeAuthentificationInterface facadeAuth;
+
+    public ControleurAuthentification(PasswordEncoder passwordEncoder){
+        this.passwordEncoder=passwordEncoder;
+    }
 
     @PostMapping(value = "/inscription")
     public ResponseEntity<String> inscription(@RequestParam String pseudo, @RequestParam String mdp, @RequestParam String eMail) {
         try {
-            this.facadeAuth.inscription(pseudo,mdp,eMail);
+            this.facadeAuth.inscription(pseudo,passwordEncoder.encode(mdp),eMail);
             return ResponseEntity.ok("Compte créé !");
         } catch (PseudoDejaPrisException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Pseudo "+pseudo+" déjà pris");
