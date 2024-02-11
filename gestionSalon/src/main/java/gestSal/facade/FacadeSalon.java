@@ -4,7 +4,6 @@ import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
 import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
-import jdk.jshell.EvalException;
 
 import java.util.List;
 
