@@ -4,6 +4,7 @@ import auth.exception.*;
 import auth.modele.Utilisateur;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,6 +15,11 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
 
     private Map<String, Utilisateur> utilisateursConnectes;
 
+    public FacadeAuthentificationImpl() {
+        this.utilisateurs = new HashMap<>();
+        this.utilisateursConnectes = new HashMap<>();
+    }
+
     @Override
     public void inscription(String pseudo, String mdp, String eMail) throws PseudoDejaPrisException, EMailDejaPrisException {
 
@@ -23,7 +29,7 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
         if (utilisateurs.containsKey(eMail))
             throw new EMailDejaPrisException();
 
-        this.utilisateurs.put(pseudo,new Utilisateur(pseudo,mdp,eMail));
+        this.utilisateurs.put(pseudo,new Utilisateur(pseudo,eMail,mdp));
 
     }
 
