@@ -1,15 +1,20 @@
-import './CardConnexion.scss';
+import './CardInscription.scss';
 
-function CardConnexion() {
+function CardInscription() {
     return (
     
        <div className="form-container">
-            <div className="img-form-connexion">
+            <div className="img-form-inscription">
 
             </div>
 
             <div className="form">
-                <h3 className="title-form">Connexion</h3>
+                <h3 className="title-form-inscription">Inscription</h3>
+
+                <div className="field">
+                    <label htmlFor="email">Email</label>
+                    <input type="text" name="email" id="email" />
+                </div>
 
                 <div className="field">
                     <label htmlFor="login">Login</label>
@@ -22,7 +27,7 @@ function CardConnexion() {
                 </div>
 
                 <div className="buttonContainer">
-                    <button className="connexionButton" type="submit">Connexion</button>
+                    <button className="inscriptionButton" type="submit">Inscription</button>
                 </div>
                 
                 
@@ -34,4 +39,4 @@ function CardConnexion() {
     );
 }
 
-export default CardConnexion;
+export default CardInscription;
