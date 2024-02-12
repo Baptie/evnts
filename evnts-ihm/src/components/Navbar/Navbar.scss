@@ -1,0 +1,86 @@
+@import "./../../pages/Variables.scss";
+
+.navbarContainer{
+    height: 100vh;
+    width: 20vw;
+    background-color: $color-red;
+}
+
+.profil{
+    margin: 2em;
+    height: 12%;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+
+
+}
+.img-profil-navbar{
+    height: 3em;
+    width: 3em;
+    margin-inline: 1em;
+}
+
+.pseudoLabelNavbar{
+    color: black;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+.menu{
+    width: 76%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.deconnnexion{
+    height: 12%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.deconnnexionLink{
+    position: relative;
+    width: 100%;
+    height: 3em;
+    display:inline-flex;
+    align-items: center;
+}
+
+.navbarLink{
+    position: relative;
+    width: 100%;
+    height: 3em;
+    display:inline-flex;
+    align-items: center;
+}
+.navbarIcon{
+    height: 2.5em;
+    width: 2.5em;
+    margin-block: 1em;
+    margin-inline: 0.5em;
+}
+
+.navbarLinkLabel{
+    position: relative;
+    height: 3em;
+    display: flex;
+    align-items: center;
+
+    // POLICE
+    font-size: 1.3em;
+    color: $color-white;
+
+    // LIEN
+    text-decoration: none;
+}
+
+.navbarLinkLabel:visited{
+    color:$color-white;
+}
+
+.navbarLinkLabel:hover{
+    color: $color-gray;
+}
+

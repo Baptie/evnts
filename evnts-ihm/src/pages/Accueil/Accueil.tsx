@@ -1,9 +1,12 @@
+import Navbar from '../../components/Navbar/Navbar';
 import './Accueil.scss';
 
 function Accueil() {
     return (
-        <div>
-ACCUEIL
+        <div className="pageAccueil">
+
+            <Navbar/>
+            
         </div>
     );
 }
