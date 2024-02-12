@@ -31,10 +31,11 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
         if (utilisateurs.containsKey(pseudo))
             throw new PseudoDejaPrisException();
 
-        if (utilisateurs.containsKey(eMail))
-            throw new EMailDejaPrisException();
+        for (Utilisateur utilisateur : utilisateurs.values())
+            if (utilisateur.getEMail().equals(eMail))
+                throw new EMailDejaPrisException();
 
-        this.utilisateurs.put(pseudo,new Utilisateur(pseudo,eMail,mdp));
+        this.utilisateurs.put(pseudo,new Utilisateur(pseudo,eMail,passwordEncoder.encode(mdp)));
 
     }
 
@@ -59,5 +60,13 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
             throw new MauvaisTokenException();
 
         return utilisateursConnectes.get(token).getPseudo();
+    }
+
+    public Map<String, Utilisateur> getUtilisateurs() {
+        return utilisateurs;
+    }
+
+    public Map<String, Utilisateur> getUtilisateursConnectes() {
+        return utilisateursConnectes;
     }
 }

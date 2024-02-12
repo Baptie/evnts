@@ -1,6 +1,9 @@
 package auth.facade;
 
 import auth.exception.*;
+import auth.modele.Utilisateur;
+
+import java.util.Map;
 
 public interface FacadeAuthentificationInterface {
 
@@ -35,4 +38,6 @@ public interface FacadeAuthentificationInterface {
          */
         String checkToken(String token) throws MauvaisTokenException;
 
+        Map<String, Utilisateur> getUtilisateurs();
+        Map<String, Utilisateur> getUtilisateursConnectes();
 }
