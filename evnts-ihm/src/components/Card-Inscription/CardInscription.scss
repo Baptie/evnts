@@ -31,8 +31,8 @@
     align-items: center;
 
 }
-.title-form{
-    color: $color-green;
+.title-form-inscription{
+    color: $color-red;
     font-size: 2em;
     text-align: center;
 }
@@ -61,10 +61,10 @@ label{
     
 }
 
-.connexionButton{
+.inscriptionButton{
     
     color : white;
-    background-color: $color-green;
+    background-color: $color-red;
     border: none;
     border-radius: 0.3em;
     width: 100%;
@@ -76,18 +76,19 @@ label{
     font-family: "Oxygen", sans-serif;
     font-weight: 700;
 }
-.connexionButton:active{
-    background-color: $color-dark-green;
-}
-.connexionButton:hover{
+
+.inscriptionButton:hover{
     cursor: pointer;
 }
+.inscriptionButton:active{
+    background-color: $color-dark-red;
+}
 
-.img-form-connexion{
+.img-form-inscription{
     
     height: 100%;
     width: 50%;
-    background-image: url("../../assets/football.jpg");
+    background-image: url("../../assets/event\ free.webp");
     background-size: cover;
     background-position:  center center;
 
