@@ -41,12 +41,4 @@ public class ControleurAuthentification {
 
     }
 
-    @GetMapping(value = "/token")
-    public ResponseEntity<String> checkToken(@RequestParam String token){
-        try {
-            return ResponseEntity.ok(this.facadeAuth.checkToken(token));
-        } catch (MauvaisTokenException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }

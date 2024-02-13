@@ -29,15 +29,7 @@ public interface FacadeAuthentificationInterface {
          */
         String connexion(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException;
 
-        /**
-         * Permet de récupérer le pseudo de l'utilisateur possédant ce token
-         *
-         * @param token
-         * @return le pseudo correspondant au token
-         * @throws MauvaisTokenException
-         */
-        String checkToken(String token) throws MauvaisTokenException;
+        boolean getStatus(String pseudo) throws UtilisateurInexistantException;
 
         Map<String, Utilisateur> getUtilisateurs();
-        Map<String, Utilisateur> getUtilisateursConnectes();
 }
