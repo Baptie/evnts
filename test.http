@@ -1,0 +1,17 @@
+
+###Inscription Personne expected = 201
+POST http://localhost:8080/auth/inscription
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+pseudo=bibi&mdp=lustucru&eMail=fdmfdm@dffd.fr
+
+###connexion Personne expected = 201
+POST http://localhost:8080/auth/connexion
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+pseudo=bibi&mdp=lustucru
+
+###Token Personne expected = 201
+GET http://localhost:8080/auth/token?token=4e141818-7734-4efe-8d85-ed6b776f23fe
