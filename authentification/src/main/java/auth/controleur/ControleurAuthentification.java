@@ -41,4 +41,15 @@ public class ControleurAuthentification {
 
     }
 
+    @PostMapping(value = "/deconnexion")
+    public ResponseEntity<String> deconnexion (@RequestParam String pseudo){
+
+        try {
+            this.facadeAuth.deconnexion(pseudo);
+            return ResponseEntity.ok("Déconnexion de "+pseudo+" faite !");
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais identifiants !");
+        }
+    }
+
 }
