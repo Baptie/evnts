@@ -1,39 +1,43 @@
 import './Navbar.scss';
 import { Link } from 'react-router-dom'
-import home_icon from '../../assets/icons/home.png'
-import mail_icon from '../../assets/icons/mail.webp'
-import logout_icon from '../../assets/icons/logout.png'
 import user_placeholder from '../../assets/icons/user_placeholder.jpeg'
 
-
+function goToProfile() {
+    window.location.href = '/profile';
+  }
 
 function Navbar() {
     return (
         <div className="navbarContainer">
-            <div className="profil">
+
+            <div className="profil blocNavbar" >
                 
-                    <img src={user_placeholder} alt="user_profile_picture" className='img-profil-navbar' />
-                    <Link to="/profile" className="pseudoLabelNavbar">Pseudo_Joueur</Link>
+                <img src={user_placeholder} alt="user_profile_picture" className='img-profil-navbar' onClick={goToProfile} />
+                <span className="pseudoLabelNavbar" onClick={goToProfile}>Pseudo_Joueur12345678956785467456701234567890</span>
                 
             </div>
 
-            <div className="menu">
+            <div className="menu blocNavbar ">
+
                <div className="navbarLink">
-                    <img src={home_icon} alt="home_icon" className='navbarIcon' />
                     <Link to="/" className='navbarLinkLabel'>Accueil</Link>
                 </div>
                 <div className="navbarLink">
-                    <img src={mail_icon} alt="home_icon" className='navbarIcon' />
+                    <Link to="/salons" className='navbarLinkLabel'>Salons</Link>
+                </div>
+                <div className="navbarLink">
                     <Link to="/messagerie" className='navbarLinkLabel'>Messagerie</Link>
                 </div>
+                
 
             </div>
 
-            <div className="deconnexion">
-                <div className="deconnexionink">
-                    <img src={logout_icon} alt="home_icon" className='navbarIcon' />
+            <div className="deconnexion blocNavbar">
+
+                <div className="navbarLink">
                     <Link to="/connexion"className='navbarLinkLabel'>Déconnexion</Link>
                 </div>
+
             </div>
             
         </div>

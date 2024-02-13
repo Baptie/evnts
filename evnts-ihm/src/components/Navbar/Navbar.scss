@@ -1,86 +1,95 @@
 @import "./../../pages/Variables.scss";
 
-.navbarContainer{
-    height: 100vh;
-    width: 20vw;
-    background-color: $color-red;
+.navbarContainer {
+  height: 100vh;
+  width: 20vw;
+  background-color: none;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
 }
 
-.profil{
-    margin: 2em;
-    height: 12%;
-    width: 100%;
-    display: inline-flex;
-    align-items: center;
-
-
-}
-.img-profil-navbar{
-    height: 3em;
-    width: 3em;
-    margin-inline: 1em;
+.blocNavbar {
+  background-color: $color-gray-30;
+  border-radius: 15px;
+  margin-block: 0.3em;
+  display: flex;
 }
 
-.pseudoLabelNavbar{
-    color: black;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-}
-.menu{
-    width: 76%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.profil, .deconnexion {
+  height: 7vh;
+  padding: 1em;
 }
 
-.deconnnexion{
-    height: 12%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-.deconnnexionLink{
-    position: relative;
-    width: 100%;
-    height: 3em;
-    display:inline-flex;
-    align-items: center;
+.menu, .deconnexion {
+  flex-direction: column;
 }
 
-.navbarLink{
-    position: relative;
-    width: 100%;
-    height: 3em;
-    display:inline-flex;
-    align-items: center;
-}
-.navbarIcon{
-    height: 2.5em;
-    width: 2.5em;
-    margin-block: 1em;
-    margin-inline: 0.5em;
+.profil {
+  display: flex;
+  align-items: center;
 }
 
-.navbarLinkLabel{
-    position: relative;
-    height: 3em;
-    display: flex;
-    align-items: center;
-
-    // POLICE
-    font-size: 1.3em;
-    color: $color-white;
-
-    // LIEN
-    text-decoration: none;
+.deconnexion {
+  
 }
 
-.navbarLinkLabel:visited{
-    color:$color-white;
+.menu {
+  flex: 1;
+  padding-block: 2em;
 }
 
-.navbarLinkLabel:hover{
-    color: $color-gray;
+.img-profil-navbar {
+  height: 3em;
+  width: 3em;
+  margin-inline: 1em;
+  border-radius: 10px;
 }
 
+.img-profil-navbar:hover {
+  cursor: pointer;
+}
+
+.pseudoLabelNavbar {
+  color: black;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pseudoLabelNavbar:hover {
+  cursor: pointer;
+}
+
+.navbarLink {
+  position: relative;
+  height: 3em;
+  display: inline-flex;
+  align-items: center;
+  margin-inline: 3em;
+  margin-block: 1.1em;
+}
+
+.navbarLinkLabel {
+  position: relative;
+  height: 3em;
+  display: flex;
+  align-items: center;
+  // POLICE
+  font-size: 1.3em;
+  color: $color-red;
+  // LIEN
+  text-decoration: none;
+}
+
+.navbarLinkLabel:visited {
+  color: $color-red;
+}
+
+.navbarLinkLabel:hover {
+  color: $color-dark-red;
+}
