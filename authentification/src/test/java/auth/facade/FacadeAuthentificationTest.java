@@ -75,4 +75,38 @@ public class FacadeAuthentificationTest {
     public void deconnexion_UserNotFound() {
         assertThrows(UtilisateurInexistantException.class, () -> facadeAuth.deconnexion("Axelle"));
     }
+
+    @Test
+    public void reSetPseudo_Successful() throws Exception {
+        String ancienPseudo = "Cristiano";
+        facadeAuth.inscription(ancienPseudo, "ronaldo", "Cristiano@test.com");
+
+        String nouveauPseudo = "Lionel";
+        facadeAuth.reSetPseudo(ancienPseudo, nouveauPseudo);
+
+        assertTrue(facadeAuth.getUtilisateurs().containsKey(nouveauPseudo));
+        assertFalse(facadeAuth.getUtilisateurs().containsKey(ancienPseudo));
+    }
+
+    @Test
+    public void reSetPseudo_UserNotFound() {
+        assertThrows(UtilisateurInexistantException.class, () -> facadeAuth.reSetPseudo("Pen", "Gu"));
+    }
+
+    @Test
+    public void reSetMDP_Successful() throws Exception {
+        String ancienMDP = "pandemic";
+        facadeAuth.inscription("Cedric", "pandemic", "Cedric@example.com");
+
+        String nouveauMDP = "demicpan";
+        facadeAuth.reSetMDP("Cedric", nouveauMDP);
+
+        String token = facadeAuth.connexion("Cedric", nouveauMDP);
+        assertNotNull(token);
+    }
+
+    @Test
+    public void reSetMDP_UserNotFound() {
+        assertThrows(UtilisateurInexistantException.class, () -> facadeAuth.reSetMDP("ML", "FrontBof"));
+    }
 }
