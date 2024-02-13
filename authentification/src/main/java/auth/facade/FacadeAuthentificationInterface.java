@@ -41,5 +41,8 @@ public interface FacadeAuthentificationInterface {
 
         Map<String, Utilisateur> getUtilisateurs();
 
+        void reSetPseudo(String ancienPseudo, String nouveauPseudo) throws UtilisateurInexistantException;
+
+        void reSetMDP(String pseudo, String nouveauMDP) throws UtilisateurInexistantException;
 
 }
