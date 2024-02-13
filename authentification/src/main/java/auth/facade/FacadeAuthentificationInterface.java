@@ -29,7 +29,17 @@ public interface FacadeAuthentificationInterface {
          */
         String connexion(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException;
 
+        /**
+         * Déconnexion de l'utilisateur sur le site
+         *
+         * @param pseudo
+         * @throws UtilisateurInexistantException
+         */
+        void deconnexion(String pseudo) throws UtilisateurInexistantException;
+
         boolean getStatus(String pseudo) throws UtilisateurInexistantException;
 
         Map<String, Utilisateur> getUtilisateurs();
+
+
 }

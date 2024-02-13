@@ -59,4 +59,20 @@ public class FacadeAuthentificationTest {
             facadeAuth.connexion("toto", "leMauvaisMDP");
         });
     }
+
+    @Test
+    public void deconnexion_Successful() throws Exception {
+        facadeAuth.inscription("Sidney", "pass", "sid@test.com");
+        String token = facadeAuth.connexion("Sidney", "pass");
+        assertNotNull(token);
+        assertTrue(facadeAuth.getStatus("Sidney"));
+
+        facadeAuth.deconnexion("Sidney");
+        assertFalse(facadeAuth.getStatus("Sidney"));
+    }
+
+    @Test
+    public void deconnexion_UserNotFound() {
+        assertThrows(UtilisateurInexistantException.class, () -> facadeAuth.deconnexion("Axelle"));
+    }
 }

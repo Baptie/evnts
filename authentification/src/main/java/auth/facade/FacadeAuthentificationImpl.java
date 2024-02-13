@@ -50,6 +50,18 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
         return idConnection;
     }
 
+    @Override
+    public void deconnexion(String pseudo) throws UtilisateurInexistantException {
+
+        if (!utilisateurs.containsKey(pseudo))
+            throw new UtilisateurInexistantException();
+
+        Utilisateur u = utilisateurs.get(pseudo);
+
+        u.setStatus(false);
+    }
+
+    @Override
     public boolean getStatus(String pseudo) throws UtilisateurInexistantException {
         if (!utilisateurs.containsKey(pseudo))
             throw new UtilisateurInexistantException();
@@ -60,6 +72,7 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
 
     }
 
+    @Override
     public Map<String, Utilisateur> getUtilisateurs() {
         return utilisateurs;
     }
