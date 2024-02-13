@@ -44,7 +44,7 @@ public class FacadeAuthentificationTest {
         facadeAuth.inscription("Sidney", "pass", "sid@test.com");
         String token = facadeAuth.connexion("Sidney", "pass");
         assertNotNull(token);
-        assertTrue(facadeAuth.getUtilisateursConnectes().containsKey(token));
+        assertTrue(facadeAuth.getStatus("Sidney"));
     }
 
     @Test
@@ -58,17 +58,5 @@ public class FacadeAuthentificationTest {
             facadeAuth.inscription("toto", "leBonMDP", "toto@test.com");
             facadeAuth.connexion("toto", "leMauvaisMDP");
         });
-    }
-
-    @Test
-    public void checkToken_Successful() throws Exception {
-        facadeAuth.inscription("Plume", "patte", "plume@test.com");
-        String token = facadeAuth.connexion("Plume", "patte");
-        assertEquals("Plume", facadeAuth.checkToken(token));
-    }
-
-    @Test
-    public void checkToken_InvalidToken() {
-        assertThrows(MauvaisTokenException.class, () -> facadeAuth.checkToken("invalidToken"));
     }
 }

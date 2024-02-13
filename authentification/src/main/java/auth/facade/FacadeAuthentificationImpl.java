@@ -16,13 +16,9 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
 
     private Map<String, Utilisateur> utilisateurs;
 
-    private Map<String, Utilisateur> utilisateursConnectes;
-
     public FacadeAuthentificationImpl(PasswordEncoder passwordEncoder) {
         this.utilisateurs = new HashMap<>();
-        this.utilisateursConnectes   = new HashMap<>();
         this.passwordEncoder=passwordEncoder;
-
     }
 
     @Override
@@ -49,24 +45,23 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
         if (!passwordEncoder.matches(mdp, u.getMdp()))
             throw new MdpIncorrecteException();
 
+        u.setStatus(true);
         String idConnection = UUID.randomUUID().toString();
-        this.utilisateursConnectes.put(idConnection, u);
         return idConnection;
     }
 
-    @Override
-    public String checkToken(String token) throws MauvaisTokenException {
-        if (!utilisateursConnectes.containsKey(token))
-            throw new MauvaisTokenException();
+    public boolean getStatus(String pseudo) throws UtilisateurInexistantException {
+        if (!utilisateurs.containsKey(pseudo))
+            throw new UtilisateurInexistantException();
 
-        return utilisateursConnectes.get(token).getPseudo();
+        Utilisateur u = utilisateurs.get(pseudo);
+
+        return u.isStatus();
+
     }
 
     public Map<String, Utilisateur> getUtilisateurs() {
         return utilisateurs;
     }
 
-    public Map<String, Utilisateur> getUtilisateursConnectes() {
-        return utilisateursConnectes;
-    }
 }
