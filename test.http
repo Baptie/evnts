@@ -15,3 +15,23 @@ pseudo=bibi&mdp=lustucru
 
 ###Token Personne expected = 201
 GET http://localhost:8080/auth/token?token=4e141818-7734-4efe-8d85-ed6b776f23fe
+
+###TestInscriptionFull
+POST http://localhost:8080/utilisateurs/inscription
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+pseudo=sid&mdp=baptielpb&email=vincentlpb@camacho.fr&bio=salutcmoi&photoDeProfil=www.googleimage.fr/sidlpb
+
+### recuperer infos publiques
+GET http://localhost:8080/utilisateurs/sid
+
+###
+POST http://localhost:8080/utilisateurs/suppressionCompte
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+email=vincentlpb@camacho.fr
+
+
+
