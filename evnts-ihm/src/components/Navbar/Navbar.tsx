@@ -1,5 +1,5 @@
 import './Navbar.scss';
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import user_placeholder from '../../assets/icons/user_placeholder.jpeg'
 
 function goToProfile() {
@@ -20,13 +20,15 @@ function Navbar() {
             <div className="menu blocNavbar ">
 
                <div className="navbarLink">
-                    <Link to="/" className='navbarLinkLabel'>Accueil</Link>
+                    <NavLink to="/" 
+                    className={({ isActive }) => (isActive ? 'active navbarLinkLabel ' : 'navbarLinkLabel')}
+                    >Accueil</NavLink>
                 </div>
                 <div className="navbarLink">
-                    <Link to="/salons" className='navbarLinkLabel'>Salons</Link>
+                    <NavLink to="/salons" className='navbarLinkLabel'>Salons</NavLink>
                 </div>
                 <div className="navbarLink">
-                    <Link to="/messagerie" className='navbarLinkLabel'>Messagerie</Link>
+                    <NavLink to="/messagerie" className='navbarLinkLabel'>Messagerie</NavLink>
                 </div>
                 
 
@@ -35,7 +37,7 @@ function Navbar() {
             <div className="deconnexion blocNavbar">
 
                 <div className="navbarLink">
-                    <Link to="/connexion"className='navbarLinkLabel'>Déconnexion</Link>
+                    <NavLink to="/connexion"className='navbarLinkLabel'>Déconnexion</NavLink>
                 </div>
 
             </div>

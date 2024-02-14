@@ -84,10 +84,13 @@
   color: $color-red;
   // LIEN
   text-decoration: none;
+  
 }
-
+.active{
+  color: $color-green;
+}
 .navbarLinkLabel:visited {
-  color: $color-red;
+  
 }
 
 .navbarLinkLabel:hover {
