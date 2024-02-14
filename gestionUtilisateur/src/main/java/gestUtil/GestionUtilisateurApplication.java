@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GestionUtilisateurApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GestionSalonApplication.class, args);
+        SpringApplication.run(GestionUtilisateurApplication.class, args);
     }
 
 }
