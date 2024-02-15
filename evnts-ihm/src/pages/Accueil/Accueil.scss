@@ -1,33 +1,6 @@
 @import "./../../pages/Variables.scss";
 
-.pageAccueil{
-    display: flex;
-    
-   
-}
-.asideNavbar{
-    width: 13vw;
-
-}
-
-.headerPageAccueil{
-    position: sticky;
-    flex:1;
-    height: 7vh;
-    width: 100%;
-
-    flex: 0 0 200px;
-    position: fixed;
-
-}
-
-.titlePageAccueil{
-    
-}
-
 .allEventsContainer{
-    width: 100%;
-    height: 100vh;
     display: flex;
     flex-wrap: wrap;
 
