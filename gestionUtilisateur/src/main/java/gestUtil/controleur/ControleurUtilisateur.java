@@ -21,9 +21,9 @@ public class ControleurUtilisateur {
     IFacadeGestionUtilisateur facadeUtilisateur;
 
     @PostMapping(value = "/inscription")
-    public ResponseEntity<String> inscription(@RequestParam String pseudo, @RequestParam String mdp, @RequestParam String email, @RequestParam String bio, @RequestParam String photoDeProfil ) {
+    public ResponseEntity<String> inscription(@RequestParam String pseudo, @RequestParam String email, @RequestParam String bio, @RequestParam String photoDeProfil ) {
         try {
-            this.facadeUtilisateur.creerCompte(pseudo,mdp,email,bio,photoDeProfil);
+            this.facadeUtilisateur.creerCompte(pseudo,email,bio,photoDeProfil);
             return ResponseEntity.ok("Compte créé !");
         } catch (PseudoDejaPrisException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Pseudo "+pseudo+" déjà pris");
@@ -40,9 +40,11 @@ public class ControleurUtilisateur {
             return ResponseEntity.ok("Pseudo changé avec succès !");
         } catch (UtilisateurNonTrouveException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (PseudoDejaPrisException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
-
+    /*
     @PatchMapping(value = "/changementMdp")
     public ResponseEntity<String> changerMdp(@RequestParam String email,
                                              @RequestParam String ancienMdp,
@@ -54,7 +56,7 @@ public class ControleurUtilisateur {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
+    */
     @PatchMapping(value = "/changementBio")
     public ResponseEntity<String> changementBio(@RequestParam String email,
                                                 @RequestParam String nouvelleBio) {

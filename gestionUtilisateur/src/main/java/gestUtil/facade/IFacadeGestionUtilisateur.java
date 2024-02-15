@@ -11,21 +11,21 @@ public interface IFacadeGestionUtilisateur {
     /**
      * Permet de creer un compte complet, avec la bio et la photo de profil
      * @param pseudo
-     * @param mdp
      * @param eMail
      * @param bio
      * @param photoDeProfil
      * @throws PseudoDejaPrisException
      * @throws EMailDejaPrisException
      */
-    void creerCompte(String pseudo, String mdp, String eMail, String bio, String photoDeProfil) throws PseudoDejaPrisException, EMailDejaPrisException;
+    void creerCompte(String pseudo, String eMail, String bio, String photoDeProfil) throws PseudoDejaPrisException, EMailDejaPrisException;
 
     /**
      * Permet de modifier son pseudo
      * @param email
      * @param nouveauPseudo
      */
-    void changerPseudo(String email, String nouveauPseudo) throws UtilisateurNonTrouveException;
+    void changerPseudo(String email, String nouveauPseudo) throws UtilisateurNonTrouveException, PseudoDejaPrisException;
+    /*
     /**
      * Permet de changer de MDP, en mettant son ancien mdp, TODO : ATTENTION A L'ENCODAGE ?
      * @param pseudo
@@ -35,9 +35,9 @@ public interface IFacadeGestionUtilisateur {
      * @throws MdpIncorrectException
      * @throws UtilisateurNonTrouveException
      * @throws MdpIncorrectException
-     */
-    void changerMdp(String pseudo, String ancienMdp, String nouveauMdp) throws UtilisateurNonTrouveException, MdpIncorrectException, UtilisateurNonTrouveException, MdpIncorrectException;
 
+    void changerMdp(String pseudo, String ancienMdp, String nouveauMdp) throws UtilisateurNonTrouveException, MdpIncorrectException, UtilisateurNonTrouveException, MdpIncorrectException;
+    */
     /**
      * Permet de modifier la bio de son profil
      * @param pseudo
