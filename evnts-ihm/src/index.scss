@@ -63,5 +63,8 @@ code {
 }
 
 .contentContainer{
-  height: 90vh;
+  height: calc(90vh  - calc(2 * $padding-contentContainer));
+  padding :$padding-contentContainer;
+
+  overflow-y: scroll;
 }
