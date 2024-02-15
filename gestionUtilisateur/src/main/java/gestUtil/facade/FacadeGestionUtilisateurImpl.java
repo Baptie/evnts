@@ -25,28 +25,35 @@ public class FacadeGestionUtilisateurImpl implements IFacadeGestionUtilisateur {
 
     }
     @Override
-    public void creerCompte(String pseudo, String mdp, String email, String bio, String photoDeProfil) throws PseudoDejaPrisException, EMailDejaPrisException {
-        if (utilisateurs.containsKey(pseudo))
-            throw new PseudoDejaPrisException();
+    public void creerCompte(String pseudo, String email, String bio, String photoDeProfil) throws PseudoDejaPrisException, EMailDejaPrisException {
+        if (utilisateurs.containsKey(email))
+            throw new EMailDejaPrisException();
 
         for (Utilisateur utilisateur : utilisateurs.values())
-            if (utilisateur.getEmail().equals(email))
-                throw new EMailDejaPrisException();
+            if (utilisateur.getPseudo().equals(pseudo))
+                throw new PseudoDejaPrisException();
 
-        this.utilisateurs.put(email,new Utilisateur(email,mdp,pseudo,bio,photoDeProfil,new ArrayList<>()));
+        this.utilisateurs.put(email,new Utilisateur(email,pseudo,bio,photoDeProfil,new ArrayList<>()));
     }
 
     @Override
-    public void changerPseudo(String email, String pseudo) throws UtilisateurNonTrouveException {
+    public void changerPseudo(String email, String pseudo) throws UtilisateurNonTrouveException, PseudoDejaPrisException {
         Utilisateur utilisateur = utilisateurs.get(email);
 
         if (utilisateur == null) {
             throw new UtilisateurNonTrouveException();
         }
 
+        for(Utilisateur u : utilisateurs.values()){
+            if(u.getPseudo().equals(pseudo)){
+                throw new PseudoDejaPrisException();
+            }
+        }
+
         utilisateur.setPseudo(pseudo);
     }
 
+    /*
     @Override
     public void changerMdp(String email, String ancienMdp, String nouveauMdp) throws UtilisateurNonTrouveException, MdpIncorrectException {
         Utilisateur utilisateur = utilisateurs.get(email);
@@ -60,7 +67,7 @@ public class FacadeGestionUtilisateurImpl implements IFacadeGestionUtilisateur {
         }
 
         utilisateur.setMdp(nouveauMdp);
-    }
+    }*/
 
     @Override
     public void changerBio(String email, String nouvelleBio) throws UtilisateurNonTrouveException {
