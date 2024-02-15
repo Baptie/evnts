@@ -1,5 +1,17 @@
 @import "./../../pages/Variables.scss";
 
+.logoNavbarContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+}
+
+.logoNavbar{
+height: 5em;
+widht: auto;
+}
+
 .navbarContainer {
   height: 100vh;
   width: 13vw;
@@ -7,36 +19,24 @@
   justify-content: space-between;
   display: flex;
   flex-direction: column;
+
+  border-right: 1px solid $color-gray;
 }
 
 .blocNavbar {
-  background-color: $color-gray-30;
-  border-radius: 15px;
+  
   margin-block: 0.3em;
   display: flex;
 }
 
-.profil, .deconnexion {
-  height: 7vh;
-  padding: 1em;
-}
 
-.menu, .deconnexion {
-  flex-direction: column;
-}
 
-.profil {
-  display: flex;
-  align-items: center;
-}
 
-.deconnexion {
-  
-}
 
 .menu {
   flex: 1;
   padding-block: 2em;
+  flex-direction: column;
 }
 
 .img-profil-navbar {
@@ -46,29 +46,11 @@
   border-radius: 10px;
 }
 
-.img-profil-navbar:hover {
-  cursor: pointer;
-}
-
-.pseudoLabelNavbar {
-  color: black;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.pseudoLabelNavbar:hover {
-  cursor: pointer;
-}
 
 .navbarLink {
   position: relative;
   height: 3em;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   margin-inline: 3em;
   margin-block: 1.1em;
@@ -95,4 +77,55 @@
 
 .navbarLinkLabel:hover {
   color: $color-dark-red;
+}
+
+.profil {
+  height: 7vh;
+  align-items: center;
+  padding: 1em;
+
+  
+}
+
+.logoutLabel{
+  color: gray;
+  text-decoration: underline;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+
+
+}
+.logoutLabel:hover{
+  cursor: pointer;
+}
+.navbarProfileLabels{
+  width: 100%;
+
+}
+
+
+.img-profil-navbar:hover {
+  cursor: pointer;
+}
+
+.pseudoLabelNavbar {
+  color: black;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pseudoLabelNavbar:hover {
+  cursor: pointer;
+}
+
+.profilePictureContainer{
+  width: 4em;
+  float:left;
 }
