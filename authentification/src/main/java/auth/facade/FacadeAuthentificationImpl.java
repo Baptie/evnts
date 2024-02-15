@@ -89,12 +89,17 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
     }
 
     @Override
-    public void reSetMDP(String pseudo, String nouveauMDP) throws UtilisateurInexistantException {
+    public void reSetMDP(String pseudo, String mdp, String nouveauMDP) throws UtilisateurInexistantException, MdpIncorrecteException {
         if (!utilisateurs.containsKey(pseudo))
             throw new UtilisateurInexistantException();
 
+        Utilisateur u = utilisateurs.get(pseudo);
+
+        if (!passwordEncoder.matches(mdp, u.getMdp()))
+            throw new MdpIncorrecteException();
+
         Utilisateur utilisateur = utilisateurs.get(pseudo);
-        utilisateur.setMdp(passwordEncoder.encode(nouveauMDP)); // Modifier le mot de passe
+        utilisateur.setMdp(passwordEncoder.encode(nouveauMDP));
     }
 
 }

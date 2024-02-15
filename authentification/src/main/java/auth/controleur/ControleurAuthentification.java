@@ -52,4 +52,24 @@ public class ControleurAuthentification {
         }
     }
 
+    @PatchMapping ResponseEntity<String> modifierPseudo (@RequestParam String pseudo, @RequestParam String nouveauPseudo){
+        try{
+            this.facadeAuth.reSetPseudo(pseudo,nouveauPseudo);
+            return ResponseEntity.ok("Pseudo : "+pseudo+" changé en :" + nouveauPseudo+" !");
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais pseudo !");
+        }
+    }
+
+    @PatchMapping ResponseEntity<String> modifierMdp (@RequestParam String pseudo,@RequestParam String mdp, @RequestParam String nouveauMDP){
+        try{
+            this.facadeAuth.reSetMDP(pseudo,mdp,nouveauMDP);
+            return ResponseEntity.ok("Mdp changé !");
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais pseudo !");
+        } catch (MdpIncorrecteException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais mdp !");
+        }
+    }
+
 }
