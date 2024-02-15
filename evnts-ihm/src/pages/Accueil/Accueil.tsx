@@ -3,32 +3,37 @@ import './Accueil.scss';
 import CardEvent from '../../components/Card-Event/CardEvent';
 function Accueil() {
     return (
-        <div className="pageAccueil">
-            <div className='asideNavbar'>
+        <div className="page">
+            <div className='navbarContainer'>
                 <Navbar/>
             </div>
         
-            
-            <div className="allEventsContainer">
-               
-                    <CardEvent/>
-                    <CardEvent/>
-                    <CardEvent/>
-                    <CardEvent/>
-                    <CardEvent/>
-                    <CardEvent/> 
-                    <CardEvent/> 
-                    <CardEvent/> 
-                    <CardEvent/> 
-                    <CardEvent/> 
-                    <CardEvent/> 
-                    <CardEvent/> 
-                    <CardEvent/> 
-                    <CardEvent/> 
-                    <CardEvent/> 
-             
+            <div className="contentPage">
+                <div className="sectionHeaderPage">
+                    <span className="labelHeaderPage">Mes événements</span>
+                </div>
+                <div className="contentContainer allEventsContainer">
                 
+                <CardEvent/>
+                <CardEvent/>
+                <CardEvent/>
+                <CardEvent/>
+                <CardEvent/>
+                <CardEvent/> 
+                <CardEvent/> 
+                <CardEvent/> 
+                <CardEvent/> 
+                <CardEvent/> 
+                <CardEvent/> 
+                <CardEvent/> 
+                <CardEvent/> 
+                <CardEvent/> 
+                <CardEvent/> 
+            
+            
+                 </div>
             </div>
+    
 
         </div>
     );
