@@ -102,4 +102,17 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
         utilisateur.setMdp(passwordEncoder.encode(nouveauMDP));
     }
 
+    @Override
+    public void supprimerUtilisateur(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException {
+        if (!utilisateurs.containsKey(pseudo))
+            throw new UtilisateurInexistantException();
+
+        Utilisateur u = utilisateurs.get(pseudo);
+
+        if (!passwordEncoder.matches(mdp, u.getMdp()))
+            throw new MdpIncorrecteException();
+
+        utilisateurs.remove(pseudo);
+    }
+
 }

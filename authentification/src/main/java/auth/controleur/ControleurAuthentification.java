@@ -72,4 +72,15 @@ public class ControleurAuthentification {
         }
     }
 
+    @DeleteMapping ResponseEntity<String> supprimerUtilisateur (@RequestParam String pseudo,@RequestParam String mdp){
+        try{
+            this.facadeAuth.supprimerUtilisateur(pseudo,mdp);
+            return ResponseEntity.ok("Utilisateur supprimé");
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais pseudo !");
+        } catch (MdpIncorrecteException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais mdp !");
+        }
+    }
+
 }

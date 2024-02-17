@@ -99,7 +99,7 @@ public class FacadeAuthentificationTest {
         facadeAuth.inscription("Cedric", "pandemic", "Cedric@example.com");
 
         String nouveauMDP = "demicpan";
-        facadeAuth.reSetMDP("Cedric", nouveauMDP);
+        facadeAuth.reSetMDP("Cedric",ancienMDP, nouveauMDP);
 
         String token = facadeAuth.connexion("Cedric", nouveauMDP);
         assertNotNull(token);
@@ -107,6 +107,29 @@ public class FacadeAuthentificationTest {
 
     @Test
     public void reSetMDP_UserNotFound() {
-        assertThrows(UtilisateurInexistantException.class, () -> facadeAuth.reSetMDP("ML", "FrontBof"));
+        assertThrows(UtilisateurInexistantException.class, () -> facadeAuth.reSetMDP("ML", "blabla","FrontBof"));
+    }
+
+    @Test
+    public void supprimerUtilisateur_Successful() throws Exception {
+        facadeAuth.inscription("user1", "password1", "user1@example.com");
+        facadeAuth.supprimerUtilisateur("user1", "password1");
+        assertFalse(facadeAuth.getUtilisateurs().containsKey("user1"));
+    }
+
+    @Test
+    public void supprimerUtilisateur_UserNotFound() {
+        assertThrows(UtilisateurInexistantException.class, () -> facadeAuth.supprimerUtilisateur("user2", "password2"));
+    }
+
+    @Test
+    public void supprimerUtilisateur_IncorrectPassword() {
+        assertThrows(MdpIncorrecteException.class, () -> {
+            // Inscrire un utilisateur
+            facadeAuth.inscription("user3", "password3", "user3@example.com");
+
+            // Supprimer l'utilisateur avec un mot de passe incorrect
+            facadeAuth.supprimerUtilisateur("user3", "wrongPassword");
+        });
     }
 }
