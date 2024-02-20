@@ -7,9 +7,6 @@ import java.util.List;
 public class Utilisateur  {
     //@Id
     private String email;
-
-    private String mdp;
-
     private String pseudo;
 
     private String bio;
@@ -18,9 +15,8 @@ public class Utilisateur  {
 
     private List<String> listeContacts;
 
-    public Utilisateur(String email, String mdp, String pseudo, String bio, String photoDeProfil, List<String> listeContacts) {
+    public Utilisateur(String email, String pseudo, String bio, String photoDeProfil, List<String> listeContacts) {
         this.email = email;
-        this.mdp = mdp;
         this.pseudo = pseudo;
         this.bio = bio;
         this.photoDeProfil = photoDeProfil;
@@ -31,9 +27,7 @@ public class Utilisateur  {
         return email;
     }
 
-    public String getMdp() {
-        return mdp;
-    }
+
 
     public String getPseudo() {
         return pseudo;
@@ -45,10 +39,6 @@ public class Utilisateur  {
 
     public String getPhotoDeProfil() {
         return photoDeProfil;
-    }
-
-    public void setMdp(String mdp) {
-        this.mdp = mdp;
     }
 
     public void setPseudo(String pseudo) {
