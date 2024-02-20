@@ -16,13 +16,9 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
 
     private Map<String, Utilisateur> utilisateurs;
 
-    private Map<String, Utilisateur> utilisateursConnectes;
-
     public FacadeAuthentificationImpl(PasswordEncoder passwordEncoder) {
         this.utilisateurs = new HashMap<>();
-        this.utilisateursConnectes   = new HashMap<>();
         this.passwordEncoder=passwordEncoder;
-
     }
 
     @Override
@@ -49,24 +45,74 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
         if (!passwordEncoder.matches(mdp, u.getMdp()))
             throw new MdpIncorrecteException();
 
+        u.setStatus(true);
         String idConnection = UUID.randomUUID().toString();
-        this.utilisateursConnectes.put(idConnection, u);
         return idConnection;
     }
 
     @Override
-    public String checkToken(String token) throws MauvaisTokenException {
-        if (!utilisateursConnectes.containsKey(token))
-            throw new MauvaisTokenException();
+    public void deconnexion(String pseudo) throws UtilisateurInexistantException {
 
-        return utilisateursConnectes.get(token).getPseudo();
+        if (!utilisateurs.containsKey(pseudo))
+            throw new UtilisateurInexistantException();
+
+        Utilisateur u = utilisateurs.get(pseudo);
+
+        u.setStatus(false);
     }
 
+    @Override
+    public boolean getStatus(String pseudo) throws UtilisateurInexistantException {
+        if (!utilisateurs.containsKey(pseudo))
+            throw new UtilisateurInexistantException();
+
+        Utilisateur u = utilisateurs.get(pseudo);
+
+        return u.isStatus();
+
+    }
+
+    @Override
     public Map<String, Utilisateur> getUtilisateurs() {
         return utilisateurs;
     }
 
-    public Map<String, Utilisateur> getUtilisateursConnectes() {
-        return utilisateursConnectes;
+    @Override
+    public void reSetPseudo(String ancienPseudo, String nouveauPseudo) throws UtilisateurInexistantException {
+        if (!utilisateurs.containsKey(ancienPseudo))
+            throw new UtilisateurInexistantException();
+
+        Utilisateur utilisateur = utilisateurs.get(ancienPseudo);
+        utilisateurs.remove(ancienPseudo);
+        utilisateur.setPseudo(nouveauPseudo);
+        utilisateurs.put(nouveauPseudo, utilisateur);
     }
+
+    @Override
+    public void reSetMDP(String pseudo, String mdp, String nouveauMDP) throws UtilisateurInexistantException, MdpIncorrecteException {
+        if (!utilisateurs.containsKey(pseudo))
+            throw new UtilisateurInexistantException();
+
+        Utilisateur u = utilisateurs.get(pseudo);
+
+        if (!passwordEncoder.matches(mdp, u.getMdp()))
+            throw new MdpIncorrecteException();
+
+        Utilisateur utilisateur = utilisateurs.get(pseudo);
+        utilisateur.setMdp(passwordEncoder.encode(nouveauMDP));
+    }
+
+    @Override
+    public void supprimerUtilisateur(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException {
+        if (!utilisateurs.containsKey(pseudo))
+            throw new UtilisateurInexistantException();
+
+        Utilisateur u = utilisateurs.get(pseudo);
+
+        if (!passwordEncoder.matches(mdp, u.getMdp()))
+            throw new MdpIncorrecteException();
+
+        utilisateurs.remove(pseudo);
+    }
+
 }

@@ -41,12 +41,46 @@ public class ControleurAuthentification {
 
     }
 
-    @GetMapping(value = "/token")
-    public ResponseEntity<String> checkToken(@RequestParam String token){
+    @PostMapping(value = "/deconnexion")
+    public ResponseEntity<String> deconnexion (@RequestParam String pseudo){
+
         try {
-            return ResponseEntity.ok(this.facadeAuth.checkToken(token));
-        } catch (MauvaisTokenException e) {
-            return ResponseEntity.notFound().build();
+            this.facadeAuth.deconnexion(pseudo);
+            return ResponseEntity.ok("Déconnexion de "+pseudo+" faite !");
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais identifiants !");
         }
     }
+
+    @PatchMapping ResponseEntity<String> modifierPseudo (@RequestParam String pseudo, @RequestParam String nouveauPseudo){
+        try{
+            this.facadeAuth.reSetPseudo(pseudo,nouveauPseudo);
+            return ResponseEntity.ok("Pseudo : "+pseudo+" changé en :" + nouveauPseudo+" !");
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais pseudo !");
+        }
+    }
+
+    @PatchMapping ResponseEntity<String> modifierMdp (@RequestParam String pseudo,@RequestParam String mdp, @RequestParam String nouveauMDP){
+        try{
+            this.facadeAuth.reSetMDP(pseudo,mdp,nouveauMDP);
+            return ResponseEntity.ok("Mdp changé !");
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais pseudo !");
+        } catch (MdpIncorrecteException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais mdp !");
+        }
+    }
+
+    @DeleteMapping ResponseEntity<String> supprimerUtilisateur (@RequestParam String pseudo,@RequestParam String mdp){
+        try{
+            this.facadeAuth.supprimerUtilisateur(pseudo,mdp);
+            return ResponseEntity.ok("Utilisateur supprimé");
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais pseudo !");
+        } catch (MdpIncorrecteException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais mdp !");
+        }
+    }
+
 }
