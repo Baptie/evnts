@@ -1,0 +1,73 @@
+version: '3.9'
+
+services:
+
+  dbAuthentification:
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: authentification
+    volumes:
+      - ./authentification-init.sql:/docker-entrypoint-initdb.d/authentification-init.sql
+
+  dbSalon:
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: salon
+    volumes:
+      - ./salon-init.sql:/docker-entrypoint-initdb.d/salon-init.sql
+
+  dbGestionUtilisateur:
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: utilisateur
+    volumes:
+      - ./utilisateur-init.sql:/docker-entrypoint-initdb.d/utilisateur-init.sql
+
+
+  salonApp:
+    build:
+      context: ./gestionSalon
+      dockerfile: Dockerfile
+    image: mon-application-salon
+    restart: always
+    ports:
+      - 8081:8080
+    depends_on:
+      - dbSalon
+
+
+  authentificationApp:
+    build:
+      context: ./authentification
+      dockerfile: Dockerfile
+    image: mon-application-authentification
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - dbAuthentification
+
+      
+
+  gesionUtilisateurApp:
+    build:
+      context: ./gestionUtilisateur
+      dockerfile: Dockerfile
+    image: mon-application-utilisateur
+    restart: always
+    ports:
+      - 8082:8080
+    depends_on:
+      - dbGestionUtilisateur
