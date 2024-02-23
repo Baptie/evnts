@@ -4,9 +4,9 @@ import CardEvent from '../../components/Card-Event/CardEvent';
 function Accueil() {
     return (
         <div className="page">
-            <div className='navbarContainer'>
+            
                 <Navbar/>
-            </div>
+            
         
             <div className="contentPage">
                 <div className="sectionHeaderPage">
