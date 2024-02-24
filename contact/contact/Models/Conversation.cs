@@ -1,7 +1,11 @@
-﻿namespace contact.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace contact.Models
 {
     public class Conversation
     {
+
+        [Key]
         public required int Id { get; set; }
 
         public required UtilisateurContact UtilisateurContact1 { get; set; }
