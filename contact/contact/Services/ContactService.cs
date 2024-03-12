@@ -14,10 +14,10 @@ namespace contact.Services
             UtilisateurContact? utilisateur2 = _utilisateurList.SingleOrDefault(u => u.EMail == Receveur);
 
             if (utilisateur1 == null || utilisateur2 == null)
-                throw new UtilisateurNonExistant();
+                throw new UtilisateurNonExistantException();
 
             if (utilisateur1.Contacts.Contains(Receveur) && utilisateur2.Contacts.Contains(Demandeur))
-                throw new DejaEnContact();
+                throw new DejaEnContactException();
 
             utilisateur2.Contacts.Add(Demandeur);
             utilisateur1.Contacts.Add(Receveur);
@@ -40,7 +40,7 @@ namespace contact.Services
             UtilisateurContact? utilisateur2 = _utilisateurList.SingleOrDefault(u => u.EMail == Utilisateur2);
 
             if (utilisateur1 == null || utilisateur2 == null)
-                throw new UtilisateurNonExistant();
+                throw new UtilisateurNonExistantException();
 
             if (utilisateur1.Conversation != null && utilisateur2.Conversation != null)
             {
@@ -48,7 +48,7 @@ namespace contact.Services
                 var conversationExistante = utilisateur1.Conversation.FirstOrDefault(u => u.Id == id);
 
                 if (conversationExistante != null)
-                    throw new ConversationDejaExistante();
+                    throw new ConversationDejaExistanteException();
             }
             
 
@@ -70,7 +70,7 @@ namespace contact.Services
             UtilisateurContact? utilisateur = _utilisateurList.SingleOrDefault(u => u.EMail == EMail);
 
             if (utilisateur != null)
-                throw new UtilisateurDejaExistant();
+                throw new UtilisateurDejaExistantException();
 
             utilisateur = new UtilisateurContact()
             {
@@ -87,11 +87,11 @@ namespace contact.Services
             UtilisateurContact? utilisateur2 = _utilisateurList.SingleOrDefault(u => u.EMail == Receveur);
 
             if (utilisateur1 == null || utilisateur2 == null)
-                throw new UtilisateurNonExistant();
+                throw new UtilisateurNonExistantException();
 
             if (utilisateur2.DemandeContact.SingleOrDefault(u => u.Equals(Demandeur)) != null)
             {
-                throw new DemandeDejaExistante();
+                throw new DemandeDejaExistanteException();
             }
 
             utilisateur2.DemandeContact.Add(Receveur);
@@ -120,7 +120,7 @@ namespace contact.Services
             UtilisateurContact? utilisateur = _utilisateurList.SingleOrDefault(u => u.EMail == Utilisateur);
 
             if (utilisateur == null)
-                throw new UtilisateurNonExistant();
+                throw new UtilisateurNonExistantException();
 
             return utilisateur.Contacts;
         }
@@ -140,12 +140,12 @@ namespace contact.Services
             UtilisateurContact? utilisateur = _utilisateurList.SingleOrDefault(u => u.EMail == Utilisateur1);
 
             if (utilisateur != null)
-                throw new UtilisateurDejaExistant();
+                throw new UtilisateurDejaExistantException();
 
             Conversation conversation = utilisateur.Conversation.FirstOrDefault(c => c.Id == id);
             
             if (utilisateur == null)
-                throw new ConversationNonExistante();
+                throw new ConversationNonExistanteException();
 
             return conversation;
 
@@ -156,7 +156,7 @@ namespace contact.Services
             UtilisateurContact? utilisateur = _utilisateurList.SingleOrDefault(u => u.EMail == Utilisateur);
 
             if (utilisateur == null)
-                throw new UtilisateurNonExistant();
+                throw new UtilisateurNonExistantException();
 
             return utilisateur.Conversation;
         }
@@ -166,7 +166,7 @@ namespace contact.Services
             UtilisateurContact? utilisateur = _utilisateurList.SingleOrDefault(u => u.EMail == Utilisateur);
 
             if (utilisateur == null)
-                throw new UtilisateurNonExistant();
+                throw new UtilisateurNonExistantException();
 
             return utilisateur.DemandeContact;
         }
@@ -177,10 +177,10 @@ namespace contact.Services
             UtilisateurContact? utilisateur2 = _utilisateurList.SingleOrDefault(u => u.EMail == Cible);
 
             if (utilisateur1 == null || utilisateur2 == null)
-                throw new UtilisateurNonExistant();
+                throw new UtilisateurNonExistantException();
 
             if (!utilisateur1.Contacts.Contains(Cible))
-                throw new ContactNonExistant();
+                throw new ContactNonExistantException();
 
             utilisateur1.Contacts.Remove(Cible);
             utilisateur2.Contacts.Remove(Demandeur);
@@ -191,7 +191,7 @@ namespace contact.Services
             UtilisateurContact? utilisateur = _utilisateurList.SingleOrDefault(u => u.EMail == EMail);
             
             if (utilisateur == null)
-                throw new UtilisateurNonExistant();
+                throw new UtilisateurNonExistantException();
 
             _utilisateurList.Remove(utilisateur);
         }

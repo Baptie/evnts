@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using contact.Exceptions;
-using contact.Models;
-using contact.Services;
 
 namespace contact.Controllers
 {
