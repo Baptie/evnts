@@ -6,6 +6,7 @@ namespace contact.Services
     public class ContactService : IContactService
     {
         private static List<UtilisateurContact> _utilisateurList = new List<UtilisateurContact>();
+
         public void AjoutContact(string Demandeur, string Receveur)
         {
             // Vérifier si les deux utilisateurs existent dans la liste des utilisateurs
