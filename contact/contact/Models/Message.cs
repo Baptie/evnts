@@ -11,7 +11,7 @@ namespace contact.Models
 
         public DateTimeOffset DateCreation { get; set; }
 
-        public required UtilisateurContact Auteur { get; set; }
+        public required string Auteur { get; set; }
 
         public bool EstVu {  get; set; }
 
