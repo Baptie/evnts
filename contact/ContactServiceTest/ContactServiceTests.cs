@@ -1,17 +1,19 @@
-﻿using contact.Exceptions;
+using contact.Exceptions;
 using contact.Models;
 using contact.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace contact.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ContactServiceTest
     {
 
-        private ContactService service = new ContactService();
+        private ContactService service;
 
-        [TestInitialize]
+        [SetUp]
         public void Initialize()
         {
             service = new ContactService();
@@ -22,12 +24,14 @@ namespace contact.Tests
         [TestMethod]
         public void AjoutContact_UtilisateursExistantsEtPasDejaEnContact_AjouteContactAUtilisateurs()
         {
+     
             service.CreationUtilisateur("utilisateur1@example.com");
             service.CreationUtilisateur("utilisateur2@example.com");
+
             service.AjoutContact("utilisateur1@example.com", "utilisateur2@example.com");
 
-            List <string>? contactsUtilisateur1 = service.GetContacts("utilisateur1@example.com");
-            List <string>? contactsUtilisateur2 = service.GetContacts("utilisateur2@example.com");
+            List<string>? contactsUtilisateur1 = service.GetContacts("utilisateur1@example.com");
+            List<string>? contactsUtilisateur2 = service.GetContacts("utilisateur2@example.com");
 
             CollectionAssert.Contains(contactsUtilisateur1, "utilisateur2@example.com");
             CollectionAssert.Contains(contactsUtilisateur2, "utilisateur1@example.com");
@@ -36,13 +40,11 @@ namespace contact.Tests
         [TestMethod]
         public void AjoutContact_UtilisateursExistantsEtDejaEnContact_LanceDejaEnContact()
         {
-            // Arrange
-            
+        
             service.CreationUtilisateur("utilisateur1@example.com");
             service.CreationUtilisateur("utilisateur2@example.com");
             service.AjoutContact("utilisateur1@example.com", "utilisateur2@example.com");
 
-            // Act & Assert
             Assert.ThrowsException<DejaEnContactException>(() => service.AjoutContact("utilisateur1@example.com", "utilisateur2@example.com"));
         }
 
@@ -60,10 +62,6 @@ namespace contact.Tests
         [TestMethod]
         public void AjoutContact_UtilisateursInexistants_LanceUtilisateurNonExistant()
         {
-            // Arrange
-            
-
-            // Act & Assert
             Assert.ThrowsException<UtilisateurNonExistantException>(() => service.AjoutContact("utilisateur1@example.com", "utilisateur2@example.com"));
         }
 
@@ -84,7 +82,7 @@ namespace contact.Tests
             service.AjoutConversation("utilisateur1@example.com", "utilisateur2@example.com");
 
             // Assert
-            List <Conversation> conversationsUtilisateur1 = service.GetConversations("utilisateur1@example.com");
+            List<Conversation> conversationsUtilisateur1 = service.GetConversations("utilisateur1@example.com");
             List<Conversation> conversationsUtilisateur2 = service.GetConversations("utilisateur2@example.com");
 
             Assert.IsNotNull(conversationsUtilisateur1);
@@ -142,7 +140,7 @@ namespace contact.Tests
             service.CreationUtilisateur("utilisateur1@example.com");
 
             // Assert
-            List <string>? contactsUtilisateur = service.GetContacts("utilisateur1@example.com");
+            List<string>? contactsUtilisateur = service.GetContacts("utilisateur1@example.com");
             Assert.IsNotNull(contactsUtilisateur);
             Assert.AreEqual(0, contactsUtilisateur.Count);
         }
@@ -175,7 +173,7 @@ namespace contact.Tests
             service.DemandeContact("demandeur@example.com", "receveur@example.com");
 
             // Assert
-            List <string>? demandesReceveur = service.GetDemandes("receveur@example.com");
+            List<string>? demandesReceveur = service.GetDemandes("receveur@example.com");
             Assert.IsNotNull(demandesReceveur);
             CollectionAssert.Contains(demandesReceveur, "demandeur@example.com");
         }
@@ -336,7 +334,7 @@ namespace contact.Tests
             service.AjoutConversation("utilisateur1@example.com", "utilisateur2@example.com");
 
             // Act
-            List <Conversation> conversations = service.GetConversations("utilisateur1@example.com");
+            List<Conversation> conversations = service.GetConversations("utilisateur1@example.com");
 
             // Assert
             Assert.IsNotNull(conversations);
@@ -370,7 +368,7 @@ namespace contact.Tests
             service.DemandeContact("utilisateur1@example.com", "utilisateur2@example.com");
 
             // Act
-            List <string>? demandes = service.GetDemandes("utilisateur2@example.com");
+            List<string>? demandes = service.GetDemandes("utilisateur2@example.com");
 
             // Assert
             Assert.IsNotNull(demandes);
@@ -406,8 +404,8 @@ namespace contact.Tests
             service.SuppressionContact("utilisateur1@example.com", "utilisateur2@example.com");
 
             // Assert
-            List <string>? contactsUtilisateur1 = service.GetContacts("utilisateur1@example.com");
-            List <string>? contactsUtilisateur2 = service.GetContacts("utilisateur2@example.com");
+            List<string>? contactsUtilisateur1 = service.GetContacts("utilisateur1@example.com");
+            List<string>? contactsUtilisateur2 = service.GetContacts("utilisateur2@example.com");
 
             Assert.IsNotNull(contactsUtilisateur1);
             Assert.IsNotNull(contactsUtilisateur2);

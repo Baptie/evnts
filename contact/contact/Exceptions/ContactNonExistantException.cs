@@ -3,7 +3,7 @@
 namespace contact.Exceptions
 {
     [Serializable]
-    internal class ContactNonExistantException : Exception
+    public class ContactNonExistantException : Exception
     {
         public ContactNonExistantException()
         {

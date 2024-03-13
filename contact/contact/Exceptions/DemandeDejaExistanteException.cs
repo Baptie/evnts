@@ -3,7 +3,7 @@
 namespace contact.Exceptions
 {
     [Serializable]
-    internal class DemandeDejaExistanteException : Exception
+    public class DemandeDejaExistanteException : Exception
     {
         public DemandeDejaExistanteException()
         {

@@ -3,7 +3,7 @@
 namespace contact.Exceptions
 {
     [Serializable]
-    internal class DejaEnContactException : Exception
+    public class DejaEnContactException : Exception
     {
         public DejaEnContactException()
         {

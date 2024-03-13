@@ -45,20 +45,15 @@ namespace contact.Services
             if (utilisateur1.Conversation != null && utilisateur2.Conversation != null)
             {
 
-                var conversationExistante = utilisateur1.Conversation.FirstOrDefault(u => u.Id == id);
+                Conversation conversationExistante = utilisateur1.Conversation.FirstOrDefault(u => u.Id == id);
 
                 if (conversationExistante != null)
                     throw new ConversationDejaExistanteException();
             }
-            
 
-            var nouvelleConversation = new Conversation
-            {
-                Id=id,
-                UtilisateurContact1 = utilisateur1,
-                UtilisateurContact2 = utilisateur2,
-                Messages = new List<Message>()
-            };
+
+            Conversation nouvelleConversation = new Conversation (id, utilisateur1, utilisateur2);
+            
 
             utilisateur1.Conversation.Add(nouvelleConversation);
             utilisateur2.Conversation.Add(nouvelleConversation);
@@ -72,10 +67,7 @@ namespace contact.Services
             if (utilisateur != null)
                 throw new UtilisateurDejaExistantException();
 
-            utilisateur = new UtilisateurContact()
-            {
-                EMail = EMail
-            };
+            utilisateur = new UtilisateurContact(EMail);
 
             _utilisateurList.Add(utilisateur);
         }
@@ -102,15 +94,10 @@ namespace contact.Services
         {
             Conversation conversation = GetConversation(Envoyeur, Receveur);
             List<Message> messages = conversation.Messages;
-            
-            var nouveauMessage = new Message
-            {
-                Id = messages.Count,
-                Contenu = Contenu,
-                DateCreation = DateTime.Now,
-                Auteur = Envoyeur,
-                EstVu = false 
-            };
+
+            int id = messages == null ? 0 : messages.Count;
+
+            var nouveauMessage = new Message(id, Contenu, Envoyeur);
 
             messages.Add(nouveauMessage);
         }
