@@ -39,11 +39,13 @@ public interface FacadeAuthentificationInterface {
 
         boolean getStatus(String pseudo) throws UtilisateurInexistantException;
 
-        Map<String, Utilisateur> getUtilisateurs();
-
         void reSetPseudo(String ancienPseudo, String nouveauPseudo) throws UtilisateurInexistantException;
 
         void reSetMDP(String pseudo, String mdp, String nouveauMDP) throws UtilisateurInexistantException, MdpIncorrecteException;
 
         void supprimerUtilisateur(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException;
+
+        Map<String, Utilisateur> getUtilisateurs();
+
+
 }
