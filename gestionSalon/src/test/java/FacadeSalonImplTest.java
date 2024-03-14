@@ -1,6 +1,7 @@
 import gestSal.facade.FacadeSalonImpl;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
+import gestSal.modele.Message;
 import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 import org.junit.Before;
@@ -393,5 +394,93 @@ public class FacadeSalonImplTest {
         assertFalse(evenement.isEstValide());
     }
 
+    //################################## ENVOYER MESSAGE SALON  ####################################################
 
+    @Test
+    public void envoyerMessageSalonOk() throws Exception {
+        Salon salon = new Salon();
+        salon.setConversation(new ArrayList<>());
+        facadeSalon.salons.add(salon);
+        facadeSalon.utilisateurs.put("testUser", new Utilisateur());
+
+        facadeSalon.envoyerMessageSalon(salon, "testUser", "Bonjour tout le monde");
+        assertFalse(salon.getConversation().isEmpty());
+    }
+
+    @Test(expected = SalonInexistantException.class)
+    public void envoyerMessageSalonKoSalonInexistant() throws Exception {
+        Salon salon = new Salon();
+        facadeSalon.envoyerMessageSalon(salon, "testUser", "Message");
+    }
+
+    @Test(expected = UtilisateurInexistantException.class)
+    public void envoyerMessageSalonKoUtilisateurInexistant() throws Exception {
+        Salon salon = new Salon();
+        salon.setConversation(new ArrayList<>());
+        facadeSalon.salons.add(salon);
+
+        facadeSalon.envoyerMessageSalon(salon, "userInexistant", "Message");
+    }
+
+    //################################## ENVOYER MESSAGE EVENEMENT  ####################################################
+
+    @Test
+    public void envoyerMessageEvenementOk() throws Exception {
+        Evenement evenement = new Evenement();
+        evenement.setConversation(new ArrayList<>());
+        facadeSalon.evenements.add(evenement);
+        facadeSalon.utilisateurs.put("testUser", new Utilisateur());
+
+        facadeSalon.envoyerMessageEvenement(evenement, "testUser", "Salut");
+        assertFalse(evenement.getConversation().isEmpty());
+    }
+
+    @Test(expected = EvenementInexistantException.class)
+    public void envoyerMessageEvenementKoEvenementInexistant() throws Exception {
+        Evenement evenement = new Evenement();
+        facadeSalon.envoyerMessageEvenement(evenement, "testUser", "Message");
+    }
+
+    @Test(expected = UtilisateurInexistantException.class)
+    public void envoyerMessageEvenementKoUtilisateurInexistant() throws Exception {
+        Evenement evenement = new Evenement();
+        evenement.setConversation(new ArrayList<>());
+        facadeSalon.evenements.add(evenement);
+
+        facadeSalon.envoyerMessageEvenement(evenement, "userInexistant", "Message");
+    }
+    //################################## GET MESSAGES SALONS  ####################################################
+
+    @Test
+    public void getMessagesSalonOk() throws Exception {
+        Salon salon = new Salon();
+        salon.setConversation(new ArrayList<>());
+        facadeSalon.salons.add(salon);
+
+        List<Message> messages = facadeSalon.getMessagesSalon(salon);
+        assertNotNull(messages);
+    }
+
+    @Test(expected = SalonInexistantException.class)
+    public void getMessagesSalonKoSalonInexistant() throws Exception {
+        Salon salon = new Salon();
+        facadeSalon.getMessagesSalon(salon);
+    }
+    //################################## GET MESSAGES EVENEMENTS  ####################################################
+
+    @Test
+    public void getMessagesEvenementOk() throws Exception {
+        Evenement evenement = new Evenement();
+        evenement.setConversation(new ArrayList<>());
+        facadeSalon.evenements.add(evenement);
+
+        List<Message> messages = facadeSalon.getMessagesEvenement(evenement);
+        assertNotNull(messages);
+    }
+
+    @Test(expected = EvenementInexistantException.class)
+    public void getMessagesEvenementKoEvenementInexistant() throws Exception {
+        Evenement evenement = new Evenement();
+        facadeSalon.getMessagesEvenement(evenement);
+    }
 }

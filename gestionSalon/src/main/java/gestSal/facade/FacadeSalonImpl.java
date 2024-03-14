@@ -1,14 +1,13 @@
 package gestSal.facade;
 
 import gestSal.facade.erreurs.*;
-import gestSal.modele.Conversation;
-import gestSal.modele.Evenement;
-import gestSal.modele.Salon;
-import gestSal.modele.Utilisateur;
+import gestSal.modele.*;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component("facadeSalon")
@@ -260,6 +259,49 @@ public class FacadeSalonImpl implements FacadeSalon {
         }
         return isValide;
     }
+
+    @Override
+    public void envoyerMessageSalon(Salon salon, String pseudoUtilisateur, String contenu) throws SalonInexistantException, UtilisateurInexistantException {
+        if(!salons.contains(salon)){
+            throw new SalonInexistantException();
+        }if(!utilisateurs.containsKey(pseudoUtilisateur)){
+            throw new UtilisateurInexistantException();
+        }
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+        // 2017-12-24 T 04:34:27.0871036
+        salon.getConversation().add(new Message(generateRandom4DigitNumber()+generateRandom4DigitNumber(),pseudoUtilisateur,salon.getNomSalon(),contenu,dateTime,false));
+    }
+
+    @Override
+    public void envoyerMessageEvenement(Evenement evenement, String pseudoUtilisateur, String contenu) throws EvenementInexistantException,UtilisateurInexistantException{
+        if(!evenements.contains(evenement)){
+            throw new EvenementInexistantException();
+        }if(!utilisateurs.containsKey(pseudoUtilisateur)){
+            throw new UtilisateurInexistantException();
+        }
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+
+        evenement.getConversation().add(new Message(generateRandom4DigitNumber()+generateRandom4DigitNumber(),pseudoUtilisateur,evenement.getNomEvenement(),contenu,dateTime,false));
+    }
+
+
+    @Override
+    public List<Message> getMessagesSalon(Salon salon) throws SalonInexistantException{
+        if(!salons.contains(salon)){
+            throw new SalonInexistantException();
+        }
+
+        return salon.getConversation();
+    }
+    @Override
+    public List<Message> getMessagesEvenement(Evenement evenement) throws EvenementInexistantException{
+        if(!evenements.contains(evenement)){
+            throw new EvenementInexistantException();
+        }
+
+        return evenement.getConversation();
+    }
+
 
     private String generateRandomCode(int length) {
         SecureRandom secureRandom = new SecureRandom();
