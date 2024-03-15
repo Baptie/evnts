@@ -2,6 +2,29 @@ version: '3.9'
 
 services:
 
+  consul:
+    image: consul:1.9
+    ports:
+      - "8500:8500"
+
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    image: mon-application-gateway
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+    depends_on:
+      - salonApp
+      - consul
+      - authentificationApp
+      - gestionUtilisateurApp
+
+
   dbAuthentification:
     image: mysql:latest
     restart: always
@@ -35,18 +58,17 @@ services:
     volumes:
       - ./utilisateur-init.sql:/docker-entrypoint-initdb.d/utilisateur-init.sql
 
-
   salonApp:
     build:
       context: ./gestionSalon
       dockerfile: Dockerfile
     image: mon-application-salon
     restart: always
-    ports:
-      - 8081:8080
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
     depends_on:
       - dbSalon
-
+      - consul
 
   authentificationApp:
     build:
@@ -54,20 +76,20 @@ services:
       dockerfile: Dockerfile
     image: mon-application-authentification
     restart: always
-    ports:
-      - 8080:8080
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
     depends_on:
       - dbAuthentification
+      - consul
 
-      
-
-  gesionUtilisateurApp:
+  gestionUtilisateurApp:
     build:
       context: ./gestionUtilisateur
       dockerfile: Dockerfile
     image: mon-application-utilisateur
     restart: always
-    ports:
-      - 8082:8080
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
     depends_on:
       - dbGestionUtilisateur
+      - consul
