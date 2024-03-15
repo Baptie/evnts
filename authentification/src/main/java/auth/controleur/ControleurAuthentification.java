@@ -52,7 +52,7 @@ public class ControleurAuthentification {
         }
     }
 
-    @PatchMapping ResponseEntity<String> modifierPseudo (@RequestParam String pseudo, @RequestParam String nouveauPseudo){
+    @PatchMapping(value ="/modificationPseudo") ResponseEntity<String> modifierPseudo (@RequestParam String pseudo, @RequestParam String nouveauPseudo){
         try{
             this.facadeAuth.reSetPseudo(pseudo,nouveauPseudo);
             return ResponseEntity.ok("Pseudo : "+pseudo+" changé en :" + nouveauPseudo+" !");
@@ -61,7 +61,7 @@ public class ControleurAuthentification {
         }
     }
 
-    @PatchMapping ResponseEntity<String> modifierMdp (@RequestParam String pseudo,@RequestParam String mdp, @RequestParam String nouveauMDP){
+    @PatchMapping (value ="/modificationMdp")ResponseEntity<String> modifierMdp (@RequestParam String pseudo,@RequestParam String mdp, @RequestParam String nouveauMDP){
         try{
             this.facadeAuth.reSetMDP(pseudo,mdp,nouveauMDP);
             return ResponseEntity.ok("Mdp changé !");
