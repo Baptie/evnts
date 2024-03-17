@@ -1,7 +1,7 @@
 .idea
 *.iml
 *.code-workspace
-
 bin/
-obj/
 .vs/
+=======
+.DS_Store
