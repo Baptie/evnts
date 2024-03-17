@@ -1,4 +1,7 @@
 .idea
 *.iml
 *.code-workspace
+bin/
+.vs/
+=======
 .DS_Store
