@@ -2,6 +2,7 @@ package gestSal.facade;
 
 import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
+import gestSal.modele.Message;
 import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 
@@ -62,7 +63,7 @@ public interface FacadeSalon {
      * @return L'utilisateur avec le nom rentré
      * @throws NomUtilisateurVideException
      */
-    Utilisateur getUtilisateurByPseudo(String pseudoUtilisateur) throws NomUtilisateurVideException;
+    Utilisateur getUtilisateurByPseudo(String pseudoUtilisateur) throws NomUtilisateurVideException, UtilisateurInexistantException;
 
     /**
      * Permet de récupérer le Salon à partir de son numéro
@@ -70,8 +71,10 @@ public interface FacadeSalon {
      * @return Le salon correspondant au numéro inscrit
      * @throws NumeroSalonVideException
      */
-    Salon getSalonByNum(int numSalon) throws NumeroSalonVideException;
+    Salon getSalonByNum(int numSalon) throws NumeroSalonVideException, SalonInexistantException;
 
+
+    Salon getSalonByNom(String nomSalon) throws SalonInexistantException, NomSalonVideException;
 
     /**
      * Permet de retirer un modérateur du salon
@@ -91,7 +94,7 @@ public interface FacadeSalon {
      * @throws NomSalonVideException
      * @throws PasAdminException
      */
-    void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws NomUtilisateurVideException, NomSalonVideException, PasAdminException,UtilisateurDejaModoException;
+    void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws NomUtilisateurVideException, NomSalonVideException, PasAdminException, UtilisateurDejaModoException, SalonInexistantException;
 
 
     /**
@@ -125,7 +128,7 @@ public interface FacadeSalon {
      * @param nomEvenement Nom de l'évènement
      * @return L'évènement demandé
      */
-    Evenement getEvenementByNomEtNumSalon(int numSalon, String nomEvenement);
+    Evenement getEvenementByNomEtNumSalon(int numSalon, String nomEvenement) throws EvenementInexistantException;
 
 
     /**
@@ -135,8 +138,8 @@ public interface FacadeSalon {
      * @throws NomEvenementDejaPrisException
      * @throws NomEvenementVideException
      */
-    Evenement creerEvenement(String nomEvenement) throws NomEvenementDejaPrisException, NomEvenementVideException;
 
+    Evenement creerEvenement(String nomEvenement) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException;
 
     /**
      * Permet de modifier un évènement
@@ -155,4 +158,11 @@ public interface FacadeSalon {
      */
     boolean validerEvenement(Evenement evenement) throws EvenementInexistantException;
 
+    void envoyerMessageSalon(Salon salon, String pseudoUtilisateur, String contenu) throws SalonInexistantException, UtilisateurInexistantException;
+
+    void envoyerMessageEvenement(Evenement evenement, String pseudoUtilisateur, String contenu) throws EvenementInexistantException,UtilisateurInexistantException;
+
+    List<Message> getMessagesSalon(Salon salon) throws SalonInexistantException;
+
+    List<Message> getMessagesEvenement(Evenement evenement) throws EvenementInexistantException;
 }

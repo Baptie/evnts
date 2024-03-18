@@ -1,5 +1,6 @@
 package gestSal.modele;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ public class Evenement {
     private List<Utilisateur> listeParticipants;
     private Date date;
     private boolean estValide, estTermine;
+    private List<Message> conversation;
 
     public Evenement(int idEvenement, int nombrePersonneMax, String nomEvenement, String detailsEvenement, String lieu, String nomCreateur, List<Utilisateur> listeParticipants, Date date, boolean estValide, boolean estTermine) {
         this.idEvenement = idEvenement;
@@ -21,6 +23,7 @@ public class Evenement {
         this.date = date;
         this.estValide = estValide;
         this.estTermine = estTermine;
+        this.conversation=new ArrayList<>();
     }
 
     public Evenement() {
@@ -100,5 +103,13 @@ public class Evenement {
 
     public void setEstValide(boolean estValide) {
         this.estValide = estValide;
+    }
+
+    public List<Message> getConversation() {
+        return conversation;
+    }
+
+    public void setConversation(List<Message> conversation) {
+        this.conversation = conversation;
     }
 }

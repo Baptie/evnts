@@ -1,19 +1,32 @@
 package gestSal.facade;
 
 import gestSal.facade.erreurs.*;
-import gestSal.modele.Evenement;
-import gestSal.modele.Salon;
-import gestSal.modele.Utilisateur;
+import gestSal.modele.*;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.sql.Date;
-import java.util.List;
-import java.util.Random;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Component("facadeSalon")
 public class FacadeSalonImpl implements FacadeSalon {
 
+    public Map<String, Utilisateur> utilisateurs;
+
+    public List<Salon> salons;
+
+    public List<Evenement> evenements;
+
+    public List<Conversation> conversations;
+
+    public FacadeSalonImpl(){
+        this.utilisateurs=new HashMap<>();
+        this.salons = new ArrayList<>();
+        this.evenements = new ArrayList<>();
+        this.conversations=new ArrayList<>();
+    }
 
     @Override
     public Salon creerSalon(String nomCreateur, String nomSalon) throws NomSalonVideException, NomTropCourtException, NumSalonDejaExistantException {
@@ -29,6 +42,7 @@ public class FacadeSalonImpl implements FacadeSalon {
             salonCree.setNomCreateur(nomCreateur);
             salonCree.setNumSalon(id);
         }
+
         return salonCree;
     }
 
@@ -65,15 +79,38 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public Utilisateur getUtilisateurByPseudo(String pseudoUtilisateur) throws NomUtilisateurVideException {
-        //TODO
-        return null;
+    public Utilisateur getUtilisateurByPseudo(String pseudoUtilisateur) throws NomUtilisateurVideException,UtilisateurInexistantException {
+        if(pseudoUtilisateur.isEmpty()){
+            throw new NomUtilisateurVideException()
+                    ;
+        }else if(utilisateurs.containsKey(pseudoUtilisateur)){
+            return utilisateurs.get(pseudoUtilisateur);
+        }else{
+            throw new UtilisateurInexistantException();
+        }
     }
 
     @Override
-    public Salon getSalonByNum(int numSalon) throws NumeroSalonVideException {
-        //TODO
-        return null;
+    public Salon getSalonByNum(int numSalon) throws SalonInexistantException {
+        for(Salon s : salons){
+            if(s.getNumSalon()==numSalon){
+                return s;
+            }
+        }
+        throw new SalonInexistantException();
+    }
+
+    @Override
+    public Salon getSalonByNom(String nomSalon) throws SalonInexistantException,NomSalonVideException {
+        if(nomSalon.isBlank()){
+            throw new NomSalonVideException();
+        }
+        for(Salon s : salons){
+            if(s.getNomSalon()==nomSalon){
+                return s;
+            }
+        }
+        throw new SalonInexistantException();
     }
 
     @Override
@@ -86,7 +123,11 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws NomUtilisateurVideException, NomSalonVideException, PasAdminException,UtilisateurDejaModoException {
+    public void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws NomUtilisateurVideException, NomSalonVideException, PasAdminException, UtilisateurDejaModoException, SalonInexistantException {
+        if(salons.contains(salonPourLeNouveauModo)){
+            throw new SalonInexistantException();
+        }
+
         if(!salonPourLeNouveauModo.getListeModerateur().contains(nouveauModo)){
             salonPourLeNouveauModo.getListeModerateur().add(nouveauModo);
         }else{
@@ -96,7 +137,15 @@ public class FacadeSalonImpl implements FacadeSalon {
 
     @Override
     public List<Utilisateur> seDefiniCommePresentAUnEvenement(Utilisateur utilisateur, Salon salon, Evenement evenement) throws UtilisateurInexistantException, SalonInexistantException, EvenementInexistantException {
+        if(!salons.contains(salon)){
+            throw new SalonInexistantException();
+        }
         List<Evenement> lesEvenements = salon.getLesEvenements();
+        if(!salon.getListeMembre().contains(utilisateur)){
+            throw new UtilisateurInexistantException();
+        }else if(!lesEvenements.contains(evenement)){
+            throw new EvenementInexistantException();
+        }
         if(lesEvenements.contains(evenement)){
             evenement.getListeParticipants().add(utilisateur);
         }
@@ -105,6 +154,13 @@ public class FacadeSalonImpl implements FacadeSalon {
 
     @Override
     public List<Utilisateur> seDefiniCommeAbsentAUnEvenement(Utilisateur utilisateur, Salon salon, Evenement evenement) throws UtilisateurInexistantException, SalonInexistantException, EvenementInexistantException {
+        if(!evenements.contains(evenement)){
+            throw new EvenementInexistantException();
+        }
+        if(!salons.contains(salon)){
+            throw new SalonInexistantException();
+        }
+
         List<Evenement> lesEvenements = salon.getLesEvenements();
         if(lesEvenements.contains(evenement)){
             if(evenement.getListeParticipants().contains(utilisateur)){
@@ -112,23 +168,36 @@ public class FacadeSalonImpl implements FacadeSalon {
             }else{
                 throw new UtilisateurInexistantException();
             }
+            return evenement.getListeParticipants();
         }
-        return evenement.getListeParticipants();
+        throw new EvenementInexistantException();
     }
 
     @Override
-    public Evenement getEvenementByNomEtNumSalon(int numSalon, String nomEvenement) {
-        return null;
+    public Evenement getEvenementByNomEtNumSalon(int numSalon, String nomEvenement) throws EvenementInexistantException {
+        for(Salon s : salons){ //parcours des salons
+            if(s.getNumSalon()==numSalon){ // si bon num salon on regarde ses evenements
+                for(Evenement e : s.getLesEvenements()){ //parcours evenement
+                    if(e.getNomEvenement()==nomEvenement){ // si bon nom = bon evenement
+                        return e;
+                    }
+                }
+            }
+        }
+        throw new EvenementInexistantException();
     }
 
     @Override
-    public Evenement creerEvenement(String nomEvenement) throws NomEvenementDejaPrisException, NomEvenementVideException {
+    public Evenement creerEvenement(String nomEvenement) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
+        if(evenements.contains(nomEvenement)){
+            throw new NomEvenementDejaPrisException();
+        }
         Evenement event = null;
         if(nomEvenement.isBlank()){
             throw new NomEvenementVideException();
         }else{
-            if(checkSiNomEvenementDejaPris()){
-                throw new NomEvenementVideException();
+            if(checkSiNomEvenementDejaPris(nomEvenement)){
+                throw new NomEvenementDejaPrisException();
             }else{
                 event = new Evenement();
                 event.setNomCreateur(nomEvenement);
@@ -137,12 +206,33 @@ public class FacadeSalonImpl implements FacadeSalon {
         return event;
     }
 
-    private boolean checkSiNomEvenementDejaPris() {
-        return true;
+    private boolean checkSiNomEvenementDejaPris(String nomEvenement){
+        for(Evenement e : evenements){
+            if(e.getNomEvenement()==nomEvenement){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkSiNomEvenementDejaPris(Salon salon, String nomEvenement) throws SalonInexistantException {
+        if(!salons.contains(salon)){
+            throw new SalonInexistantException();
+        }
+
+        for(Evenement e : salon.getLesEvenements()){
+            if(e.getNomEvenement()==nomEvenement){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public Evenement modifierEvenement(Evenement evenement, String choix, String valeur) throws EvenementInexistantException {
+        if(!evenements.contains(evenement)){
+            throw new EvenementInexistantException();
+        }
         switch (choix) {
             case "description" -> evenement.setDetailsEvenement(valeur);
             case "date" -> evenement.setDate(Date.valueOf(valeur));
@@ -155,6 +245,10 @@ public class FacadeSalonImpl implements FacadeSalon {
 
     @Override
     public boolean validerEvenement(Evenement evenement) throws EvenementInexistantException {
+        if(!evenements.contains(evenement)){
+            throw new EvenementInexistantException();
+        }
+
         boolean isValide;
         if(evenement.getListeParticipants().size()==evenement.getNombrePersonneMax()){
             evenement.setEstValide(true);
@@ -165,6 +259,49 @@ public class FacadeSalonImpl implements FacadeSalon {
         }
         return isValide;
     }
+
+    @Override
+    public void envoyerMessageSalon(Salon salon, String pseudoUtilisateur, String contenu) throws SalonInexistantException, UtilisateurInexistantException {
+        if(!salons.contains(salon)){
+            throw new SalonInexistantException();
+        }if(!utilisateurs.containsKey(pseudoUtilisateur)){
+            throw new UtilisateurInexistantException();
+        }
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+        // 2017-12-24 T 04:34:27.0871036
+        salon.getConversation().add(new Message(generateRandom4DigitNumber()+generateRandom4DigitNumber(),pseudoUtilisateur,salon.getNomSalon(),contenu,dateTime,false));
+    }
+
+    @Override
+    public void envoyerMessageEvenement(Evenement evenement, String pseudoUtilisateur, String contenu) throws EvenementInexistantException,UtilisateurInexistantException{
+        if(!evenements.contains(evenement)){
+            throw new EvenementInexistantException();
+        }if(!utilisateurs.containsKey(pseudoUtilisateur)){
+            throw new UtilisateurInexistantException();
+        }
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+
+        evenement.getConversation().add(new Message(generateRandom4DigitNumber()+generateRandom4DigitNumber(),pseudoUtilisateur,evenement.getNomEvenement(),contenu,dateTime,false));
+    }
+
+
+    @Override
+    public List<Message> getMessagesSalon(Salon salon) throws SalonInexistantException{
+        if(!salons.contains(salon)){
+            throw new SalonInexistantException();
+        }
+
+        return salon.getConversation();
+    }
+    @Override
+    public List<Message> getMessagesEvenement(Evenement evenement) throws EvenementInexistantException{
+        if(!evenements.contains(evenement)){
+            throw new EvenementInexistantException();
+        }
+
+        return evenement.getConversation();
+    }
+
 
     private String generateRandomCode(int length) {
         SecureRandom secureRandom = new SecureRandom();

@@ -5,10 +5,10 @@ import java.util.Date;
 public class Message {
     private int idMessage;
     private String auteur,receveur,contenu;
-    private Date date;
+    private String date;
     private boolean isSeen;
 
-    public Message(int idMessage, String auteur, String receveur, String contenu, Date date, boolean isSeen) {
+    public Message(int idMessage, String auteur, String receveur, String contenu, String date, boolean isSeen) {
         this.idMessage = idMessage;
         this.auteur = auteur;
         this.receveur = receveur;
@@ -49,11 +49,11 @@ public class Message {
         this.contenu = contenu;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
