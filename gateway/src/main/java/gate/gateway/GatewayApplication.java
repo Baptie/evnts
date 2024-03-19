@@ -15,20 +15,20 @@ public class GatewayApplication {
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		return builder.routes()
-				.route( r-> r.path("/gestionUtilisateur/**")
-						.filters(f->f.rewritePath("/gestionUtilisateur/(?<remains>.*)","/${remains}")
-								.preserveHostHeader()
-						)
-						.uri("lb://gestionUtilisateur")
-				)
-				.route(r -> r.path("/gestionSalon/**")
-						.filters(f -> f.rewritePath("/gestionSalon/(?<remains>.*)", "/${remains}")                                )
-						.uri("lb://gestionSalon")
-				)
-				.route(r -> r.path("/authentification/**")
-						.filters(f -> f.rewritePath("/authentification/(?<remains>.*)", "/${remains}")                                )
+				// Route vers le contrôleur d'authentification
+				.route(r -> r.path("/auth/**")
 						.uri("lb://authentification")
 				)
+				// Route vers le contrôleur de gestionUtilisateur
+				.route(r -> r.path("/utilisateurs/**")
+						.uri("lb://gestionUtilisateur")
+				)
+				// Route vers le contrôleur de gestionSalon
+				.route(r -> r.path("/salon/**")
+						.uri("lb://gestionSalon")
+				)
+				// Ajoutez d'autres routes ici pour les autres services si nécessaire
 				.build();
 	}
+
 }
