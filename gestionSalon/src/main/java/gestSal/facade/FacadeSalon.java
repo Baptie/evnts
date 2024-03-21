@@ -2,6 +2,7 @@ package gestSal.facade;
 
 import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
+import gestSal.modele.Message;
 import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 
@@ -157,4 +158,11 @@ public interface FacadeSalon {
      */
     boolean validerEvenement(Evenement evenement) throws EvenementInexistantException;
 
+    void envoyerMessageSalon(Salon salon, String pseudoUtilisateur, String contenu) throws SalonInexistantException, UtilisateurInexistantException;
+
+    void envoyerMessageEvenement(Evenement evenement, String pseudoUtilisateur, String contenu) throws EvenementInexistantException,UtilisateurInexistantException;
+
+    List<Message> getMessagesSalon(Salon salon) throws SalonInexistantException;
+
+    List<Message> getMessagesEvenement(Evenement evenement) throws EvenementInexistantException;
 }
