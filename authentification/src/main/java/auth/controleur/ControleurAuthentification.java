@@ -1,6 +1,9 @@
 package auth.controleur;
 
-import auth.exception.*;
+import auth.exception.EMailDejaPrisException;
+import auth.exception.MdpIncorrecteException;
+import auth.exception.PseudoDejaPrisException;
+import auth.exception.UtilisateurInexistantException;
 import auth.facade.FacadeAuthentificationInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,7 +55,8 @@ public class ControleurAuthentification {
         }
     }
 
-    @PatchMapping ResponseEntity<String> modifierPseudo (@RequestParam String pseudo, @RequestParam String nouveauPseudo){
+    @PatchMapping (value = "/modification-pseudo")
+    public ResponseEntity<String> modificationPseudo (@RequestParam String pseudo, @RequestParam String nouveauPseudo){
         try{
             this.facadeAuth.reSetPseudo(pseudo,nouveauPseudo);
             return ResponseEntity.ok("Pseudo : "+pseudo+" changé en :" + nouveauPseudo+" !");
@@ -61,7 +65,8 @@ public class ControleurAuthentification {
         }
     }
 
-    @PatchMapping ResponseEntity<String> modifierMdp (@RequestParam String pseudo,@RequestParam String mdp, @RequestParam String nouveauMDP){
+    @PatchMapping(value = "/modification-mdp")
+    ResponseEntity<String> modificationMdp (@RequestParam String pseudo,@RequestParam String mdp, @RequestParam String nouveauMDP){
         try{
             this.facadeAuth.reSetMDP(pseudo,mdp,nouveauMDP);
             return ResponseEntity.ok("Mdp changé !");
@@ -72,7 +77,8 @@ public class ControleurAuthentification {
         }
     }
 
-    @DeleteMapping ResponseEntity<String> supprimerUtilisateur (@RequestParam String pseudo,@RequestParam String mdp){
+    @DeleteMapping (value = "/suppression")
+    ResponseEntity<String> suppressionUtilisateur (@RequestParam String pseudo,@RequestParam String mdp){
         try{
             this.facadeAuth.supprimerUtilisateur(pseudo,mdp);
             return ResponseEntity.ok("Utilisateur supprimé");
