@@ -3,6 +3,7 @@ package gestSal.controleur;
 import gestSal.apireponses.ApiResponseEvenement;
 import gestSal.apireponses.ApiResponseSalon;
 import gestSal.apireponses.ApiResponseUtilisateur;
+import gestSal.dto.SalonDTO;
 import gestSal.facade.FacadeSalon;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
@@ -83,7 +84,7 @@ public class ControleurSalon {
     public ResponseEntity<ApiResponseSalon> getSalonByNum(@PathVariable int numSalon) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-
+           // SalonDTO salonDTO = salonSql.getSalonById(numSalon);
             if (salon == null) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
@@ -96,6 +97,9 @@ public class ControleurSalon {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponseSalon("Erreur lors de la récupération du salon : " + e.getMessage()));
         }
+//        catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
 
