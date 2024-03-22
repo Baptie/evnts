@@ -1,5 +1,6 @@
 package gestSal.facade;
 
+import gestSal.dto.*;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.*;
 import org.springframework.stereotype.Component;
@@ -226,6 +227,68 @@ public class FacadeSalonImpl implements FacadeSalon {
             }
         }
         return false;
+    }
+
+    public UtilisateurDTO convertUtilisateurToDTO(Utilisateur utilisateur){
+        UtilisateurDTO utilisateurDTO = new UtilisateurDTO();
+        utilisateurDTO.setIdUtilisateur(utilisateur.getIdUtilisateur());
+        utilisateurDTO.setPseudo(utilisateur.getPseudo());
+        utilisateurDTO.setEmail(utilisateur.getEmail());
+        utilisateurDTO.setDescription(utilisateur.getDescription());
+        utilisateurDTO.setStatus(utilisateur.getStatus());
+        utilisateurDTO.setPassword(utilisateur.getPassword());
+        utilisateurDTO.setMesConversations(utilisateur.getMesConversations());
+        return utilisateurDTO;
+    }
+    public SalonDTO convertSalonToDTO(Salon salon){
+        SalonDTO salonDTO = new SalonDTO();
+        salonDTO.setIdSalon(salon.getIdSalon());
+        salonDTO.setNumSalon(salon.getNumSalon());
+        salonDTO.setNomSalon(salon.getNomSalon());
+        salonDTO.setNomCreateur(salon.getNomCreateur());
+        salonDTO.setLogo(salon.getLogo());
+        salonDTO.setListeMembre(salon.getListeMembre());
+        salonDTO.setListeModerateur(salon.getListeModerateur());
+        salonDTO.setConversation(salon.getConversation());
+        salonDTO.setLesEvenements(salon.getLesEvenements());
+        return salonDTO;
+    }
+
+    public EvenementDTO convertEvenementToDTO(Evenement event){
+        EvenementDTO evenementDTO = new EvenementDTO();
+        evenementDTO.setIdEvenement(event.getIdEvenement());
+        evenementDTO.setNombrePersonneMax(event.getNombrePersonneMax());
+        evenementDTO.setNomEvenement(event.getNomEvenement());
+        evenementDTO.setDetailsEvenement(event.getDetailsEvenement());
+        evenementDTO.setLieu(event.getLieu());
+        evenementDTO.setNomCreateur(event.getNomCreateur());
+        evenementDTO.setListeParticipants(event.getListeParticipants());
+        evenementDTO.setDate(event.getDate());
+        evenementDTO.setEstValide(event.isEstValide());
+        evenementDTO.setEstTermine(event.isEstTermine());
+        evenementDTO.setConversation(event.getConversation());
+
+        return evenementDTO;
+
+    }
+
+    public MessageDTO convertMessageToDTO(Message message){
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setIdMessage(message.getIdMessage());
+        messageDTO.setAuteur(message.getAuteur());
+        messageDTO.setReceveur(message.getReceveur());
+        messageDTO.setContenu(message.getContenu());
+        messageDTO.setDate(message.getDate());
+        messageDTO.setSeen(message.isSeen());
+        return messageDTO;
+    }
+    public ConversationDTO convertConversationToDto(Conversation conversation){
+        ConversationDTO convDto = new ConversationDTO();
+        convDto.setIdConversation(conversation.getIdConversation());
+        convDto.setUtilisateurUn(conversation.getUtilisateurUn());
+        convDto.setUtilisateurDeux(conversation.getUtilisateurDeux());
+        convDto.setLesMessagesDeLaConversation(conversation.getLesMessagesDeLaConversation());
+        return convDto;
     }
 
     @Override
