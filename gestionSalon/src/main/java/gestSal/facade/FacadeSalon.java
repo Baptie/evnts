@@ -165,4 +165,6 @@ public interface FacadeSalon {
     List<Message> getMessagesSalon(Salon salon) throws SalonInexistantException;
 
     List<Message> getMessagesEvenement(Evenement evenement) throws EvenementInexistantException;
+
+
 }

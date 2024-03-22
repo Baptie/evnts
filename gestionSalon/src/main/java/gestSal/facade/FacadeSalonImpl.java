@@ -6,6 +6,7 @@ import gestSal.modele.*;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -380,4 +381,23 @@ public class FacadeSalonImpl implements FacadeSalon {
         Random random = new Random();
         return 1000 + random.nextInt(9000);
     }
+
+    public Statement connecterAuSalonSQL() throws SQLException {
+        // Connexion à la base de données MySQL
+        String jdbcUrl = "jdbc:mysql://localhost:3307/salon";
+        String jdbcUser = "root";
+        String jdbcPassword = "root";
+
+        Connection connection = DriverManager.getConnection(jdbcUrl,jdbcUser,jdbcPassword);
+        Statement statement = connection.createStatement();
+        return statement;
+
+    }
+
+    public void creerSalonSQL(String nomSalon, String nomCreateur, String logo) throws SQLException {
+        Statement st = connecterAuSalonSQL();
+        String SQL = "INSERT INTO Salon (nomSalon, nomCreateur, logo) VALUES ('"+nomSalon+"', '"+nomCreateur+"', '"+logo+"')";
+        st.executeUpdate(SQL);
+    }
+
 }

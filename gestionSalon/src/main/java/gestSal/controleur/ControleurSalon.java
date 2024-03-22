@@ -8,6 +8,7 @@ import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
 import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
+import gestSal.service.SalonSql;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -25,10 +27,15 @@ public class ControleurSalon {
     @Autowired
     FacadeSalon facadeSalon;
 
+
+    SalonSql salonSql;
+
     @PostMapping(value = "/creerSalon")
     public ResponseEntity<ApiResponseSalon> creerSalon(@RequestBody String nomCreateur, @RequestBody String nomSalon) {
         try {
             Salon salon = facadeSalon.creerSalon(nomCreateur, nomSalon);
+
+            salonSql.creerSalonSQL(nomSalon,nomCreateur,"https://e7.pngegg.com/pngimages/872/540/png-clipart-computer-icons-event-management-event-miscellaneous-angle-thumbnail.png");
 
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/salon/{nomDuSalon}")
@@ -47,6 +54,8 @@ public class ControleurSalon {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body(new ApiResponseSalon("Erreur lors de la création du salon : " + e.getMessage()));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
