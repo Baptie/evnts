@@ -7,7 +7,6 @@ services:
     ports:
       - "8500:8500"
 
-
   gateway:
     build:
       context: ./gateway
@@ -23,7 +22,6 @@ services:
       - consul
       - authentificationApp
       - gestionUtilisateurApp
-
 
   dbAuthentification:
     image: mysql:latest
@@ -93,3 +91,12 @@ services:
     depends_on:
       - dbGestionUtilisateur
       - consul
+
+  frontend:
+    image: node:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./evnts-ihm:/app
+    working_dir: /app
+    command: npm start
