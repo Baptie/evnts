@@ -148,7 +148,7 @@ public interface FacadeSalon {
      * @throws NomEvenementVideException
      */
 
-    Evenement creerEvenement(Salon salon, String nomEvenement, int nombrePersonneMax, String detailsEvenement, String lieu, Utilisateur createur, Date date) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException;
+    Evenement creerEvenement(Salon salon, String nomEvenement, int nombrePersonneMax, String detailsEvenement, String lieu, Utilisateur createur, String date) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException;
 
     /**
      * Permet de modifier un évènement

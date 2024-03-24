@@ -1,9 +1,11 @@
 package gestSal.service;
 
+import gestSal.dto.EvenementDTO;
 import gestSal.dto.SalonDTO;
 import gestSal.dto.UtilisateurDTO;
 import gestSal.facade.FacadeSalon;
 import gestSal.facade.FacadeSalonImpl;
+import gestSal.facade.erreurs.EvenementInexistantException;
 import gestSal.facade.erreurs.NomSalonVideException;
 import gestSal.facade.erreurs.NumeroSalonVideException;
 import gestSal.facade.erreurs.SalonInexistantException;
@@ -17,11 +19,8 @@ public class SalonSql {
     static FacadeSalon facadeSalon = new FacadeSalonImpl();
 
     public static void main(String[] args) throws SQLException {
-        UtilisateurDTO utilisateurDTO = getUtilisateurByPseudoSQL("Camacho");
-        SalonDTO salonDTO = getSalonById(1);
-        System.out.println("pseudo "+utilisateurDTO.getPseudo());
-        System.out.println("id "+ utilisateurDTO.getIdUtilisateur());
-        rejoindreSalonSql(utilisateurDTO,salonDTO);
+        modifierEvenementSQL(getEvenementByNomEtNumSalonSQL(1,"Jeux de role"),"nom","Super blaze");
+
     }
 
     public SalonSql() {
@@ -60,6 +59,20 @@ public class SalonSql {
 
     }
 
+    public static SalonDTO getSalonByName(String nom) throws SQLException {
+        SalonDTO salon = new SalonDTO();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from Salon where nomSalon='"+nom+"'";
+        ResultSet rs = st.executeQuery(SQL);
+        while(rs.next()){
+            salon.setIdSalon(rs.getInt("idSalon"));
+            salon.setNomSalon(rs.getString("nomSalon"));
+            salon.setNomCreateur(rs.getString("nomCreateur"));
+            salon.setLogo(rs.getString("logo"));
+        }
+        return salon;
+
+    }
 
     public static SalonDTO modifierSalonSQL(SalonDTO salonDTO, String choix, String valeur,int id) throws SQLException {
         Statement st = connecterAuSalonSQL();
@@ -105,4 +118,58 @@ public class SalonSql {
         st.executeUpdate(SQL);
 
     }
+
+    public static EvenementDTO getEvenementByNomEtNumSalonSQL(int id, String nomEvenement) throws SQLException {
+        EvenementDTO evenementDTO = new EvenementDTO();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from Evenement where nomEvenement='"+nomEvenement+"' and idSalon ="+id;
+        ResultSet rs = st.executeQuery(SQL);
+        while (rs.next()) {
+            evenementDTO.setIdEvenement(rs.getInt("idEvenement"));
+            evenementDTO.setNombrePersonneMax(rs.getInt("nombrePersonneMax"));
+            evenementDTO.setNomEvenement(rs.getString("nomEvenement"));
+            evenementDTO.setDetailsEvenement(rs.getString("details"));
+            evenementDTO.setDate(rs.getString("dateEvenement"));
+            evenementDTO.setLieu(rs.getString("lieu"));
+            evenementDTO.setEstValide(rs.getBoolean("isValide"));
+            evenementDTO.setNomCreateur(rs.getString("nomCreateur"));
+
+        }
+        return evenementDTO;
+    }
+
+    public static EvenementDTO modifierEvenementSQL(EvenementDTO evenementDTO, String choix, String valeur) throws SQLException {
+        Statement st = connecterAuSalonSQL();
+        switch (choix) {
+            case "description" -> {
+                evenementDTO.setDetailsEvenement(valeur);
+                String SQL = "UPDATE Evenement SET details = '" + valeur + "' WHERE idEvenement = " + evenementDTO.getIdEvenement();
+                st.executeUpdate(SQL);
+            }
+            case "date" -> {
+                evenementDTO.setDate(valeur);
+                String SQL = "UPDATE Evenement SET dateEvenement = '" + valeur + "' WHERE idEvenement = " + evenementDTO.getIdEvenement();
+                st.executeUpdate(SQL);
+            }
+            case "lieu" -> {
+                evenementDTO.setLieu(valeur);
+                String SQL = "UPDATE Evenement SET lieu = '" + valeur + "' WHERE idEvenement = " + evenementDTO.getIdEvenement();
+                st.executeUpdate(SQL);
+            }
+            case "nombre" ->
+            {
+                evenementDTO.setNombrePersonneMax(Integer.parseInt(valeur));
+                String SQL = "UPDATE Evenement SET nombrePersonneMax = " + Integer.parseInt(valeur) + " WHERE idEvenement = " + evenementDTO.getIdEvenement();
+                st.executeUpdate(SQL);
+            }
+            case "nom" -> {
+                evenementDTO.setNomEvenement(valeur);
+                String SQL = "UPDATE Evenement SET nomEvenement = '" + valeur + "' WHERE idEvenement = " + evenementDTO.getIdEvenement();
+                st.executeUpdate(SQL);
+            }
+        }
+        return evenementDTO;
+    }
+
+
 }

@@ -190,7 +190,7 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public Evenement creerEvenement(Salon salon, String nomEvenement, int nombrePersonneMax, String detailsEvenement, String lieu, Utilisateur createur, java.util.Date date) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
+    public Evenement creerEvenement(Salon salon, String nomEvenement, int nombrePersonneMax, String detailsEvenement, String lieu, Utilisateur createur, String date) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
         if(evenements.contains(nomEvenement)){
             throw new NomEvenementDejaPrisException();
         }
@@ -299,7 +299,7 @@ public class FacadeSalonImpl implements FacadeSalon {
         }
         switch (choix) {
             case "description" -> evenement.setDetailsEvenement(valeur);
-            case "date" -> evenement.setDate(Date.valueOf(valeur));
+            case "date" -> evenement.setDate(valeur);
             case "lieu" -> evenement.setLieu(valeur);
             case "nombre" -> evenement.setNombrePersonneMax(Integer.parseInt(valeur));
             case "nom" -> evenement.setNomEvenement(valeur);

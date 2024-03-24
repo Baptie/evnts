@@ -8,11 +8,11 @@ public class Evenement {
     private int idEvenement,nombrePersonneMax;
     private String nomEvenement,detailsEvenement,lieu,nomCreateur;
     private List<Utilisateur> listeParticipants;
-    private Date date;
+    private String date;
     private boolean estValide, estTermine;
     private List<Message> conversation;
 
-    public Evenement(int idEvenement, int nombrePersonneMax, String nomEvenement, String detailsEvenement, String lieu, String nomCreateur, List<Utilisateur> listeParticipants, Date date, boolean estValide, boolean estTermine) {
+    public Evenement(int idEvenement, int nombrePersonneMax, String nomEvenement, String detailsEvenement, String lieu, String nomCreateur, List<Utilisateur> listeParticipants, String date, boolean estValide, boolean estTermine) {
         this.idEvenement = idEvenement;
         this.nombrePersonneMax = nombrePersonneMax;
         this.nomEvenement = nomEvenement;
@@ -93,11 +93,11 @@ public class Evenement {
         this.listeParticipants = listeParticipants;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

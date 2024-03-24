@@ -1,6 +1,5 @@
 package gestSal.dto;
 
-import gestSal.modele.Evenement;
 import gestSal.modele.Message;
 import gestSal.modele.Utilisateur;
 
@@ -12,11 +11,11 @@ public class EvenementDTO {
     private int idEvenement,nombrePersonneMax;
     private String nomEvenement,detailsEvenement,lieu,nomCreateur;
     private List<Utilisateur> listeParticipants;
-    private Date date;
+    private String date;
     private boolean estValide, estTermine;
     private List<Message> conversation;
 
-    public EvenementDTO(int idEvenement, int nombrePersonneMax, String nomEvenement, String detailsEvenement, String lieu, String nomCreateur, List<Utilisateur> listeParticipants, Date date, boolean estValide, boolean estTermine) {
+    public EvenementDTO(int idEvenement, int nombrePersonneMax, String nomEvenement, String detailsEvenement, String lieu, String nomCreateur, List<Utilisateur> listeParticipants, String date, boolean estValide, boolean estTermine) {
         this.idEvenement = idEvenement;
         this.nombrePersonneMax = nombrePersonneMax;
         this.nomEvenement = nomEvenement;
@@ -103,11 +102,11 @@ public class EvenementDTO {
         this.listeParticipants = listeParticipants;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

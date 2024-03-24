@@ -120,11 +120,12 @@ public class ControleurSalon {
     @GetMapping("/byname/{nomSalon}")
     public ResponseEntity<?> getSalonByNom(@PathVariable String nomSalon){
         try{
-            Salon salon = facadeSalon.getSalonByNom(nomSalon);
-            if(salon==null) {
+            //Salon salon = facadeSalon.getSalonByNom(nomSalon);
+            SalonDTO salonDTO = salonSql.getSalonByName(nomSalon);
+            if(salonDTO==null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
-            return ResponseEntity.ok(salon);
+            return ResponseEntity.ok(salonDTO);
 
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
@@ -181,22 +182,27 @@ public class ControleurSalon {
         }
     }
     @PatchMapping("/modifierEvenement/{id}")
-    public ResponseEntity<ApiResponseEvenement> modifierEvenement(@PathVariable int id, @RequestBody String nomSalon, @RequestBody String choix, @RequestBody String valeur) {
+    public ResponseEntity<ApiResponseEvenement> modifierEvenement(@PathVariable int id, @RequestBody String nomEvenement, @RequestBody String choix, @RequestBody String valeur) {
         try {
-            Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(id, nomSalon);
+            Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(id, nomEvenement);
+            EvenementDTO evenementDTO = salonSql.getEvenementByNomEtNumSalonSQL(id,nomEvenement);
 
-            if (evenement == null) {
+            if (evenementDTO == null) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
                         .body(new ApiResponseEvenement("Événement introuvable"));
             }
 
             evenement = facadeSalon.modifierEvenement(evenement, choix, valeur);
-            return ResponseEntity.ok(new ApiResponseEvenement(evenement));
+            evenementDTO = salonSql.modifierEvenementSQL(evenementDTO, choix, valeur);
+
+            return ResponseEntity.ok(new ApiResponseEvenement(evenementDTO));
         } catch (EvenementInexistantException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponseEvenement("Erreur lors de la modification de l'événement : " + e.getMessage()));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -418,7 +424,6 @@ public class ControleurSalon {
         }
     }
 
-//TODO
 
     @PostMapping("{numSalon}/invitation")
     public ResponseEntity<Object> inviterUtilisateur(@RequestBody int numSalon, @RequestBody String pseudoUtilisateur) {
