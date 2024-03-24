@@ -190,7 +190,7 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public Evenement creerEvenement(String nomEvenement) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
+    public Evenement creerEvenement(Salon salon, String nomEvenement, int nombrePersonneMax, String detailsEvenement, String lieu, Utilisateur createur, java.util.Date date) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
         if(evenements.contains(nomEvenement)){
             throw new NomEvenementDejaPrisException();
         }
@@ -378,6 +378,16 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
 
+    @Override
+    public void supprimerUtilisateur(String pseudoUtilisateur) throws UtilisateurInexistantException {
+        if (!utilisateurs.containsKey(pseudoUtilisateur)) {
+            throw new UtilisateurInexistantException();
+        }
+        utilisateurs.remove(pseudoUtilisateur);
+    }
+
+
+
     private String generateRandomCode(int length) {
         SecureRandom secureRandom = new SecureRandom();
         StringBuilder randomCode = new StringBuilder();
@@ -393,22 +403,7 @@ public class FacadeSalonImpl implements FacadeSalon {
         return 1000 + random.nextInt(9000);
     }
 
-    public Statement connecterAuSalonSQL() throws SQLException {
-        // Connexion à la base de données MySQL
-        String jdbcUrl = "jdbc:mysql://localhost:3307/salon";
-        String jdbcUser = "root";
-        String jdbcPassword = "root";
 
-        Connection connection = DriverManager.getConnection(jdbcUrl,jdbcUser,jdbcPassword);
-        Statement statement = connection.createStatement();
-        return statement;
 
-    }
-
-    public void creerSalonSQL(String nomSalon, String nomCreateur, String logo) throws SQLException {
-        Statement st = connecterAuSalonSQL();
-        String SQL = "INSERT INTO Salon (nomSalon, nomCreateur, logo) VALUES ('"+nomSalon+"', '"+nomCreateur+"', '"+logo+"')";
-        st.executeUpdate(SQL);
-    }
 
 }

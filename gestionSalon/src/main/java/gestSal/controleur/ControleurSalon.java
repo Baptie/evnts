@@ -4,11 +4,14 @@ import gestSal.apireponses.ApiResponseEvenement;
 import gestSal.apireponses.ApiResponseSalon;
 import gestSal.apireponses.ApiResponseSalonDTO;
 import gestSal.apireponses.ApiResponseUtilisateur;
+import gestSal.dto.EvenementDTO;
+import gestSal.dto.MessageDTO;
 import gestSal.dto.SalonDTO;
 import gestSal.dto.UtilisateurDTO;
 import gestSal.facade.FacadeSalon;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
+import gestSal.modele.Message;
 import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 import gestSal.service.SalonSql;
@@ -62,7 +65,9 @@ public class ControleurSalon {
         }
     }
 
-    @PatchMapping("/modifierSalon/{id}")
+
+
+    @PatchMapping("/{numSalon}")
     public ResponseEntity<ApiResponseSalonDTO> modifierSalon(@PathVariable int id, @RequestBody String choix, @RequestBody String valeur) {
         try {
             Salon salon = facadeSalon.getSalonByNum(id);
@@ -86,7 +91,9 @@ public class ControleurSalon {
         }
     }
 
-    @GetMapping("/getSalon/{numSalon}")
+
+
+    @GetMapping("/{numSalon}")
     public ResponseEntity<ApiResponseSalonDTO> getSalonByNum(@PathVariable int numSalon) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
@@ -109,6 +116,20 @@ public class ControleurSalon {
     }
 
 
+
+    @GetMapping("/byname/{nomSalon}")
+    public ResponseEntity<?> getSalonByNom(@PathVariable String nomSalon){
+        try{
+            Salon salon = facadeSalon.getSalonByNom(nomSalon);
+            if(salon==null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
+            }
+            return ResponseEntity.ok(salon);
+
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        }
+    }
     @GetMapping("/getUtilisateur/{pseudoUtilisateur}")
     public ResponseEntity<ApiResponseUtilisateur> getUtilisateurByPseudo(@PathVariable String pseudoUtilisateur) {
         try {
@@ -219,7 +240,9 @@ public class ControleurSalon {
         }
     }
 
-    @PostMapping("/definirPresentAEvenement")
+
+
+    @PostMapping("{numSalon}/evenement/{nomEvenement}/presence")
     public ResponseEntity<Object> seDefiniCommePresentAUnEvenement(@RequestBody int numSalon, @RequestBody String nomEvenement, @RequestBody String nomUtilisateur) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
@@ -244,7 +267,9 @@ public class ControleurSalon {
         }
     }
 
-    @DeleteMapping("/definirAbsentAEvenement/{numSalon}/{nomEvent}/{nomUtilisateur}")
+
+
+    @DeleteMapping("{numSalon}/evenement/{nomEvent}/presence")
     public ResponseEntity<Object> seDefiniCommeAbsentAUnEvenement(@PathVariable int numSalon, @PathVariable String nomEvent, @PathVariable String nomUtilisateur) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
@@ -268,8 +293,24 @@ public class ControleurSalon {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
     }
+    @PostMapping("{numSalon}/evenement")
+    public ResponseEntity<Object> creerEvenement(@PathVariable int numSalon, @RequestBody EvenementDTO evenementDTO) {
+        try {
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            Utilisateur createur = facadeSalon.getUtilisateurByPseudo(evenementDTO.getNomCreateur());
+            Evenement evenement = facadeSalon.creerEvenement(salon, evenementDTO.getNomEvenement(), evenementDTO.getNombrePersonneMax(), evenementDTO.getDetailsEvenement(), evenementDTO.getLieu(), createur, evenementDTO.getDate());
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(evenement.getIdEvenement()  )
+                    .toUri();
+            return ResponseEntity.created(location).body(evenement);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        }
+    }
 
-    @GetMapping("/getEvenementByNomEtNumSalon/{numSalon}")
+
+    @GetMapping("{numSalon}/evenement/{nomEvenement}")
     public ResponseEntity<Object> getEvenementByNomEtNumSalon(@PathVariable int numSalon, @RequestParam String nomEvenement) {
         try {
             Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(numSalon, nomEvenement);
@@ -283,18 +324,10 @@ public class ControleurSalon {
         }
     }
 
-    @PostMapping("/creerEvenement")
-    public ResponseEntity<Object> creerEvenement(@RequestBody String nomEvenement) {
-        try {
-            Evenement evenement = facadeSalon.creerEvenement(nomEvenement);
-            return ResponseEntity.ok(evenement);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
-        }
-    }
 
 
-    @PatchMapping("/validerEvenement/{idSalon}/{nomEvent}")
+
+    @PatchMapping("{numSalon}/evenement/{nomEvent}/validation")
     public ResponseEntity<Object> validerEvenement(@PathVariable int idSalon, @PathVariable String nomEvent) {
         try {
             Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(idSalon, nomEvent);
@@ -308,4 +341,200 @@ public class ControleurSalon {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
     }
+
+    @PostMapping("{numSalon}/messages")
+    public ResponseEntity<Object> envoyerMessageSalon(@PathVariable int numSalon, @RequestBody MessageDTO messageDTO) {
+        try {
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            if (salon == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
+            }
+            facadeSalon.envoyerMessageSalon(salon, messageDTO.getAuteur(), messageDTO.getContenu());
+            return ResponseEntity.ok("Message envoyé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        }
+    }
+
+    @PostMapping("{numSalon}/evenement/{nomEvent}/messages")
+    public ResponseEntity<Object> envoyerMessageEvenement(@PathVariable int numSalon, @PathVariable String nomEvent,@RequestBody MessageDTO messageDTO) {
+        try {
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            if (salon == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
+            }
+            Evenement evenement = null;
+            for(Evenement event : salon.getLesEvenements()){
+                if(event.getNomEvenement().equals(nomEvent) ){
+                    evenement = event;
+                }
+            }
+            if (evenement == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Événement introuvable");
+            }
+            facadeSalon.envoyerMessageEvenement(evenement,messageDTO.getAuteur(), messageDTO.getContenu());
+            return ResponseEntity.ok("Message envoyé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        }
+    }
+
+
+    @GetMapping("{numSalon}/messages")
+    public ResponseEntity<Object> getMessagesSalon(@PathVariable int numSalon) {
+        try {
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            if (salon == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
+            }
+            List<Message> messages = facadeSalon.getMessagesSalon(salon);
+            return ResponseEntity.ok(messages);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        }
+    }
+
+    @GetMapping("{numSalon}/evenement/{nomEvent}/messages")
+    public ResponseEntity<Object> getMessagesEvenement(@PathVariable int numSalon,@PathVariable String nomEvent) {
+        try {
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            if (salon == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
+            }
+            Evenement evenement = null;
+            for(Evenement event : salon.getLesEvenements()){
+                if(event.getNomEvenement()==nomEvent){
+                    evenement = event;
+                }
+            }
+            if (evenement == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Événement introuvable");
+            }
+
+            List<Message> messages = facadeSalon.getMessagesEvenement(evenement);
+            return ResponseEntity.ok(messages);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        }
+    }
+
+//TODO
+
+    @PostMapping("{numSalon}/invitation")
+    public ResponseEntity<Object> inviterUtilisateur(@RequestBody int numSalon, @RequestBody String pseudoUtilisateur) {
+        try {
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            if (salon == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
+            }
+            Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(pseudoUtilisateur);
+            if (utilisateur == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur introuvable");
+            }
+            String invitationUrl = facadeSalon.inviterUtilisateur(salon, utilisateur);
+            return ResponseEntity.ok("Invitation envoyée. URL: " + invitationUrl);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        }
+    }
+
+    @PostMapping("{numSalon}/adhesion")
+    public ResponseEntity<?> rejoindreSalon(@PathVariable int numSalon, @RequestBody String pseudoUtilisateur){
+        try{
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            if (salon == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
+            }
+            Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(pseudoUtilisateur);
+            if (utilisateur == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur introuvable");
+            }
+            facadeSalon.rejoindreSalon(utilisateur,salon);
+            return ResponseEntity.ok(salon);
+        }catch(UtilisateurDejaPresentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Utilisateur deja présent dans salon");
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        }
+    }
+
+
+
+    @DeleteMapping("/utilisateur/{nomUtilisateur}")
+    public ResponseEntity<?> supprimerUtilisateur(@PathVariable String nomUtilisateur){
+        try {
+            facadeSalon.supprimerUtilisateur(nomUtilisateur);
+            return ResponseEntity.noContent().build();
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/utilisateur/{nomUtilisateur}")
+    public ResponseEntity<?> getUtilisateur(@PathVariable String nomUtilisateur){
+        try {
+            Utilisateur user = facadeSalon.getUtilisateurByPseudo(nomUtilisateur);
+            return ResponseEntity.ok(user);
+        } catch (NomUtilisateurVideException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        } catch (UtilisateurInexistantException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/{numSalon}/moderation")
+    public ResponseEntity<?> ajouterModerateur(@PathVariable int numSalon, @RequestBody String nomModerateur){
+        try{
+            Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(nomModerateur);
+            System.out.println(utilisateur);
+            if(utilisateur==null){
+                throw new UtilisateurInexistantException();
+            }
+
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            System.out.println(salon);
+            if(salon==null){
+                throw new SalonInexistantException();
+            }
+            facadeSalon.ajouterModerateurAuSalon(utilisateur,salon);
+            return ResponseEntity.ok(salon);
+        } catch (NomUtilisateurVideException | NumeroSalonVideException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erreur : " + e.getMessage());
+        }catch (NomSalonVideException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/{numSalon}/moderation")
+    public ResponseEntity<?> supprimerModerateur(@PathVariable int numSalon, @RequestBody String nomModerateur){
+        try{
+            System.out.println("avant get utilisateur by pseudo");
+            Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(nomModerateur);
+            System.out.println(utilisateur);
+            if(utilisateur==null){
+                throw new UtilisateurInexistantException();
+            }
+            System.out.println("toruver salon");
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            if(salon==null){
+                throw new SalonInexistantException();
+            }
+            System.out.println("retirer moderateur salon");
+            facadeSalon.retirerModerateurDuSalon(salon,utilisateur);
+            return ResponseEntity.ok(salon);
+        } catch (NomUtilisateurVideException | NumeroSalonVideException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        } catch (UtilisateurInexistantException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erreur : " + e.getMessage());
+        }catch (NomSalonVideException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
