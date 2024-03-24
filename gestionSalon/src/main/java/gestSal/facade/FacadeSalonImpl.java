@@ -52,7 +52,7 @@ public class FacadeSalonImpl implements FacadeSalon {
     @Override
     public Salon modifierSalon(Salon salon, String choix, String valeur) throws SalonInexistantException, NomSalonVideException, NumeroSalonVideException {
         switch (choix) {
-            case "num" -> salon.setNumSalon(Integer.parseInt(valeur));
+//            case "num" -> salon.setNumSalon(Integer.parseInt(valeur));
             case "nom" -> salon.setNomSalon(valeur);
             case "logo" -> salon.setLogo(valeur);
             case "createur" -> salon.setNomCreateur(valeur);

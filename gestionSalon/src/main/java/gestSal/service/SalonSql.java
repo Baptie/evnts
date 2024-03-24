@@ -1,6 +1,9 @@
 package gestSal.service;
 
 import gestSal.dto.SalonDTO;
+import gestSal.facade.erreurs.NomSalonVideException;
+import gestSal.facade.erreurs.NumeroSalonVideException;
+import gestSal.facade.erreurs.SalonInexistantException;
 import gestSal.modele.Salon;
 
 import java.sql.*;
@@ -9,7 +12,7 @@ public class SalonSql {
 
 
     public static void main(String[] args) throws SQLException {
-        getSalonById(2);
+        modifierSalonSQL(getSalonById(1),"createur","Vince Creator",1);
     }
 
     public SalonSql() {
@@ -51,5 +54,30 @@ public class SalonSql {
         return salon;
 
     }
+
+
+    public static SalonDTO modifierSalonSQL(SalonDTO salonDTO, String choix, String valeur,int id) throws SQLException {
+        Statement st = connecterAuSalonSQL();
+        switch (choix){
+            case "nom" -> {
+                salonDTO.setNomSalon(valeur);
+                String SQL = "UPDATE Salon SET nomSalon = '" + valeur + "' WHERE idSalon = " + id;
+                st.executeUpdate(SQL);
+            }
+            case "logo" -> {
+                salonDTO.setLogo(valeur);
+                String SQL = "UPDATE Salon SET logo = '" + valeur + "' WHERE idSalon = " + id;
+                st.executeUpdate(SQL);
+            }
+            case "createur" -> {
+                salonDTO.setNomCreateur(valeur);
+                String SQL = "UPDATE Salon SET nomCreateur = '" + valeur + "' WHERE idSalon = " + id;
+                st.executeUpdate(SQL);
+            }
+        }
+        return salonDTO;
+    }
+
+
 
 }

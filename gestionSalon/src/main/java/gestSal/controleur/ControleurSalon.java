@@ -2,6 +2,7 @@ package gestSal.controleur;
 
 import gestSal.apireponses.ApiResponseEvenement;
 import gestSal.apireponses.ApiResponseSalon;
+import gestSal.apireponses.ApiResponseSalonDTO;
 import gestSal.apireponses.ApiResponseUtilisateur;
 import gestSal.dto.SalonDTO;
 import gestSal.facade.FacadeSalon;
@@ -61,45 +62,49 @@ public class ControleurSalon {
     }
 
     @PatchMapping("/modifierSalon/{id}")
-    public ResponseEntity<ApiResponseSalon> modifierSalon(@PathVariable int id, @RequestBody String choix, @RequestBody String valeur) {
+    public ResponseEntity<ApiResponseSalonDTO> modifierSalon(@PathVariable int id, @RequestBody String choix, @RequestBody String valeur) {
         try {
             Salon salon = facadeSalon.getSalonByNum(id);
+            SalonDTO salonDTO = salonSql.getSalonById(id);
 
             if (salon == null) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponseSalon("Salon introuvable"));
+                        .body(new ApiResponseSalonDTO("Salon introuvable"));
             }
 
             salon = facadeSalon.modifierSalon(salon, choix, valeur);
-            return ResponseEntity.ok(new ApiResponseSalon(salon));
+            salonDTO = salonSql.modifierSalonSQL(salonDTO,choix,valeur,id);
+            return ResponseEntity.ok(new ApiResponseSalonDTO(salonDTO));
         } catch (SalonInexistantException | NomSalonVideException | NumeroSalonVideException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponseSalon("Erreur lors de la modification du salon : " + e.getMessage()));
+                    .body(new ApiResponseSalonDTO("Erreur lors de la modification du salon : " + e.getMessage()));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @GetMapping("/getSalon/{numSalon}")
-    public ResponseEntity<ApiResponseSalon> getSalonByNum(@PathVariable int numSalon) {
+    public ResponseEntity<ApiResponseSalonDTO> getSalonByNum(@PathVariable int numSalon) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-           // SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
             if (salon == null) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponseSalon("Salon introuvable"));
+                        .body(new ApiResponseSalonDTO("Salon introuvable"));
             }
 
-            return ResponseEntity.ok(new ApiResponseSalon(salon));
+            return ResponseEntity.ok(new ApiResponseSalonDTO(salonDTO));
         } catch (NumeroSalonVideException | SalonInexistantException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponseSalon("Erreur lors de la récupération du salon : " + e.getMessage()));
+                    .body(new ApiResponseSalonDTO("Erreur lors de la récupération du salon : " + e.getMessage()));
         }
-//        catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
