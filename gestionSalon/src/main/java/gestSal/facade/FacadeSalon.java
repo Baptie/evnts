@@ -1,5 +1,6 @@
 package gestSal.facade;
 
+import gestSal.dto.UtilisateurDTO;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
 import gestSal.modele.Message;
@@ -167,4 +168,5 @@ public interface FacadeSalon {
     List<Message> getMessagesEvenement(Evenement evenement) throws EvenementInexistantException;
 
 
+    Utilisateur convertUserDTOtoUser(UtilisateurDTO utilisateurDTO);
 }

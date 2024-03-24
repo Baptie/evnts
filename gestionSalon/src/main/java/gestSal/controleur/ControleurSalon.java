@@ -5,6 +5,7 @@ import gestSal.apireponses.ApiResponseSalon;
 import gestSal.apireponses.ApiResponseSalonDTO;
 import gestSal.apireponses.ApiResponseUtilisateur;
 import gestSal.dto.SalonDTO;
+import gestSal.dto.UtilisateurDTO;
 import gestSal.facade.FacadeSalon;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
@@ -111,8 +112,9 @@ public class ControleurSalon {
     @GetMapping("/getUtilisateur/{pseudoUtilisateur}")
     public ResponseEntity<ApiResponseUtilisateur> getUtilisateurByPseudo(@PathVariable String pseudoUtilisateur) {
         try {
-            Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(pseudoUtilisateur);
-
+//            Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(pseudoUtilisateur);
+            UtilisateurDTO utilisateurDTO = salonSql.getUtilisateurByPseudoSQL(pseudoUtilisateur);
+            Utilisateur utilisateur = facadeSalon.convertUserDTOtoUser(utilisateurDTO);
             if (utilisateur == null) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
@@ -120,37 +122,41 @@ public class ControleurSalon {
             }
 
             return ResponseEntity.ok(new ApiResponseUtilisateur(utilisateur));
-        } catch (NomUtilisateurVideException | UtilisateurInexistantException e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponseUtilisateur("Erreur lors de la récupération de l'utilisateur : " + e.getMessage()));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
 
     @PostMapping("/rejoindreSalon")
-    public ResponseEntity<ApiResponseSalon> rejoindreSalon(@RequestBody String nomUtilisateur, @RequestBody int numSalon) {
+    public ResponseEntity<ApiResponseSalonDTO> rejoindreSalon(@RequestBody String nomUtilisateur, @RequestBody int numSalon) {
         try {
             Salon salonRejoint = facadeSalon.getSalonByNum(numSalon);
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+
             if (salonRejoint == null) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponseSalon("Salon introuvable"));
+                        .body(new ApiResponseSalonDTO("Salon introuvable"));
             }
 
             Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(nomUtilisateur);
+            UtilisateurDTO utilisateurDTO = salonSql.getUtilisateurByPseudoSQL(nomUtilisateur);
+
             if (utilisateur == null) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponseSalon("Utilisateur introuvable"));
+                        .body(new ApiResponseSalonDTO("Utilisateur introuvable"));
             }
 
             facadeSalon.rejoindreSalon(utilisateur, salonRejoint);
-            return ResponseEntity.ok(new ApiResponseSalon("Utilisateur rejoint le salon avec succès"));
+            salonSql.rejoindreSalonSql(utilisateurDTO, salonDTO);
+
+            return ResponseEntity.ok(new ApiResponseSalonDTO("Utilisateur rejoint le salon avec succès"));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponseSalon("Erreur : " + e.getMessage()));
+                    .body(new ApiResponseSalonDTO("Erreur : " + e.getMessage()));
         }
     }
     @PatchMapping("/modifierEvenement/{id}")

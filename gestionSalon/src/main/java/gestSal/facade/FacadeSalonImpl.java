@@ -366,6 +366,17 @@ public class FacadeSalonImpl implements FacadeSalon {
         return evenement.getConversation();
     }
 
+    @Override
+    public Utilisateur convertUserDTOtoUser(UtilisateurDTO utilisateurDTO) {
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setPseudo(utilisateurDTO.getPseudo());
+        utilisateur.setEmail(utilisateurDTO.getEmail());
+        utilisateur.setDescription(utilisateurDTO.getDescription());
+        utilisateur.setStatus(utilisateurDTO.getStatus());
+        utilisateur.setMesConversations(utilisateurDTO.getMesConversations());
+        return utilisateur;
+    }
+
 
     private String generateRandomCode(int length) {
         SecureRandom secureRandom = new SecureRandom();

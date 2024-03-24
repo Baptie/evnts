@@ -1,18 +1,27 @@
 package gestSal.service;
 
 import gestSal.dto.SalonDTO;
+import gestSal.dto.UtilisateurDTO;
+import gestSal.facade.FacadeSalon;
+import gestSal.facade.FacadeSalonImpl;
 import gestSal.facade.erreurs.NomSalonVideException;
 import gestSal.facade.erreurs.NumeroSalonVideException;
 import gestSal.facade.erreurs.SalonInexistantException;
 import gestSal.modele.Salon;
+import gestSal.modele.Utilisateur;
 
 import java.sql.*;
 
 public class SalonSql {
 
+    static FacadeSalon facadeSalon = new FacadeSalonImpl();
 
     public static void main(String[] args) throws SQLException {
-        modifierSalonSQL(getSalonById(1),"createur","Vince Creator",1);
+        UtilisateurDTO utilisateurDTO = getUtilisateurByPseudoSQL("Camacho");
+        SalonDTO salonDTO = getSalonById(1);
+        System.out.println("pseudo "+utilisateurDTO.getPseudo());
+        System.out.println("id "+ utilisateurDTO.getIdUtilisateur());
+        rejoindreSalonSql(utilisateurDTO,salonDTO);
     }
 
     public SalonSql() {
@@ -47,10 +56,6 @@ public class SalonSql {
             salon.setNomCreateur(rs.getString("nomCreateur"));
             salon.setLogo(rs.getString("logo"));
         }
-        System.out.println(id);
-        System.out.println(salon.getNomSalon());
-        System.out.println(salon.getNomCreateur());
-        System.out.println(salon.getLogo());
         return salon;
 
     }
@@ -79,5 +84,25 @@ public class SalonSql {
     }
 
 
+    public static UtilisateurDTO getUtilisateurByPseudoSQL(String pseudoUtilisateur) throws SQLException {
+        UtilisateurDTO userDTO = new UtilisateurDTO();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from Membre where nomMembre='"+pseudoUtilisateur+"'";
+        ResultSet rs = st.executeQuery(SQL);
+        while(rs.next()){
+            userDTO.setIdUtilisateur(rs.getInt("idMembre"));
+            userDTO.setPseudo(rs.getString("nomMembre"));
+        }
 
+        return userDTO;
+    }
+
+    public static void rejoindreSalonSql(UtilisateurDTO utilisateurDTO, SalonDTO salonDTO) throws SQLException {
+        int idUser = utilisateurDTO.getIdUtilisateur();
+        int idSalon = salonDTO.getIdSalon();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "insert into SalonMembre(idSalon, idMembre) VALUES ("+idSalon+", "+idUser+")";
+        st.executeUpdate(SQL);
+
+    }
 }
