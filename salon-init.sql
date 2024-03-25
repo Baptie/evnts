@@ -21,6 +21,14 @@ CREATE TABLE SalonMembre (
                              PRIMARY KEY (idSalon, idMembre)
 );
 
+CREATE TABLE ModerateurSalon (
+                             idSalon INT,
+                             idMembre INT,
+                             FOREIGN KEY (idSalon) REFERENCES Salon(idSalon),
+                             FOREIGN KEY (idMembre) REFERENCES Membre(idMembre),
+                             PRIMARY KEY (idSalon, idMembre)
+);
+
 CREATE TABLE Evenement (
                            idEvenement INT AUTO_INCREMENT PRIMARY KEY,
                            nomEvenement VARCHAR(255) NOT NULL,
@@ -34,6 +42,13 @@ CREATE TABLE Evenement (
                            FOREIGN KEY (idSalon) REFERENCES Salon(idSalon)
 );
 
+CREATE TABLE PresenceEvenement (
+                                 idMembre INT,
+                                 idEvenement INT,
+                                 FOREIGN KEY (idEvenement) REFERENCES Evenement(idEvenement),
+                                 FOREIGN KEY (idMembre) REFERENCES Membre(idMembre),
+                                 PRIMARY KEY (idEvenement, idMembre)
+);
 
 
 -- Insérer un salon
@@ -51,3 +66,4 @@ INSERT INTO SalonMembre (idSalon, idMembre) VALUES (1, 2); -- Associer Camacho �
 INSERT INTO Evenement (nomEvenement, nombrePersonneMax, details, dateEvenement, lieu, isValide, nomCreateur, idSalon)
 VALUES ('Jeux de société', 100, 'Super jeux in coming !', '2024-02-20', 'Chez oim', false, 'Vince', 1);
 
+INSERT INTO ModerateurSalon (idSalon, idMembre) VALUES (1, 1); -- Associer Vince à Modérateur du Salon

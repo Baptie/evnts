@@ -13,14 +13,15 @@ import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SalonSql {
 
     static FacadeSalon facadeSalon = new FacadeSalonImpl();
 
     public static void main(String[] args) throws SQLException {
-        modifierEvenementSQL(getEvenementByNomEtNumSalonSQL(1,"Jeux de role"),"nom","Super blaze");
-
+        seDefiniCommePresentAUnEvenementSQL(getUtilisateurByIdSQL(1),getEvenementByNomEtNumSalonSQL(1,"Jeux de poker"));
     }
 
     public SalonSql() {
@@ -110,6 +111,19 @@ public class SalonSql {
         return userDTO;
     }
 
+    public static UtilisateurDTO getUtilisateurByIdSQL(int idUtilisateur) throws SQLException {
+        UtilisateurDTO userDTO = new UtilisateurDTO();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from Membre where idMembre="+idUtilisateur;
+        ResultSet rs = st.executeQuery(SQL);
+        while(rs.next()){
+            userDTO.setIdUtilisateur(rs.getInt("idMembre"));
+            userDTO.setPseudo(rs.getString("nomMembre"));
+        }
+
+        return userDTO;
+    }
+
     public static void rejoindreSalonSql(UtilisateurDTO utilisateurDTO, SalonDTO salonDTO) throws SQLException {
         int idUser = utilisateurDTO.getIdUtilisateur();
         int idSalon = salonDTO.getIdSalon();
@@ -172,4 +186,29 @@ public class SalonSql {
     }
 
 
+    public static void retirerModerateurDuSalonSQL(SalonDTO salonDTO, UtilisateurDTO utilisateurDTO) throws SQLException {
+        Statement st = connecterAuSalonSQL();
+        String SQL = "DELETE FROM ModerateurSalon where idSalon="+salonDTO.getIdSalon()+" and idMembre="+utilisateurDTO.getIdUtilisateur();
+        st.executeUpdate(SQL);
+    }
+
+    public static void ajouterModerateurAuSalon(UtilisateurDTO utilisateurDTO, SalonDTO salonDTO) throws SQLException {
+        Statement st = connecterAuSalonSQL();
+        String SQL = "INSERT INTO ModerateurSalon (idSalon,idMembre) values ("+salonDTO.getIdSalon()+",+"+utilisateurDTO.getIdUtilisateur()+")";
+        st.executeUpdate(SQL);
+    }
+
+    public static List<String> seDefiniCommePresentAUnEvenementSQL(UtilisateurDTO utilisateurDTO, EvenementDTO evenementDTO) throws SQLException {
+        List<String> participants = new ArrayList<>();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "INSERT INTO PresenceEvenement (idMembre,idEvenement) values ("+utilisateurDTO.getIdUtilisateur()+",+"+evenementDTO.getIdEvenement()+")";
+        st.executeUpdate(SQL);
+
+        String SQL2 = "select * from PresenceEvenement where idEvenement="+evenementDTO.getIdEvenement();
+        ResultSet rs = st.executeQuery(SQL2);
+        while(rs.next()){
+            participants.add(getUtilisateurByIdSQL(rs.getInt("idMembre")).getPseudo());
+        }
+        return participants;
+    }
 }

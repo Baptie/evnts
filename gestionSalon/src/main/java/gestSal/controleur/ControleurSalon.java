@@ -206,20 +206,26 @@ public class ControleurSalon {
         }
     }
 
+    //TODO TU ES ICI
+
     @DeleteMapping("/retirerModerateur/{numSalon}/{nomutilisateur}")
     public ResponseEntity<ApiResponseSalon> retirerModerateurDuSalon(@PathVariable int numSalon, @PathVariable String nomutilisateur) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            if (salon == null) {
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+            if (salonDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseSalon("Salon introuvable"));
             }
 
             Utilisateur utilisateurPlusModo = facadeSalon.getUtilisateurByPseudo(nomutilisateur);
-            if (utilisateurPlusModo == null) {
+            UtilisateurDTO utilisateurDTO = salonSql.getUtilisateurByPseudoSQL(nomutilisateur);
+            if (utilisateurDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseSalon("Utilisateur introuvable"));
             }
 
             facadeSalon.retirerModerateurDuSalon(salon, utilisateurPlusModo);
+            salonSql.retirerModerateurDuSalonSQL(salonDTO,utilisateurDTO);
+
             return ResponseEntity.ok(new ApiResponseSalon("Modérateur retiré du salon avec succès"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseSalon("Erreur : " + e.getMessage()));
@@ -230,16 +236,20 @@ public class ControleurSalon {
     public ResponseEntity<ApiResponseSalon> ajouterModerateurAuSalon(@RequestBody String nomModo, @RequestBody int numSalon) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            if (salon == null) {
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+
+            if (salonDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseSalon("Salon introuvable"));
             }
 
             Utilisateur nouveauModo = facadeSalon.getUtilisateurByPseudo(nomModo);
-            if (nouveauModo == null) {
+            UtilisateurDTO utilisateurDTO = salonSql.getUtilisateurByPseudoSQL(nomModo);
+            if (utilisateurDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseSalon("Utilisateur introuvable"));
             }
 
             facadeSalon.ajouterModerateurAuSalon(nouveauModo, salon);
+            salonSql.ajouterModerateurAuSalon(utilisateurDTO,salonDTO);
             return ResponseEntity.ok(new ApiResponseSalon("Modérateur ajouté au salon avec succès"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseSalon("Erreur : " + e.getMessage()));
@@ -252,22 +262,28 @@ public class ControleurSalon {
     public ResponseEntity<Object> seDefiniCommePresentAUnEvenement(@RequestBody int numSalon, @RequestBody String nomEvenement, @RequestBody String nomUtilisateur) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            if (salon == null) {
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+            if (salonDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
 
             Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(numSalon, nomEvenement);
+            EvenementDTO evenementDTO = salonSql.getEvenementByNomEtNumSalonSQL(numSalon,nomEvenement);
+
             if (evenement == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Événement introuvable");
             }
 
             Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(nomUtilisateur);
-            if (utilisateur == null) {
+            UtilisateurDTO utilisateurDTO = salonSql.getUtilisateurByPseudoSQL(nomUtilisateur);
+            if (utilisateurDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur introuvable");
             }
 
             List<Utilisateur> participants = facadeSalon.seDefiniCommePresentAUnEvenement(utilisateur, salon, evenement);
-            return ResponseEntity.ok(participants);
+            List<String> participantsSQL = salonSql.seDefiniCommePresentAUnEvenementSQL(utilisateurDTO,evenementDTO);
+
+            return ResponseEntity.ok(participantsSQL);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
