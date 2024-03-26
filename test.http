@@ -1,10 +1,8 @@
 
 ###Inscription Personne expected = 201
-POST http://localhost:8080/auth/inscription
+POST http://localhost:8080/auth/inscription?pseudo=test&mdp=test&eMail=test
 Content-Type: application/x-www-form-urlencoded
 Accept: */*
-
-pseudo=bbb&mdp=aaa&eMail=fdmfdm@dffd.fr
 
 ###connexion Personne expected = 201
 POST http://localhost:8080/auth/connexion

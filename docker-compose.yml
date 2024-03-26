@@ -22,6 +22,7 @@ services:
       - consul
       - authentificationApp
       - gestionUtilisateurApp
+      - contactApp
 
   dbAuthentification:
     image: mysql:latest
@@ -55,6 +56,17 @@ services:
       MYSQL_DATABASE: utilisateur
     volumes:
       - ./utilisateur-init.sql:/docker-entrypoint-initdb.d/utilisateur-init.sql
+
+  dbContact:
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3309:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: utilisateur
+    volumes:
+      - ./contact-init.sql:/docker-entrypoint-initdb.d/contact-init.sql
 
   salonApp:
     build:
@@ -92,11 +104,25 @@ services:
       - dbGestionUtilisateur
       - consul
 
-  frontend:
-    image: node:latest
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./evnts-ihm:/app
-    working_dir: /app
-    command: npm start
+  contactApp:
+    build:
+      context: ./contact
+      dockerfile: Dockerfile
+    image: mon-application-contact
+    restart: always
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+    depends_on:
+      - dbContact
+      - consul
+
+#  frontend:
+#    build:
+#      context: ./evnts-ihm
+#      dockerfile: Dockerfile
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - ./evnts-ihm:/app
+#    working_dir: /app
+#    command: npm start
