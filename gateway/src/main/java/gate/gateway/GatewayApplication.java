@@ -27,6 +27,10 @@ public class GatewayApplication {
 				.route(r -> r.path("/salon/**")
 						.uri("lb://gestionSalon")
 				)
+				// Route vers le contrôleur de contact
+				.route(r -> r.path("/contact/**")
+						.uri("lb://contact")
+				)
 				// Ajoutez d'autres routes ici pour les autres services si nécessaire
 				.build();
 	}
