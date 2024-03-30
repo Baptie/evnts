@@ -22,8 +22,7 @@ public class SalonSql {
     static FacadeSalon facadeSalon = new FacadeSalonImpl();
 
     public static void main(String[] args) throws SQLException {
-        //TODO : TEST COMMIT
-        seDefiniCommeAbsentAUnEvenementSQL(getUtilisateurByIdSQL(1),getEvenementByNomEtNumSalonSQL(1,"Jeux de loi"));
+        validerEvenementSQL(getEvenementByNomEtNumSalonSQL(1,"Jeux de loi"));
     }
 
     public SalonSql() {
@@ -228,5 +227,15 @@ public class SalonSql {
             participantsDTO.add(getUtilisateurByIdSQL(rs.getInt("idMembre")).getPseudo());
         }
         return participantsDTO;
+    }
+
+
+
+    public static void validerEvenementSQL(EvenementDTO evenementDTO) throws SQLException {
+        int idEvenement = evenementDTO.getIdEvenement();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "UPDATE Evenement SET isValide = true WHERE idEvenement = '"+idEvenement+"';";
+        st.executeUpdate(SQL);
+
     }
 }

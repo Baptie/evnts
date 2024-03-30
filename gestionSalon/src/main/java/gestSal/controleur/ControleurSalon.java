@@ -342,11 +342,12 @@ public class ControleurSalon {
     public ResponseEntity<Object> getEvenementByNomEtNumSalon(@PathVariable int numSalon, @RequestParam String nomEvenement) {
         try {
             Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(numSalon, nomEvenement);
-            if (evenement == null) {
+            EvenementDTO evenementDTO = salonSql.getEvenementByNomEtNumSalonSQL(numSalon,nomEvenement);
+            if (evenementDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Événement introuvable");
             }
 
-            return ResponseEntity.ok(evenement);
+            return ResponseEntity.ok(evenementDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
@@ -359,16 +360,24 @@ public class ControleurSalon {
     public ResponseEntity<Object> validerEvenement(@PathVariable int idSalon, @PathVariable String nomEvent) {
         try {
             Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(idSalon, nomEvent);
-            if (evenement == null) {
+            EvenementDTO evenementDTO = salonSql.getEvenementByNomEtNumSalonSQL(idSalon,nomEvent);
+            if (evenementDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Événement introuvable");
             }
 
             boolean isValide = facadeSalon.validerEvenement(evenement);
+            if(isValide){
+                salonSql.validerEvenementSQL(evenementDTO);
+            }
+
             return ResponseEntity.ok(isValide);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
     }
+
+
+    //TODO JE SUIS ICI
 
     @PostMapping("{numSalon}/messages")
     public ResponseEntity<Object> envoyerMessageSalon(@PathVariable int numSalon, @RequestBody MessageDTO messageDTO) {
