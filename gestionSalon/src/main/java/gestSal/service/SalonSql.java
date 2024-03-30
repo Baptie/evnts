@@ -22,6 +22,7 @@ public class SalonSql {
     static FacadeSalon facadeSalon = new FacadeSalonImpl();
 
     public static void main(String[] args) throws SQLException {
+        //TODO : TEST COMMIT
         seDefiniCommeAbsentAUnEvenementSQL(getUtilisateurByIdSQL(1),getEvenementByNomEtNumSalonSQL(1,"Jeux de loi"));
     }
 
