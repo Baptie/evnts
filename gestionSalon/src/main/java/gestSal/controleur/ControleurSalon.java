@@ -206,7 +206,6 @@ public class ControleurSalon {
         }
     }
 
-    //TODO TU ES ICI
 
     @DeleteMapping("/retirerModerateur/{numSalon}/{nomutilisateur}")
     public ResponseEntity<ApiResponseSalon> retirerModerateurDuSalon(@PathVariable int numSalon, @PathVariable String nomutilisateur) {
@@ -377,16 +376,18 @@ public class ControleurSalon {
     }
 
 
-    //TODO JE SUIS ICI
 
     @PostMapping("{numSalon}/messages")
     public ResponseEntity<Object> envoyerMessageSalon(@PathVariable int numSalon, @RequestBody MessageDTO messageDTO) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            if (salon == null) {
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+
+            if (salonDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
             facadeSalon.envoyerMessageSalon(salon, messageDTO.getAuteur(), messageDTO.getContenu());
+            salonSql.envoyerMessageSalonSQL(salonDTO,messageDTO);
             return ResponseEntity.ok("Message envoyé avec succès");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
@@ -397,10 +398,12 @@ public class ControleurSalon {
     public ResponseEntity<Object> envoyerMessageEvenement(@PathVariable int numSalon, @PathVariable String nomEvent,@RequestBody MessageDTO messageDTO) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            if (salon == null) {
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+            if (salonDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
             Evenement evenement = null;
+            EvenementDTO evenementDTO = salonSql.getEvenementByNomEtNumSalonSQL(numSalon,nomEvent);
             for(Evenement event : salon.getLesEvenements()){
                 if(event.getNomEvenement().equals(nomEvent) ){
                     evenement = event;
@@ -410,6 +413,8 @@ public class ControleurSalon {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Événement introuvable");
             }
             facadeSalon.envoyerMessageEvenement(evenement,messageDTO.getAuteur(), messageDTO.getContenu());
+            salonSql.envoyerMessageEventSQL(evenementDTO,messageDTO);
+
             return ResponseEntity.ok("Message envoyé avec succès");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
@@ -421,11 +426,13 @@ public class ControleurSalon {
     public ResponseEntity<Object> getMessagesSalon(@PathVariable int numSalon) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            if (salon == null) {
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+            if (salonDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
             List<Message> messages = facadeSalon.getMessagesSalon(salon);
-            return ResponseEntity.ok(messages);
+            List<MessageDTO> messageDTOS = salonSql.getMessageSalonSQL(numSalon);
+            return ResponseEntity.ok(messageDTOS);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
@@ -435,21 +442,26 @@ public class ControleurSalon {
     public ResponseEntity<Object> getMessagesEvenement(@PathVariable int numSalon,@PathVariable String nomEvent) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            if (salon == null) {
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+
+            if (salonDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
             Evenement evenement = null;
+            EvenementDTO evenementDTO = salonSql.getEvenementByNomEtNumSalonSQL(numSalon,nomEvent);
             for(Evenement event : salon.getLesEvenements()){
                 if(event.getNomEvenement()==nomEvent){
                     evenement = event;
                 }
             }
-            if (evenement == null) {
+            if (evenementDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Événement introuvable");
             }
 
             List<Message> messages = facadeSalon.getMessagesEvenement(evenement);
-            return ResponseEntity.ok(messages);
+            List<MessageDTO> messageDTOS = salonSql.getMessageEventSQL(evenementDTO.getIdEvenement());
+
+            return ResponseEntity.ok(messageDTOS);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
@@ -474,19 +486,26 @@ public class ControleurSalon {
         }
     }
 
+
     @PostMapping("{numSalon}/adhesion")
     public ResponseEntity<?> rejoindreSalon(@PathVariable int numSalon, @RequestBody String pseudoUtilisateur){
         try{
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            if (salon == null) {
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+
+            if (salonDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
             Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(pseudoUtilisateur);
-            if (utilisateur == null) {
+            UtilisateurDTO utilisateurDTO = salonSql.getUtilisateurByPseudoSQL(pseudoUtilisateur);
+
+            if (utilisateurDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur introuvable");
             }
             facadeSalon.rejoindreSalon(utilisateur,salon);
-            return ResponseEntity.ok(salon);
+            salonSql.rejoindreSalonSql(utilisateurDTO,salonDTO);
+
+            return ResponseEntity.ok(salonDTO);
         }catch(UtilisateurDejaPresentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Utilisateur deja présent dans salon");
         }catch (Exception e) {
@@ -500,39 +519,48 @@ public class ControleurSalon {
     public ResponseEntity<?> supprimerUtilisateur(@PathVariable String nomUtilisateur){
         try {
             facadeSalon.supprimerUtilisateur(nomUtilisateur);
+            salonSql.supprimerUtilisateurSQL(facadeSalon.getUtilisateurByPseudo(nomUtilisateur));
             return ResponseEntity.noContent().build();
         } catch (UtilisateurInexistantException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+        } catch (SQLException | NomUtilisateurVideException e) {
+            throw new RuntimeException(e);
         }
     }
+
 
     @GetMapping("/utilisateur/{nomUtilisateur}")
     public ResponseEntity<?> getUtilisateur(@PathVariable String nomUtilisateur){
         try {
             Utilisateur user = facadeSalon.getUtilisateurByPseudo(nomUtilisateur);
-            return ResponseEntity.ok(user);
+            UtilisateurDTO utilisateurDTO = salonSql.getUtilisateurByPseudoSQL(nomUtilisateur);
+            return ResponseEntity.ok(utilisateurDTO);
         } catch (NomUtilisateurVideException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
-        } catch (UtilisateurInexistantException e) {
+        } catch (UtilisateurInexistantException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     @PostMapping("/{numSalon}/moderation")
     public ResponseEntity<?> ajouterModerateur(@PathVariable int numSalon, @RequestBody String nomModerateur){
         try{
             Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(nomModerateur);
-            System.out.println(utilisateur);
-            if(utilisateur==null){
+            UtilisateurDTO utilisateurDTO = salonSql.getUtilisateurByPseudoSQL(nomModerateur);
+            if(utilisateurDTO==null){
                 throw new UtilisateurInexistantException();
             }
 
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            System.out.println(salon);
-            if(salon==null){
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+
+            if(salonDTO==null){
                 throw new SalonInexistantException();
             }
             facadeSalon.ajouterModerateurAuSalon(utilisateur,salon);
+            salonSql.ajouterModerateurAuSalon(utilisateurDTO,salonDTO);
+
             return ResponseEntity.ok(salon);
         } catch (NomUtilisateurVideException | NumeroSalonVideException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
@@ -548,20 +576,22 @@ public class ControleurSalon {
     @DeleteMapping("/{numSalon}/moderation")
     public ResponseEntity<?> supprimerModerateur(@PathVariable int numSalon, @RequestBody String nomModerateur){
         try{
-            System.out.println("avant get utilisateur by pseudo");
             Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(nomModerateur);
-            System.out.println(utilisateur);
+            UtilisateurDTO utilisateurDTO = salonSql.getUtilisateurByPseudoSQL(nomModerateur);
+
             if(utilisateur==null){
                 throw new UtilisateurInexistantException();
             }
-            System.out.println("toruver salon");
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            if(salon==null){
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
+
+            if(salonDTO==null){
                 throw new SalonInexistantException();
             }
-            System.out.println("retirer moderateur salon");
             facadeSalon.retirerModerateurDuSalon(salon,utilisateur);
-            return ResponseEntity.ok(salon);
+            salonSql.retirerModerateurDuSalonSQL(salonDTO,utilisateurDTO);
+
+            return ResponseEntity.ok(salonDTO);
         } catch (NomUtilisateurVideException | NumeroSalonVideException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         } catch (UtilisateurInexistantException e) {

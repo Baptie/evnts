@@ -50,6 +50,22 @@ CREATE TABLE PresenceEvenement (
                                  PRIMARY KEY (idEvenement, idMembre)
 );
 
+CREATE TABLE MessageSalon (
+                                   idMessage INT AUTO_INCREMENT PRIMARY KEY,
+                                   idSalon INT,
+                                   nomAuteur VARCHAR(255),
+                                   contenu VARCHAR(255),
+                                   dateMessage VARCHAR(255),
+);
+
+CREATE TABLE MessageEvenement (
+                                  idMessage INT AUTO_INCREMENT PRIMARY KEY,
+                                  idEvenement INT,
+                                  nomAuteur VARCHAR(255),
+                                  contenu VARCHAR(255),
+                                  dateMessage VARCHAR(255),
+);
+
 
 -- Insérer un salon
 INSERT INTO Salon (nomSalon, nomCreateur, logo) VALUES ('Mon Premier Salon', 'Vince', 'https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png');

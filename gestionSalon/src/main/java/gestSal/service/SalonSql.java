@@ -1,6 +1,7 @@
 package gestSal.service;
 
 import gestSal.dto.EvenementDTO;
+import gestSal.dto.MessageDTO;
 import gestSal.dto.SalonDTO;
 import gestSal.dto.UtilisateurDTO;
 import gestSal.facade.FacadeSalon;
@@ -236,6 +237,69 @@ public class SalonSql {
         Statement st = connecterAuSalonSQL();
         String SQL = "UPDATE Evenement SET isValide = true WHERE idEvenement = '"+idEvenement+"';";
         st.executeUpdate(SQL);
+    }
 
+
+    //TODO TRY
+    public static void envoyerMessageSalonSQL(SalonDTO salonDTO, MessageDTO messageDTO) throws SQLException {
+        Statement st = connecterAuSalonSQL();
+        String SQL = "INSERT INTO MessageSalon (idSalon,nomAuteur,contenu,dateMessage) values ("+salonDTO.getIdSalon()+",'"+messageDTO.getAuteur()+"','"+messageDTO.getContenu()+"','"+messageDTO.getDate()+"')";
+        st.executeUpdate(SQL);
+    }
+
+    //TODO TRY
+
+    public static void envoyerMessageEventSQL(EvenementDTO evenementDTO, MessageDTO messageDTO) throws SQLException {
+        Statement st = connecterAuSalonSQL();
+        String SQL = "INSERT INTO MessageEvenement (idEvenement,nomAuteur,contenu,dateMessage) values ("+evenementDTO.getIdEvenement()+",'"+messageDTO.getAuteur()+"','"+messageDTO.getContenu()+"','"+messageDTO.getDate()+"')";
+        st.executeUpdate(SQL);
+    }
+
+
+    //TODO TRY
+
+    public static List<MessageDTO> getMessageSalonSQL(int numSalon) throws SQLException {
+        ArrayList<MessageDTO> lesMessages = new ArrayList<>();
+        Statement st = connecterAuSalonSQL();
+        String SQLMessage = "select * from MessageSalon where idSalon="+numSalon;
+        ResultSet rs = st.executeQuery(SQLMessage);
+        while(rs.next()){
+            MessageDTO message = new MessageDTO();
+            String auteur = rs.getString("nomAuteur");
+            String contenu = rs.getString("contenu");
+            String dateMessage = rs.getString("dateMessage");
+            message.setAuteur(auteur);
+            message.setContenu(contenu);
+            message.setDate(dateMessage);
+            lesMessages.add(message);
+        }
+        return lesMessages;
+    }
+
+
+    //TODO TRY
+    public static List<MessageDTO> getMessageEventSQL(int idEvenement) throws SQLException {
+        ArrayList<MessageDTO> lesMessages = new ArrayList<>();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from MessageEvenement where idEvenement="+idEvenement;
+        ResultSet rs = st.executeQuery(SQL);
+        while(rs.next()){
+            MessageDTO message = new MessageDTO();
+            String auteur = rs.getString("nomAuteur");
+            String contenu = rs.getString("contenu");
+            String dateMessage = rs.getString("dateMessage");
+            message.setAuteur(auteur);
+            message.setContenu(contenu);
+            message.setDate(dateMessage);
+            lesMessages.add(message);
+        }
+        return lesMessages;
+    }
+
+    //TODO TRY
+    public static void supprimerUtilisateurSQL(Utilisateur utilisateur) throws SQLException {
+        Statement st = connecterAuSalonSQL();
+        String SQL = "DELETE FROM Membre where idMembre="+utilisateur.getIdUtilisateur();
+        st.executeUpdate(SQL);
     }
 }
