@@ -9,6 +9,7 @@ import gestSal.facade.erreurs.EvenementInexistantException;
 import gestSal.facade.erreurs.NomSalonVideException;
 import gestSal.facade.erreurs.NumeroSalonVideException;
 import gestSal.facade.erreurs.SalonInexistantException;
+import gestSal.modele.Evenement;
 import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 
@@ -21,7 +22,7 @@ public class SalonSql {
     static FacadeSalon facadeSalon = new FacadeSalonImpl();
 
     public static void main(String[] args) throws SQLException {
-        seDefiniCommePresentAUnEvenementSQL(getUtilisateurByIdSQL(1),getEvenementByNomEtNumSalonSQL(1,"Jeux de poker"));
+        seDefiniCommeAbsentAUnEvenementSQL(getUtilisateurByIdSQL(1),getEvenementByNomEtNumSalonSQL(1,"Jeux de loi"));
     }
 
     public SalonSql() {
@@ -210,5 +211,21 @@ public class SalonSql {
             participants.add(getUtilisateurByIdSQL(rs.getInt("idMembre")).getPseudo());
         }
         return participants;
+    }
+
+
+
+    public static List<String> seDefiniCommeAbsentAUnEvenementSQL(UtilisateurDTO utilisateurDTO, EvenementDTO evenementDTO) throws SQLException {
+        List<String> participantsDTO = new ArrayList<>();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "DELETE FROM PresenceEvenement WHERE idMembre = " + utilisateurDTO.getIdUtilisateur() + " AND idEvenement = " + evenementDTO.getIdEvenement();
+        st.executeUpdate(SQL);
+
+        String SQL2 = "select * from PresenceEvenement where idEvenement="+evenementDTO.getIdEvenement();
+        ResultSet rs = st.executeQuery(SQL2);
+        while(rs.next()){
+            participantsDTO.add(getUtilisateurByIdSQL(rs.getInt("idMembre")).getPseudo());
+        }
+        return participantsDTO;
     }
 }

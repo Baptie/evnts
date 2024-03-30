@@ -295,22 +295,28 @@ public class ControleurSalon {
     public ResponseEntity<Object> seDefiniCommeAbsentAUnEvenement(@PathVariable int numSalon, @PathVariable String nomEvent, @PathVariable String nomUtilisateur) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            if (salon == null) {
+            SalonDTO salonDTO = SalonSql.getSalonById(numSalon);
+
+            if (salonDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
 
             Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(numSalon, nomEvent);
-            if (evenement == null) {
+            EvenementDTO evenementDTO = SalonSql.getEvenementByNomEtNumSalonSQL(numSalon,nomEvent);
+            if (evenementDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Événement introuvable");
             }
 
             Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(nomUtilisateur);
-            if (utilisateur == null) {
+            UtilisateurDTO utilisateurDTO = SalonSql.getUtilisateurByPseudoSQL(nomUtilisateur);
+
+            if (utilisateurDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur introuvable");
             }
 
             List<Utilisateur> participants = facadeSalon.seDefiniCommeAbsentAUnEvenement(utilisateur, salon, evenement);
-            return ResponseEntity.ok(participants);
+            List<String> participantsDTO = SalonSql.seDefiniCommeAbsentAUnEvenementSQL(utilisateurDTO, evenementDTO);
+            return ResponseEntity.ok(participantsDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
