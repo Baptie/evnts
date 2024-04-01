@@ -68,10 +68,10 @@ public class ControleurSalon {
 
 
     @PatchMapping("/{numSalon}")
-    public ResponseEntity<ApiResponseSalonDTO> modifierSalon(@PathVariable int id, @RequestBody String choix, @RequestBody String valeur) {
+    public ResponseEntity<ApiResponseSalonDTO> modifierSalon(@PathVariable int numSalon, @RequestBody String choix, @RequestBody String valeur) {
         try {
-            Salon salon = facadeSalon.getSalonByNum(id);
-            SalonDTO salonDTO = salonSql.getSalonById(id);
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
 
             if (salon == null) {
                 return ResponseEntity
@@ -80,7 +80,7 @@ public class ControleurSalon {
             }
 
             salon = facadeSalon.modifierSalon(salon, choix, valeur);
-            salonDTO = salonSql.modifierSalonSQL(salonDTO,choix,valeur,id);
+            salonDTO = salonSql.modifierSalonSQL(salonDTO,choix,valeur,numSalon);
             return ResponseEntity.ok(new ApiResponseSalonDTO(salonDTO));
         } catch (SalonInexistantException | NomSalonVideException | NumeroSalonVideException e) {
             return ResponseEntity
@@ -345,7 +345,7 @@ public class ControleurSalon {
             }
             Evenement evenement = null;
             for(Evenement event : salon.getLesEvenements()){
-                if(event.getNomEvenement()==nomEvent){
+                if(event.getNomEvenement().equals(nomEvent)){
                     evenement = event;
                 }
             }
@@ -439,13 +439,11 @@ public class ControleurSalon {
             }
             facadeSalon.ajouterModerateurAuSalon(utilisateur,salon);
             return ResponseEntity.ok(salon);
-        } catch (NomUtilisateurVideException | NumeroSalonVideException e) {
+        } catch (NomSalonVideException|NomUtilisateurVideException | NumeroSalonVideException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         } catch (UtilisateurInexistantException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erreur : " + e.getMessage());
-        }catch (NomSalonVideException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
-        } catch (Exception e) {
+        }catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
