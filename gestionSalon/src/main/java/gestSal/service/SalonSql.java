@@ -6,12 +6,6 @@ import gestSal.dto.SalonDTO;
 import gestSal.dto.UtilisateurDTO;
 import gestSal.facade.FacadeSalon;
 import gestSal.facade.FacadeSalonImpl;
-import gestSal.facade.erreurs.EvenementInexistantException;
-import gestSal.facade.erreurs.NomSalonVideException;
-import gestSal.facade.erreurs.NumeroSalonVideException;
-import gestSal.facade.erreurs.SalonInexistantException;
-import gestSal.modele.Evenement;
-import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 
 import java.sql.*;
@@ -22,16 +16,12 @@ public class SalonSql {
 
     static FacadeSalon facadeSalon = new FacadeSalonImpl();
 
-    public static void main(String[] args) throws SQLException {
-        validerEvenementSQL(getEvenementByNomEtNumSalonSQL(1,"Jeux de loi"));
-    }
-
     public SalonSql() {
     }
 
     public static Statement connecterAuSalonSQL() throws SQLException {
         // Connexion à la base de données MySQL
-        String jdbcUrl = "jdbc:mysql://localhost:3307/salon";
+        String jdbcUrl = "jdbc:mysql://localhost:3308/utilisateur";
         String jdbcUser = "root";
         String jdbcPassword = "root";
 
