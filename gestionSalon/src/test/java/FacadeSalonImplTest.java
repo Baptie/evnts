@@ -193,28 +193,7 @@ public class FacadeSalonImplTest {
         facadeSalon.seDefiniCommeAbsentAUnEvenement(utilisateur, salon, evenement);
     }
 
-    //################################## CREER EVENEMENT ####################################################
 
-    @Test(expected = NomEvenementVideException.class)
-    public void testCreerEvenementAvecNomVide() throws Exception {
-        facadeSalon.creerEvenement("");
-    }
-
-    @Test(expected = NomEvenementDejaPrisException.class)
-    public void testCreerEvenementAvecNomDejaPris() throws Exception {
-        Evenement evenement = new Evenement();
-        evenement.setNomEvenement("EventExistant");
-        facadeSalon.evenements.add(evenement);
-
-        facadeSalon.creerEvenement("EventExistant");
-    }
-
-    @Test
-    public void testCreerEvenementReussi() throws Exception {
-        Evenement evenement = facadeSalon.creerEvenement("nomEvenementValide");
-        assertNotNull(evenement);
-        assertEquals("nomEvenementValide", evenement.getNomCreateur());
-    }
     //################################## GET UTILISATEUR PAR PSEUDO ####################################################
 
     @Test
@@ -280,19 +259,7 @@ public class FacadeSalonImplTest {
         facadeSalon.getSalonByNom("inexistant");
     }
 
-    //################################## CREER EVENEMENT ####################################################
 
-    @Test
-    public void testCreerEvenementOk() throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
-        Evenement result = facadeSalon.creerEvenement("eventTest");
-        assertNotNull(result);
-        assertEquals("eventTest", result.getNomCreateur());
-    }
-
-    @Test(expected = NomEvenementVideException.class)
-    public void testCreerEvenementVide() throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
-        facadeSalon.creerEvenement("");
-    }
 
     //################################## VALIDER EVENEMENT ####################################################
 

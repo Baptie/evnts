@@ -1,11 +1,13 @@
 package gestSal.facade;
 
+import gestSal.dto.UtilisateurDTO;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
 import gestSal.modele.Message;
 import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 
+import java.util.Date;
 import java.util.List;
 
 public interface FacadeSalon {
@@ -133,13 +135,20 @@ public interface FacadeSalon {
 
     /**
      * Permet de créer un évenement
-     * @param nomEvenement Nom de l'évènement
+     *
+     * @param salon
+     * @param nomEvenement      Nom de l'évènement
+     * @param nombrePersonneMax
+     * @param detailsEvenement
+     * @param lieu
+     * @param createur
+     * @param date
      * @return L'évènement créer
      * @throws NomEvenementDejaPrisException
      * @throws NomEvenementVideException
      */
 
-    Evenement creerEvenement(String nomEvenement) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException;
+    Evenement creerEvenement(Salon salon, String nomEvenement, int nombrePersonneMax, String detailsEvenement, String lieu, Utilisateur createur, String date) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException;
 
     /**
      * Permet de modifier un évènement
@@ -165,4 +174,10 @@ public interface FacadeSalon {
     List<Message> getMessagesSalon(Salon salon) throws SalonInexistantException;
 
     List<Message> getMessagesEvenement(Evenement evenement) throws EvenementInexistantException;
+
+
+    Utilisateur convertUserDTOtoUser(UtilisateurDTO utilisateurDTO);
+
+    void supprimerUtilisateur(String nomUtilisateur) throws UtilisateurInexistantException;
+
 }

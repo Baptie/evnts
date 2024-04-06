@@ -1,10 +1,12 @@
 package gestSal.facade;
 
+import gestSal.dto.*;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.*;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -50,7 +52,7 @@ public class FacadeSalonImpl implements FacadeSalon {
     @Override
     public Salon modifierSalon(Salon salon, String choix, String valeur) throws SalonInexistantException, NomSalonVideException, NumeroSalonVideException {
         switch (choix) {
-            case "num" -> salon.setNumSalon(Integer.parseInt(valeur));
+//            case "num" -> salon.setNumSalon(Integer.parseInt(valeur));
             case "nom" -> salon.setNomSalon(valeur);
             case "logo" -> salon.setLogo(valeur);
             case "createur" -> salon.setNomCreateur(valeur);
@@ -188,7 +190,7 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public Evenement creerEvenement(String nomEvenement) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
+    public Evenement creerEvenement(Salon salon, String nomEvenement, int nombrePersonneMax, String detailsEvenement, String lieu, Utilisateur createur, String date) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
         if(evenements.contains(nomEvenement)){
             throw new NomEvenementDejaPrisException();
         }
@@ -228,6 +230,68 @@ public class FacadeSalonImpl implements FacadeSalon {
         return false;
     }
 
+    public UtilisateurDTO convertUtilisateurToDTO(Utilisateur utilisateur){
+        UtilisateurDTO utilisateurDTO = new UtilisateurDTO();
+        utilisateurDTO.setIdUtilisateur(utilisateur.getIdUtilisateur());
+        utilisateurDTO.setPseudo(utilisateur.getPseudo());
+        utilisateurDTO.setEmail(utilisateur.getEmail());
+        utilisateurDTO.setDescription(utilisateur.getDescription());
+        utilisateurDTO.setStatus(utilisateur.getStatus());
+        utilisateurDTO.setPassword(utilisateur.getPassword());
+        utilisateurDTO.setMesConversations(utilisateur.getMesConversations());
+        return utilisateurDTO;
+    }
+    public SalonDTO convertSalonToDTO(Salon salon){
+        SalonDTO salonDTO = new SalonDTO();
+        salonDTO.setIdSalon(salon.getIdSalon());
+        salonDTO.setNumSalon(salon.getNumSalon());
+        salonDTO.setNomSalon(salon.getNomSalon());
+        salonDTO.setNomCreateur(salon.getNomCreateur());
+        salonDTO.setLogo(salon.getLogo());
+        salonDTO.setListeMembre(salon.getListeMembre());
+        salonDTO.setListeModerateur(salon.getListeModerateur());
+        salonDTO.setConversation(salon.getConversation());
+        salonDTO.setLesEvenements(salon.getLesEvenements());
+        return salonDTO;
+    }
+
+    public EvenementDTO convertEvenementToDTO(Evenement event){
+        EvenementDTO evenementDTO = new EvenementDTO();
+        evenementDTO.setIdEvenement(event.getIdEvenement());
+        evenementDTO.setNombrePersonneMax(event.getNombrePersonneMax());
+        evenementDTO.setNomEvenement(event.getNomEvenement());
+        evenementDTO.setDetailsEvenement(event.getDetailsEvenement());
+        evenementDTO.setLieu(event.getLieu());
+        evenementDTO.setNomCreateur(event.getNomCreateur());
+        evenementDTO.setListeParticipants(event.getListeParticipants());
+        evenementDTO.setDate(event.getDate());
+        evenementDTO.setEstValide(event.isEstValide());
+        evenementDTO.setEstTermine(event.isEstTermine());
+        evenementDTO.setConversation(event.getConversation());
+
+        return evenementDTO;
+
+    }
+
+    public MessageDTO convertMessageToDTO(Message message){
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setIdMessage(message.getIdMessage());
+        messageDTO.setAuteur(message.getAuteur());
+        messageDTO.setReceveur(message.getReceveur());
+        messageDTO.setContenu(message.getContenu());
+        messageDTO.setDate(message.getDate());
+        messageDTO.setSeen(message.isSeen());
+        return messageDTO;
+    }
+    public ConversationDTO convertConversationToDto(Conversation conversation){
+        ConversationDTO convDto = new ConversationDTO();
+        convDto.setIdConversation(conversation.getIdConversation());
+        convDto.setUtilisateurUn(conversation.getUtilisateurUn());
+        convDto.setUtilisateurDeux(conversation.getUtilisateurDeux());
+        convDto.setLesMessagesDeLaConversation(conversation.getLesMessagesDeLaConversation());
+        return convDto;
+    }
+
     @Override
     public Evenement modifierEvenement(Evenement evenement, String choix, String valeur) throws EvenementInexistantException {
         if(!evenements.contains(evenement)){
@@ -235,7 +299,7 @@ public class FacadeSalonImpl implements FacadeSalon {
         }
         switch (choix) {
             case "description" -> evenement.setDetailsEvenement(valeur);
-            case "date" -> evenement.setDate(Date.valueOf(valeur));
+            case "date" -> evenement.setDate(valeur);
             case "lieu" -> evenement.setLieu(valeur);
             case "nombre" -> evenement.setNombrePersonneMax(Integer.parseInt(valeur));
             case "nom" -> evenement.setNomEvenement(valeur);
@@ -302,6 +366,27 @@ public class FacadeSalonImpl implements FacadeSalon {
         return evenement.getConversation();
     }
 
+    @Override
+    public Utilisateur convertUserDTOtoUser(UtilisateurDTO utilisateurDTO) {
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setPseudo(utilisateurDTO.getPseudo());
+        utilisateur.setEmail(utilisateurDTO.getEmail());
+        utilisateur.setDescription(utilisateurDTO.getDescription());
+        utilisateur.setStatus(utilisateurDTO.getStatus());
+        utilisateur.setMesConversations(utilisateurDTO.getMesConversations());
+        return utilisateur;
+    }
+
+
+    @Override
+    public void supprimerUtilisateur(String pseudoUtilisateur) throws UtilisateurInexistantException {
+        if (!utilisateurs.containsKey(pseudoUtilisateur)) {
+            throw new UtilisateurInexistantException();
+        }
+        utilisateurs.remove(pseudoUtilisateur);
+    }
+
+
 
     private String generateRandomCode(int length) {
         SecureRandom secureRandom = new SecureRandom();
@@ -317,4 +402,8 @@ public class FacadeSalonImpl implements FacadeSalon {
         Random random = new Random();
         return 1000 + random.nextInt(9000);
     }
+
+
+
+
 }

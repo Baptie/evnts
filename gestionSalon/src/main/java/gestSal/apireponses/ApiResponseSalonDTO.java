@@ -1,29 +1,29 @@
 package gestSal.apireponses;
 
-import gestSal.dto.EvenementDTO;
-import gestSal.modele.Evenement;
+import gestSal.dto.SalonDTO;
 
-public class ApiResponseEvenement {
-    private EvenementDTO evenement;
+public class ApiResponseSalonDTO {
+    private SalonDTO salon;
     private String message;
     private boolean success;
 
-    public ApiResponseEvenement(EvenementDTO evenement) {
-        this.evenement = evenement;
+    public ApiResponseSalonDTO(SalonDTO salon) {
+        this.salon = salon;
         this.success = true;
     }
 
-    public ApiResponseEvenement(String message) {
+    public ApiResponseSalonDTO(String message) {
         this.message = message;
         this.success = false;
     }
 
-    public EvenementDTO getEvenement() {
-        return evenement;
+    // Getters et Setters
+    public SalonDTO getSalon() {
+        return salon;
     }
 
-    public void setEvenement(EvenementDTO evenement) {
-        this.evenement = evenement;
+    public void setSalon(SalonDTO salon) {
+        this.salon = salon;
     }
 
     public String getMessage() {
