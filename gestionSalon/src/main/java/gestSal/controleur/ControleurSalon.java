@@ -3,7 +3,6 @@ package gestSal.controleur;
 import gestSal.apireponses.ApiResponseEvenement;
 import gestSal.apireponses.ApiResponseSalon;
 import gestSal.apireponses.ApiResponseSalonDTO;
-import gestSal.apireponses.ApiResponseUtilisateur;
 import gestSal.dto.EvenementDTO;
 import gestSal.dto.MessageDTO;
 import gestSal.dto.SalonDTO;
@@ -36,7 +35,7 @@ public class ControleurSalon {
 
     SalonSql salonSql;
 
-    @PostMapping(value = "/creerSalon")
+    @PostMapping(value = "")
     public ResponseEntity<ApiResponseSalon> creerSalon(@RequestBody String nomCreateur, @RequestBody String nomSalon) {
         try {
             Salon salon = facadeSalon.creerSalon(nomCreateur, nomSalon);
@@ -68,10 +67,10 @@ public class ControleurSalon {
 
 
     @PatchMapping("/{numSalon}")
-    public ResponseEntity<ApiResponseSalonDTO> modifierSalon(@PathVariable int id, @RequestBody String choix, @RequestBody String valeur) {
+    public ResponseEntity<ApiResponseSalonDTO> modifierSalon(@PathVariable int numSalon, @RequestBody String choix, @RequestBody String valeur) {
         try {
-            Salon salon = facadeSalon.getSalonByNum(id);
-            SalonDTO salonDTO = salonSql.getSalonById(id);
+            Salon salon = facadeSalon.getSalonByNum(numSalon);
+            SalonDTO salonDTO = salonSql.getSalonById(numSalon);
 
             if (salon == null) {
                 return ResponseEntity
@@ -80,7 +79,7 @@ public class ControleurSalon {
             }
 
             salon = facadeSalon.modifierSalon(salon, choix, valeur);
-            salonDTO = salonSql.modifierSalonSQL(salonDTO,choix,valeur,id);
+            salonDTO = salonSql.modifierSalonSQL(salonDTO,choix,valeur,numSalon);
             return ResponseEntity.ok(new ApiResponseSalonDTO(salonDTO));
         } catch (SalonInexistantException | NomSalonVideException | NumeroSalonVideException e) {
             return ResponseEntity
@@ -120,9 +119,9 @@ public class ControleurSalon {
     @GetMapping("/byname/{nomSalon}")
     public ResponseEntity<?> getSalonByNom(@PathVariable String nomSalon){
         try{
-            //Salon salon = facadeSalon.getSalonByNom(nomSalon);
+            Salon salon = facadeSalon.getSalonByNom(nomSalon);
             SalonDTO salonDTO = salonSql.getSalonByName(nomSalon);
-            if(salonDTO==null) {
+            if(salon==null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
             return ResponseEntity.ok(salonDTO);
@@ -131,26 +130,9 @@ public class ControleurSalon {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
     }
-    @GetMapping("/getUtilisateur/{pseudoUtilisateur}")
-    public ResponseEntity<ApiResponseUtilisateur> getUtilisateurByPseudo(@PathVariable String pseudoUtilisateur) {
-        try {
-//            Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(pseudoUtilisateur);
-            UtilisateurDTO utilisateurDTO = salonSql.getUtilisateurByPseudoSQL(pseudoUtilisateur);
-            Utilisateur utilisateur = facadeSalon.convertUserDTOtoUser(utilisateurDTO);
-            if (utilisateur == null) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponseUtilisateur("Utilisateur introuvable"));
-            }
-
-            return ResponseEntity.ok(new ApiResponseUtilisateur(utilisateur));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 
-    @PostMapping("/rejoindreSalon")
+    @PostMapping("/salon/adhesion")
     public ResponseEntity<ApiResponseSalonDTO> rejoindreSalon(@RequestBody String nomUtilisateur, @RequestBody int numSalon) {
         try {
             Salon salonRejoint = facadeSalon.getSalonByNum(numSalon);
@@ -181,8 +163,8 @@ public class ControleurSalon {
                     .body(new ApiResponseSalonDTO("Erreur : " + e.getMessage()));
         }
     }
-    @PatchMapping("/modifierEvenement/{id}")
-    public ResponseEntity<ApiResponseEvenement> modifierEvenement(@PathVariable int id, @RequestBody String nomEvenement, @RequestBody String choix, @RequestBody String valeur) {
+    @PatchMapping("{numSalon}/evenement/{id}")
+    public ResponseEntity<ApiResponseEvenement> modifierEvenement(@PathVariable int id, @PathVariable String nomEvenement, @RequestBody String choix, @RequestBody String valeur) {
         try {
             Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(id, nomEvenement);
             EvenementDTO evenementDTO = salonSql.getEvenementByNomEtNumSalonSQL(id,nomEvenement);
@@ -207,7 +189,7 @@ public class ControleurSalon {
     }
 
 
-    @DeleteMapping("/retirerModerateur/{numSalon}/{nomutilisateur}")
+    @DeleteMapping("/{numSalon}/{nomutilisateur}")
     public ResponseEntity<ApiResponseSalon> retirerModerateurDuSalon(@PathVariable int numSalon, @PathVariable String nomutilisateur) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
