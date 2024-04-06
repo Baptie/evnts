@@ -1,36 +1,53 @@
 package auth.service;
+import auth.dto.UtilisateurDTO;
+import auth.modele.Utilisateur;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class AuthentificationSQL {
 
 
+    public AuthentificationSQL(){
+    }
 
-    public static void main(String[] args) {
+    public static Statement connecterAuthentificationSQL() throws SQLException {
         // Connexion à la base de données MySQL
-        String jdbcUrl = "jdbc:mysql://localhost:3306/utilisateur";
+        String jdbcUrl = "jdbc:mysql://localhost:3306/authentification";
         String jdbcUser = "root";
         String jdbcPassword = "root";
 
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
-             Statement statement = connection.createStatement()) {
+        Connection connection = DriverManager.getConnection(jdbcUrl,jdbcUser,jdbcPassword);
+        Statement statement = connection.createStatement();
+        return statement;
 
-            // Exécution de la requête SQL
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM toto");
+    }
+    public static void main(String[] args) throws SQLException {
+        supprimerUtilisateurSQL("vince");
+    }
 
-            // Traitement des résultats
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                System.out.println("ID: " + id + ", Name: " + name);
-            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("end");
+    public static void inscriptionSQL(String pseudo, String mdp, String eMail) throws SQLException {
+        Statement st = connecterAuthentificationSQL();
+        String SQL = "insert into Utilisateur(email, pseudo, motDePasse) VALUES ('"+eMail+"', '"+pseudo+"','"+mdp+"')";
+        st.executeUpdate(SQL);
+    }
+
+    public static void renameSQL(String pseudo, String nouveauPseudo) throws SQLException {
+        Statement st = connecterAuthentificationSQL();
+        String SQL = "UPDATE Utilisateur SET pseudo = '"+nouveauPseudo+"' WHERE pseudo = '"+pseudo+"'";
+        st.executeUpdate(SQL);
+    }
+
+    public static void resetMDP(String pseudo, String nouveauMDP) throws SQLException {
+        Statement st = connecterAuthentificationSQL();
+        String SQL = "UPDATE Utilisateur SET motDePasse = '"+nouveauMDP+"' WHERE pseudo = '"+pseudo+"'";
+        st.executeUpdate(SQL);
+    }
+
+    public static void supprimerUtilisateurSQL(String pseudo) throws SQLException {
+        Statement st = connecterAuthentificationSQL();
+        String SQL = "DELETE FROM Utilisateur WHERE pseudo = '"+pseudo+"'";
+        st.executeUpdate(SQL);
+
     }
 }
