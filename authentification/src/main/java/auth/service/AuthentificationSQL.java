@@ -1,6 +1,4 @@
 package auth.service;
-import auth.dto.UtilisateurDTO;
-import auth.modele.Utilisateur;
 
 import java.sql.*;
 
