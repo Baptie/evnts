@@ -20,6 +20,9 @@ public class UtilisateurPublicDTO {
         this.listeContacts = listeContacts;
     }
 
+    public UtilisateurPublicDTO() {
+    }
+
     public String getPseudo() {
         return pseudo;
     }
