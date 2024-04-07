@@ -11,8 +11,7 @@ function App() {
       <BrowserRouter>
   
         <Routes>
-            <Route path="/connexion" element={<Connexion/>}/>
-            <Route path="/inscription" element={<Inscription/>}/>
+        
             <Route path="/" element={<Accueil/>}/>
             <Route path="/salons" element={<AllSalons/>}/>
 
