@@ -22,6 +22,10 @@ public class Security {
                         })
                         .oauth2Login(oauth2 -> oauth2
                                 .successHandler(new CustomLoginSuccessHandler())) // redirection vers /secured
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")  // URL de redirection après déconnexion
+                        .permitAll()
+                )
                 .formLogin(withDefaults())
                         .formLogin(withDefaults())
                         .build();
