@@ -1,9 +1,7 @@
 package com.example.gestiongoogle.controleur;
 
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -14,28 +12,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.gestiongoogle.service.EmailService;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.sql.SQLOutput;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.stream.Collectors;
 
 @RestController
 public class GoogleControleur {
@@ -86,7 +76,10 @@ public class GoogleControleur {
                 "<input type='hidden' name='" + csrfToken.getParameterName() + "' value='" + token + "' />" +
                 "<input type='submit' value='Ajouter Événement'>" +
                 "</form>" +
-                "</body>" +
+                "<form action='/send-email' method='get'>" +
+                "<input type='submit' value='Envoyer un mail'>" +
+                "</form>" +
+                 "</body>" +
                 "</html>";
     }
 
@@ -149,6 +142,19 @@ public class GoogleControleur {
         event = service.events().insert(calendarId, event).execute();
 
         return "Événement ajouté : " + event.getHtmlLink();
+    }
+
+    @Autowired
+    private EmailService emailService;
+
+    @GetMapping("/send-email")
+    public String sendEmail(Authentication authentication) {
+        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+
+        String email = oidcUser.getEmail();
+
+        emailService.sendSimpleMessage(email, "Test", "est-ce que ca fonctionne ?");
+        return "Email envoyé avec succès";
     }
 
 
