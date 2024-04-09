@@ -1,5 +1,7 @@
 
 import Navbar from '../../components/Navbar/Navbar';
+import Connexion from '../Connexion/Connexion';
+import Inscription from '../Inscription/Inscription';
 import './Accueil.scss';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,11 +12,10 @@ const Accueil =()=> {
 
     if (localStorage.getItem("authenticated")==="no"){
         if (localStorage.getItem("register")===("no")){
-            navigate("/connexion")
-            return(<div></div>)
+            return(<Connexion/>)
         }else{
-            navigate("/inscription")
-            return(<div></div>)
+
+            return(<Inscription/>)
         }
     }else{
         return (
