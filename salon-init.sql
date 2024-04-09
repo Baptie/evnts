@@ -56,15 +56,18 @@ CREATE TABLE MessageSalon (
                                    idSalon INT,
                                    nomAuteur VARCHAR(255),
                                    contenu VARCHAR(255),
-                                   dateMessage VARCHAR(255)
+                                   dateMessage VARCHAR(255),
+                                   FOREIGN KEY (idSalon) REFERENCES Salon(idSalon) ON DELETE CASCADE
+
 );
 
 CREATE TABLE MessageEvenement (
                                   idMessage INT AUTO_INCREMENT PRIMARY KEY,
-                                  idEvenement INT,
+                                  idEvenement INT ,
                                   nomAuteur VARCHAR(255),
                                   contenu VARCHAR(255),
-                                  dateMessage VARCHAR(255)
+                                  dateMessage VARCHAR(255),
+                                  FOREIGN KEY (idEvenement) REFERENCES Evenement(idEvenement) ON DELETE CASCADE
 );
 
 
