@@ -55,7 +55,7 @@ CREATE TABLE MessageSalon (
                                    idSalon INT,
                                    nomAuteur VARCHAR(255),
                                    contenu VARCHAR(255),
-                                   dateMessage VARCHAR(255),
+                                   dateMessage VARCHAR(255)
 );
 
 CREATE TABLE MessageEvenement (
@@ -63,7 +63,7 @@ CREATE TABLE MessageEvenement (
                                   idEvenement INT,
                                   nomAuteur VARCHAR(255),
                                   contenu VARCHAR(255),
-                                  dateMessage VARCHAR(255),
+                                  dateMessage VARCHAR(255)
 );
 
 
