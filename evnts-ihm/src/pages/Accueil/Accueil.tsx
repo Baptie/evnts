@@ -1,3 +1,4 @@
+
 import Navbar from '../../components/Navbar/Navbar';
 import './Accueil.scss';
 import { useNavigate } from 'react-router-dom';
@@ -7,8 +8,8 @@ const Accueil =()=> {
 
     const navigate = useNavigate();
 
-    if (!localStorage.getItem("authenticated")){
-        if (!localStorage.getItem("register")){
+    if (localStorage.getItem("authenticated")==="no"){
+        if (localStorage.getItem("register")===("no")){
             navigate("/connexion")
             return(<div></div>)
         }else{

@@ -8,9 +8,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { login } from '../../services/AuthService';
 
-
-
-
 const Connexion = () => {
 
     const [password, setPassword] = useState("");
@@ -23,15 +20,15 @@ const Connexion = () => {
         try{
             console.log(email,password)
             login(email,password);
-            localStorage.setItem("authenticated",true)
+            localStorage.setItem("authenticated","yes")
             navigate("/")
         }catch (error){
             console.log("Erreur lors de l'authentification : ",error)
         }
     }
     const handleClick = () => {
-        if(!localStorage.getItem("register")){
-            localStorage.setItem("register",true)
+        if(localStorage.getItem("register")===("no")){
+            localStorage.setItem("register","yes")
        }
        navigate("/")
     }

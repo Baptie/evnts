@@ -8,8 +8,8 @@ function goToProfile() {
   }
 
 function disconnect(){
-    window.location.href = '/connexion';
-    
+    localStorage.setItem("authenticated","no");
+
 
 }
 

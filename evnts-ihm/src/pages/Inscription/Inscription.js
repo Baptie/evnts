@@ -18,7 +18,7 @@ const Inscription = () => {
         try{
             console.log(email,password)
             register(nom,email,password);
-            localStorage.setItem("authenticated",true)
+            localStorage.setItem("authenticated","yes")
             navigate("/")
         }catch (error){
             console.log("Erreur lors de l'authentification : ",error)
@@ -27,8 +27,8 @@ const Inscription = () => {
     }
 
     const handleClick = () => {
-       if(localStorage.getItem("register")){
-            localStorage.setItem("register",false)
+       if(localStorage.getItem("register")==="yes"){
+            localStorage.setItem("register","no")
        }
 
        navigate("/");
