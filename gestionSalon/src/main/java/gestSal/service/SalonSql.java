@@ -4,15 +4,6 @@ import gestSal.dto.EvenementDTO;
 import gestSal.dto.MessageDTO;
 import gestSal.dto.SalonDTO;
 import gestSal.dto.UtilisateurDTO;
-import gestSal.facade.FacadeSalon;
-import gestSal.facade.FacadeSalonImpl;
-import gestSal.facade.erreurs.EvenementInexistantException;
-import gestSal.facade.erreurs.NomSalonVideException;
-import gestSal.facade.erreurs.NumeroSalonVideException;
-import gestSal.facade.erreurs.SalonInexistantException;
-import gestSal.modele.Evenement;
-import gestSal.modele.Salon;
-import gestSal.modele.Utilisateur;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,17 +11,8 @@ import java.util.List;
 
 public class SalonSql {
 
-    static FacadeSalon facadeSalon = new FacadeSalonImpl();
-
-    public static void main(String[] args) throws SQLException {
-        validerEvenementSQL(getEvenementByNomEtNumSalonSQL(1,"Jeux de loi"));
-    }
-
-    public SalonSql() {
-    }
 
     public static Statement connecterAuSalonSQL() throws SQLException {
-        // Connexion à la base de données MySQL
         String jdbcUrl = "jdbc:mysql://localhost:3307/salon";
         String jdbcUser = "root";
         String jdbcPassword = "root";
@@ -240,14 +222,13 @@ public class SalonSql {
     }
 
 
-    //TODO TRY
+
     public static void envoyerMessageSalonSQL(SalonDTO salonDTO, MessageDTO messageDTO) throws SQLException {
         Statement st = connecterAuSalonSQL();
         String SQL = "INSERT INTO MessageSalon (idSalon,nomAuteur,contenu,dateMessage) values ("+salonDTO.getIdSalon()+",'"+messageDTO.getAuteur()+"','"+messageDTO.getContenu()+"','"+messageDTO.getDate()+"')";
         st.executeUpdate(SQL);
     }
 
-    //TODO TRY
 
     public static void envoyerMessageEventSQL(EvenementDTO evenementDTO, MessageDTO messageDTO) throws SQLException {
         Statement st = connecterAuSalonSQL();
@@ -255,8 +236,6 @@ public class SalonSql {
         st.executeUpdate(SQL);
     }
 
-
-    //TODO TRY
 
     public static List<MessageDTO> getMessageSalonSQL(int numSalon) throws SQLException {
         ArrayList<MessageDTO> lesMessages = new ArrayList<>();
@@ -277,7 +256,6 @@ public class SalonSql {
     }
 
 
-    //TODO TRY
     public static List<MessageDTO> getMessageEventSQL(int idEvenement) throws SQLException {
         ArrayList<MessageDTO> lesMessages = new ArrayList<>();
         Statement st = connecterAuSalonSQL();
@@ -296,10 +274,12 @@ public class SalonSql {
         return lesMessages;
     }
 
-    //TODO TRY
-    public static void supprimerUtilisateurSQL(Utilisateur utilisateur) throws SQLException {
+    public static void supprimerUtilisateurSQL(UtilisateurDTO utilisateur) throws SQLException {
         Statement st = connecterAuSalonSQL();
         String SQL = "DELETE FROM Membre where idMembre="+utilisateur.getIdUtilisateur();
         st.executeUpdate(SQL);
     }
+
+
+
 }
