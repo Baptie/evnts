@@ -55,19 +55,7 @@ public class ControleurUtilisateur {
             throw new RuntimeException(e);
         }
     }
-    /*
-    @PatchMapping(value = "/changementMdp")
-    public ResponseEntity<String> changerMdp(@RequestParam String email,
-                                             @RequestParam String ancienMdp,
-                                             @RequestParam String nouveauMdp) {
-        try {
-            facadeUtilisateur.changerMdp(email, ancienMdp, nouveauMdp);
-            return ResponseEntity.ok("Mot de passe changé avec succès !");
-        } catch (UtilisateurNonTrouveException | MdpIncorrectException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-    */
+
     @PatchMapping(value = "/changementBio")
     public ResponseEntity<String> changementBio(@RequestParam String email,
                                                 @RequestParam String nouvelleBio) {

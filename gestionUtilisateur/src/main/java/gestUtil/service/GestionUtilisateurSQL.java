@@ -1,7 +1,6 @@
 package gestUtil.service;
 
 import gestUtil.dto.UtilisateurDTO;
-import gestUtil.dto.UtilisateurPublicDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,11 +8,7 @@ import java.util.ArrayList;
 public class GestionUtilisateurSQL {
 
 
-    public GestionUtilisateurSQL(){
-    }
-
     public static Statement connecterGestionUtilisateurSQL() throws SQLException {
-        // Connexion à la base de données MySQL
         String jdbcUrl = "jdbc:mysql://localhost:3308/utilisateur";
         String jdbcUser = "root";
         String jdbcPassword = "root";
@@ -96,7 +91,6 @@ public class GestionUtilisateurSQL {
 
         st.executeUpdate(SQL);
         st.executeUpdate(SQL2);
-
     }
 
     public static ArrayList<String> getListeContactByPseudo(String pseudo) throws SQLException{
