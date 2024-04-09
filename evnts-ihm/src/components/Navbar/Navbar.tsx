@@ -9,6 +9,7 @@ function goToProfile() {
 
 function disconnect(){
     window.location.href = '/connexion';
+    
 
 }
 

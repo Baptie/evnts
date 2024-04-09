@@ -1,47 +1,39 @@
 import './Connexion.scss';
 
-import { Link } from 'react-router-dom'
+import { Link} from 'react-router-dom'
 import logo from '../../assets/logo/logo-black-nocurve.png';
-import React, { useState } from 'react';
+import{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+
+
+import { login } from '../../services/AuthService';
 
 
 
 
-const Connexion = ({handleChange}) => {
+const Connexion = () => {
 
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
 
-
-    const [repLogin, setRep] = useState(false)
-    const [contenuRep, setRepContenu] = useState("")
-
     const navigate = useNavigate();
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        await axios.post("http://localhost:8080/auth/login", {
-            email: email,
-            password: password,
-        }).then(response => {
-            navigate('/accueil?token=' + response.data);
-            console.log(response)
-            localStorage.setItem(etatConnexion,true)
-        }).catch(error => {
-            setRep(true)
-            setRepContenu("Erreur, veuillez réessayer.")
-            console.log(error);
-        });
-        console.log(email,password);
 
-
-
+    const handleSubmit = () =>{
+        try{
+            console.log(email,password)
+            login(email,password);
+            localStorage.setItem("authenticated",true)
+            navigate("/")
+        }catch (error){
+            console.log("Erreur lors de l'authentification : ",error)
+        }
     }
-
     const handleClick = () => {
-        handleChange()
+        if(!localStorage.getItem("register")){
+            localStorage.setItem("register",true)
+       }
+       navigate("/")
     }
 
     return (
@@ -71,10 +63,8 @@ const Connexion = ({handleChange}) => {
                          <input type="password" name="pwd" id="pwd" required value={password} onChange={(event) => setPassword(event.target.value)}/>
                      </div>
 
-                     {repLogin ? <p className='reponseRegister'>{contenuRep}</p> : null}
-
                      <div className="buttonContainer">
-                         <button className="connexionButton" type="submit" onClick={handleSubmit}>Connexion</button>
+                         <button className="connexionButton" type="submit">Connexion</button>
                      </div>
                      
                      
@@ -83,7 +73,7 @@ const Connexion = ({handleChange}) => {
             </form>
 
                 <div className="inscription-link">
-                    <Link to="" onClick={handleClick}>
+                    <Link to="/inscription" onClick={handleClick}>
                         Pas encore inscrit ? Inscrivez vous ici.
                     </Link>
                 </div>
