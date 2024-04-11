@@ -67,6 +67,12 @@ public class GoogleControleur {
     public String secured(Authentication authentication, HttpServletRequest request) {
         OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
 
+        boolean nouvelUtilisateur = facadeGoogle.verifierUtilisateurExistant();
+
+        if(nouvelUtilisateur){
+            return "redirect:/newAccount";
+        }
+
         String email = oidcUser.getEmail();
         String name = oidcUser.getFullName();
         //String token = oidcUser.getAccessTokenHash();
@@ -91,6 +97,49 @@ public class GoogleControleur {
                 "</form>" +
                  "</body>" +
                 "</html>";
+    }
+
+    @GetMapping("/newAccount")
+    public String newAccount(Authentication authentication,HttpServletRequest request){
+        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+        String email = oidcUser.getEmail();
+
+        // Récupérer le jeton CSRF IMPORTANT : IL FAUT QU'IL FASSE PARTIE DE LA REQUETE !!!!!!
+        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        String token = csrfToken.getToken();
+
+        return "<!DOCTYPE html>" +
+                "<html>" +
+                "<head>" +
+                "<title>Création d'Utilisateur</title>" +
+                "</head>" +
+                "<body>" +
+                "<form action='/new-user' method='post'>" +
+                "Email: <input type='email' name='email' value="+email+ "readonly required><br>" +
+                "Pseudo: <input type='text' name='pseudo' required><br>" +
+                "Bio: <textarea name='bio'></textarea><br>" +
+                "<input type='hidden' name='" + csrfToken.getParameterName() + "' value='" + token + "' />" +
+                "<input type='submit' value='Créer Utilisateur'>" +
+                "</form>" +
+                "</body>" +
+                "</html>";
+    }
+
+    @PostMapping("/new-user")
+    public ResponseEntity<?> newUser(Authentication authentication,
+                                     @RequestParam String email,
+                                     @RequestParam String pseudo,
+                                     @RequestParam String bio){
+        try{
+            facadeGoogle.newUtilisateur(email,pseudo,bio);
+
+            return ResponseEntity.ok("Utilisateur ajoute");
+        }catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Erreur");
+        }
+
     }
 
     @PostMapping("/add-event")

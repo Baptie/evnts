@@ -3,6 +3,7 @@ package com.example.gestiongoogle.facade;
 import com.example.gestiongoogle.exceptions.AucunCalendrierTrouveException;
 import com.example.gestiongoogle.exceptions.DateFinEvenementInvalideException;
 import com.example.gestiongoogle.exceptions.ProblemeEnvoiMailException;
+import com.example.gestiongoogle.modele.Utilisateur;
 import com.example.gestiongoogle.service.EmailService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -37,6 +38,8 @@ public class FacadeGoogleImpl implements IFacadeGoogle {
 
     @Autowired
     private EmailService emailService;
+
+
 
     public String ajouterEvenementCalendrier(Authentication authentication, String nom, String location, String debut, String fin, String description) throws IOException, GeneralSecurityException, AucunCalendrierTrouveException, DateFinEvenementInvalideException {
 
@@ -115,5 +118,15 @@ public class FacadeGoogleImpl implements IFacadeGoogle {
         }catch(Exception e){
             throw new ProblemeEnvoiMailException();
         }
+    }
+
+    //TODO : verifier en base si mail deja un compte
+    public boolean verifierUtilisateurExistant() {
+        return true;
+    }
+
+    //TODO : ajouter vraiment en base l'utilisateur
+    public void newUtilisateur(String email, String pseudo, String bio) {
+        Utilisateur utilisateur = new Utilisateur(email,pseudo,bio);
     }
 }
