@@ -12,11 +12,15 @@ export const register = (username: string, email: string, password: string) => {
     .then((response) => {
       return response.data;
     }
+    ).catch(error =>{
+      console.log(error)
+    }
     );
    
   };
   
-  export const login = (email: string, password: string) => {
+  export function login(email: string, password: string){
+    
     return axios
       .post(API_URL + "connexion", {
         email,
@@ -28,7 +32,11 @@ export const register = (username: string, email: string, password: string) => {
         }
   
         return response.data;
-      });
+      }).catch(error =>{
+        console.log(error);
+        alert(error);
+      }
+      );
   };
   
   export const logout = () => {

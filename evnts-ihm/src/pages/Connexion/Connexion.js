@@ -4,9 +4,10 @@ import { Link} from 'react-router-dom'
 import logo from '../../assets/logo/logo-black-nocurve.png';
 import{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
+const API_URL = "http://localhost:8080/auth/";
 
-import { login } from '../../services/AuthService';
 
 const Connexion = () => {
 
@@ -16,18 +17,32 @@ const Connexion = () => {
     const navigate = useNavigate();
 
 
-    const handleSubmit = () =>{
-        try{
-            console.log(email,password)
-            login(email,password);
-            localStorage.setItem("authenticated","yes")
-            navigate("/")
-        }catch (error){
-            console.log("Erreur lors de l'authentification : ",error)
+    async function login(email, password){
+    
+        try {
+            const response = await axios
+                .post(API_URL + "connexion", {
+                    email,
+                    password,
+                });
+            if (response.data.accessToken) {
+                localStorage.setItem("user", JSON.stringify(response.data));
+            }
+
+            localStorage.setItem("user", response.data);
+            localStorage.setItem("authenticated", "yes");
+            navigate("/");
+        } catch (error) {
+            console.log("Erreur lors de l'authentification : ", error);
+            alert("Erreur lors de l'authentification : ", error.message);
         }
+      };
+
+    const handleSubmit = () =>{
+       login(email,password)
     }
     const handleClick = () => {
-        if(localStorage.getItem("register")===("no")){
+        if(!localStorage.getItem("register")===("yes")){
             localStorage.setItem("register","yes")
        }
        navigate("/")
@@ -70,7 +85,7 @@ const Connexion = () => {
             </form>
 
                 <div className="inscription-link">
-                    <Link to="/inscription" onClick={handleClick}>
+                    <Link to="" onClick={handleClick}>
                         Pas encore inscrit ? Inscrivez vous ici.
                     </Link>
                 </div>
