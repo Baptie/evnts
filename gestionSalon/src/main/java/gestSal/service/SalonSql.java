@@ -26,6 +26,8 @@ public class SalonSql {
 
     }
 
+
+
     public static void creerSalonSQL(String nomSalon, String nomCreateur, String logo) throws SQLException {
         Statement st = connecterAuSalonSQL();
         String SQL = "INSERT INTO Salon (nomSalon, nomCreateur, logo) VALUES ('"+nomSalon+"', '"+nomCreateur+"', '"+logo+"')";

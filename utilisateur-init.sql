@@ -20,6 +20,16 @@ CREATE TABLE Message (
 );
 
 
+
+CREATE TABLE ListeContact (
+                              idUser INT,
+                              idUser2 INT,
+                              FOREIGN KEY (idUser) REFERENCES User(idUser),
+                              FOREIGN KEY (idUser2) REFERENCES User(idUser)
+);
+
+
+
 -- Créer les utilisateurs Vince et Sid
 INSERT INTO User (email, pseudo, description, status, photo) VALUES ('vince@bg.com', 'Vince', 'Description de Vince', 'Actif', 'nerd.png');
 INSERT INTO User (email, pseudo, description, status, photo) VALUES ('sid@gital.com', 'Sid', 'Description de Sid', 'Actif', 'chauve.png');
@@ -28,3 +38,6 @@ INSERT INTO User (email, pseudo, description, status, photo) VALUES ('sid@gital.
 INSERT INTO Message (contenu, dateEnvoi, idSender, idReceiver) VALUES ('Salut Sid, comment ça va ?', NOW(), 1, 2);
 INSERT INTO Message (contenu, dateEnvoi, idSender, idReceiver) VALUES ('Salut Vince, ça va bien, merci !', NOW(), 2, 1);
 
+-- Ajouter des utilisateurs dans la liste de contacts
+INSERT INTO ListeContact (idUser, idUser2) VALUES (1, 2); -- Vince ajoute Sid à ses contacts
+INSERT INTO ListeContact (idUser, idUser2) VALUES (2, 1); -- Sid ajoute Vince à ses contacts

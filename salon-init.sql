@@ -4,7 +4,6 @@ USE salon;
 CREATE TABLE Membre (
                         idMembre INT AUTO_INCREMENT PRIMARY KEY,
                         nomMembre VARCHAR(255) NOT NULL
-
 );
 
 CREATE TABLE Salon (
@@ -63,7 +62,7 @@ CREATE TABLE MessageSalon (
 
 CREATE TABLE MessageEvenement (
                                   idMessage INT AUTO_INCREMENT PRIMARY KEY,
-                                  idEvenement INT ,
+                                  idEvenement INT,
                                   nomAuteur VARCHAR(255),
                                   contenu VARCHAR(255),
                                   dateMessage VARCHAR(255),
