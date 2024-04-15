@@ -1,8 +1,10 @@
-import { NavLink } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import './AllSalons.scss'
 import user_placeholder from '../../assets/icons/user_placeholder.jpeg'
+import axios from "axios";
 
+
+const API_URL="http://localhost:8080/auth/";
 /* 
 const salons = document.querySelectorAll('allRowsSalon rowSalon');
 
@@ -30,7 +32,41 @@ salons.forEach(salon => {
 });
 */
 
+
+const events = [
+    'Evenement 1; Lieu 1; Horaire 1',
+    'Evenement 2; Lieu 2; Horaire 2',
+    'Evenement 3; Lieu 3; Horaire 3',
+    'Evenement 4; Lieu 4; Horaire 4'
+]
+
+async function fetchData(idUser:string){
+
+    // Récupération des salons du joueur
+    await axios
+    .get(API_URL+idUser+"/salons")
+    .then( response => {
+        events.push(response.data)
+    })
+    .catch(error =>{
+        console.log(error)
+    });
+
+}
 function AllSalons(){
+    const listSalonRender = events.map(event => 
+        <div className="rowSalon">
+            <div className="salonPPContainer">
+                 <img src={user_placeholder} alt="pp_salon" className='salonPP' />
+            </div>
+
+            <div className="salonNameContainer">
+                <span className="labelSalonName">
+                    {event}
+                </span>
+            </div>
+         </div>
+        )
 
     return(
         <div className="page">
@@ -45,124 +81,20 @@ function AllSalons(){
 
                 <div className="contentContainer">
                     <div className="allRowsSalon">
-                    <NavLink to="/" className="rowSalon">
-                            <div className="salonPPContainer">
-                                <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-                            </div>
-                            <div className="salonNameContainer">
-                                <span className="labelSalonName">
-                                    nom-salon
-                                </span>
-                            </div>
-                        </NavLink>
-                  
-                        <NavLink to="/" className="rowSalon">
-                            <div className="salonPPContainer">
-                                <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-                            </div>
-                            <div className="salonNameContainer">
-                                <span className="labelSalonName">
-                                    nom-salon
-                                </span>
-                            </div>
-                        </NavLink>
-                  
-                        <NavLink to="/" className="rowSalon">
-                            <div className="salonPPContainer">
-                                <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-                            </div>
-                            <div className="salonNameContainer">
-                                <span className="labelSalonName">
-                                    nom-salon
-                                </span>
-                            </div>
-                        </NavLink>
-                  
-                        <NavLink to="/" className="rowSalon">
-                            <div className="salonPPContainer">
-                                <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-                            </div>
-                            <div className="salonNameContainer">
-                                <span className="labelSalonName">
-                                    nom-salon
-                                </span>
-                            </div>
-                        </NavLink>
-                  
-                        <NavLink to="/" className="rowSalon">
-                            <div className="salonPPContainer">
-                                <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-                            </div>
-                            <div className="salonNameContainer">
-                                <span className="labelSalonName">
-                                    nom-salon
-                                </span>
-                            </div>
-                        </NavLink>
-                  
-                        <NavLink to="/" className="rowSalon">
-                            <div className="salonPPContainer">
-                                <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-                            </div>
-                            <div className="salonNameContainer">
-                                <span className="labelSalonName">
-                                    nom-salon
-                                </span>
-                            </div>
-                        </NavLink>
-                  
-                        <NavLink to="/" className="rowSalon">
-                            <div className="salonPPContainer">
-                                <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-                            </div>
-                            <div className="salonNameContainer">
-                                <span className="labelSalonName">
-                                    nom-salon
-                                </span>
-                            </div>
-                        </NavLink>
-                  
-                        <NavLink to="/" className="rowSalon">
-                            <div className="salonPPContainer">
-                                <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-                            </div>
-                            <div className="salonNameContainer">
-                                <span className="labelSalonName">
-                                    nom-salon
-                                </span>
-                            </div>
-                        </NavLink>
-                  
-                        <NavLink to="/" className="rowSalon">
-                            <div className="salonPPContainer">
-                                <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-                            </div>
-                            <div className="salonNameContainer">
-                                <span className="labelSalonName">
-                                    nom-salon
-                                </span>
-                            </div>
-                        </NavLink>
-                  
-                        <NavLink to="/" className="rowSalon">
-                            <div className="salonPPContainer">
-                                <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-                            </div>
-                            <div className="salonNameContainer">
-                                <span className="labelSalonName">
-                                    nom-salon
-                                </span>
-                            </div>
-                        </NavLink>
+                        {listSalonRender}
                     </div>
 
-                    <div className="contenuSalon"></div>
+                    <div className="contenuSalon">
+
+
+                    </div>
                         
                     
                 </div>
             </div>
 
-        </div>
+            </div>
+        
     )
 }
 
