@@ -3,11 +3,6 @@ import Connexion from '../Connexion/Connexion';
 import Inscription from '../Inscription/Inscription';
 import './Accueil.scss';
 
-
-function test(){
-    console.log(localStorage.getItem("user"))
-}
-
 const Accueil =()=> {
     if (localStorage.getItem("authenticated")==="no"){
         if (localStorage.getItem("register")===("no")){
@@ -18,14 +13,17 @@ const Accueil =()=> {
         }
     }else{
         return (
-                <div>
-                    <Navbar/>
+                <div className="page">
+                    <div className="navbarContainer">
+                        <Navbar/>
+                    </div>
+                   
                     <div className="contentPage">
                         <div className="sectionHeaderPage">
                             <span className="labelHeaderPage">Mes événements</span>
                         </div>
                         <div className="contentContainer allEventsContainer">
-                            <button onClick={test}>TEST</button>
+                          
                         </div>
 
                     </div>
