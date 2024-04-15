@@ -114,6 +114,43 @@ public class FacadeSalonImplTest {
         facadeSalon.retirerModerateurDuSalon(salon, utilisateur);
         assertFalse(salon.getListeModerateur().contains(utilisateur));
     }
+
+    //##################################CREER EVENEMENT####################################################
+    @Test
+    public void creerEvenementOk() throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
+        Salon salon = new Salon();
+        Utilisateur createur = new Utilisateur();
+        facadeSalon.salons.add(salon);
+
+        String nomEvenement = "EventSuccess";
+        Evenement event = facadeSalon.creerEvenement(salon, nomEvenement, 100, "Détails de l'événement", "Localisation", createur, "2024-04-14");
+        assertNotNull(event);
+        assertEquals(nomEvenement, event.getNomEvenement());
+    }
+
+    @Test(expected = NomEvenementVideException.class)
+    public void creerEvenementKoNomVide() throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
+        Salon salon = new Salon();
+        Utilisateur createur = new Utilisateur();
+        facadeSalon.salons.add(salon);
+
+        facadeSalon.creerEvenement(salon, "", 100, "Détails de l'événement", "Localisation", createur, "2024-04-14");
+    }
+
+    @Test(expected = NomEvenementDejaPrisException.class)
+    public void creerEvenementKoNomDejaPris() throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
+        Salon salon = new Salon();
+        Utilisateur createur = new Utilisateur();
+        facadeSalon.salons.add(salon);
+
+        String nomEvenement = "EventExists";
+        Evenement existingEvent = new Evenement();
+        existingEvent.setNomEvenement(nomEvenement);
+        facadeSalon.evenements.add(existingEvent);
+
+        facadeSalon.creerEvenement(salon, nomEvenement, 100, "Détails de l'événement", "Localisation", createur, "2024-04-14");
+    }
+
     //##################################TEST PRESENT EVENEMENT ####################################################
 
     @Test
@@ -145,7 +182,10 @@ public class FacadeSalonImplTest {
 
         facadeSalon.seDefiniCommePresentAUnEvenement(utilisateur, salon, evenement);
     }
+
+
     //##################################TEST ABSENT EVENEMENT ####################################################
+
 
     @Test
     public void testSeDefiniCommeAbsentAUnEvenementOk() throws Exception {

@@ -4,6 +4,7 @@ import gestUtil.dto.UtilisateurPublicDTO;
 import gestUtil.exceptions.EMailDejaPrisException;
 import gestUtil.exceptions.PseudoDejaPrisException;
 import gestUtil.exceptions.UtilisateurNonTrouveException;
+import gestUtil.modele.Utilisateur;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -132,5 +133,29 @@ public class FacadeGestionUtilisateurImplTest {
     @Test
     public void ajoutContactKoUtilisateurNonTrouve() {
         assertThrows(UtilisateurNonTrouveException.class, () -> facadeGestionUtilisateur.ajoutContact("inexistant", "existant"));
+    }
+
+
+    //#######################################################CHANGER BIO#######################################################//
+    /**
+     * Test pour changer la bio avec succès.
+     */
+    @Test
+    public void changerBioSucces() throws Exception {
+        String email = "test@gmail.com";
+        facadeGestionUtilisateur.creerCompte("username", email, "Ancienne bio", "photo.jpg");
+        facadeGestionUtilisateur.changerBio(email, "Nouvelle bio");
+
+        assertTrue(facadeGestionUtilisateur.getInformationsPubliques("username").getBio().equals("Nouvelle bio"));
+    }
+
+    /**
+     * Test pour changer la bio échoue si l'utilisateur n'existe pas.
+     */
+    @Test
+    public void changerBioUtilisateurNonTrouve() {
+        String emailNonExistant = "nonexistant@example.com";
+
+        assertThrows(UtilisateurNonTrouveException.class, () -> facadeGestionUtilisateur.changerBio(emailNonExistant, "Nouvelle bio"));
     }
 }
