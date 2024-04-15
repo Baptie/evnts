@@ -14,14 +14,9 @@ import java.util.List;
 
 public class SalonSql {
 
-    static FacadeSalon facadeSalon = new FacadeSalonImpl();
-
-    public SalonSql() {
-    }
 
     public static Statement connecterAuSalonSQL() throws SQLException {
-        // Connexion à la base de données MySQL
-        String jdbcUrl = "jdbc:mysql://localhost:3308/utilisateur";
+        String jdbcUrl = "jdbc:mysql://localhost:3307/salon";
         String jdbcUser = "root";
         String jdbcPassword = "root";
 
@@ -230,14 +225,13 @@ public class SalonSql {
     }
 
 
-    //TODO TRY
+
     public static void envoyerMessageSalonSQL(SalonDTO salonDTO, MessageDTO messageDTO) throws SQLException {
         Statement st = connecterAuSalonSQL();
         String SQL = "INSERT INTO MessageSalon (idSalon,nomAuteur,contenu,dateMessage) values ("+salonDTO.getIdSalon()+",'"+messageDTO.getAuteur()+"','"+messageDTO.getContenu()+"','"+messageDTO.getDate()+"')";
         st.executeUpdate(SQL);
     }
 
-    //TODO TRY
 
     public static void envoyerMessageEventSQL(EvenementDTO evenementDTO, MessageDTO messageDTO) throws SQLException {
         Statement st = connecterAuSalonSQL();
@@ -245,8 +239,6 @@ public class SalonSql {
         st.executeUpdate(SQL);
     }
 
-
-    //TODO TRY
 
     public static List<MessageDTO> getMessageSalonSQL(int numSalon) throws SQLException {
         ArrayList<MessageDTO> lesMessages = new ArrayList<>();
@@ -267,7 +259,6 @@ public class SalonSql {
     }
 
 
-    //TODO TRY
     public static List<MessageDTO> getMessageEventSQL(int idEvenement) throws SQLException {
         ArrayList<MessageDTO> lesMessages = new ArrayList<>();
         Statement st = connecterAuSalonSQL();
@@ -286,8 +277,7 @@ public class SalonSql {
         return lesMessages;
     }
 
-    //TODO TRY
-    public static void supprimerUtilisateurSQL(Utilisateur utilisateur) throws SQLException {
+    public static void supprimerUtilisateurSQL(UtilisateurDTO utilisateur) throws SQLException {
         Statement st = connecterAuSalonSQL();
         String SQL = "DELETE FROM Membre where idMembre="+utilisateur.getIdUtilisateur();
         st.executeUpdate(SQL);

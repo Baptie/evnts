@@ -4,6 +4,7 @@ USE salon;
 CREATE TABLE Membre (
                         idMembre INT AUTO_INCREMENT PRIMARY KEY,
                         nomMembre VARCHAR(255) NOT NULL
+
 );
 
 CREATE TABLE Salon (
@@ -16,16 +17,16 @@ CREATE TABLE Salon (
 CREATE TABLE SalonMembre (
                              idSalon INT,
                              idMembre INT,
-                             FOREIGN KEY (idSalon) REFERENCES Salon(idSalon),
-                             FOREIGN KEY (idMembre) REFERENCES Membre(idMembre),
+                             FOREIGN KEY (idSalon) REFERENCES Salon(idSalon) ON DELETE CASCADE,
+                             FOREIGN KEY (idMembre) REFERENCES Membre(idMembre) ON DELETE CASCADE,
                              PRIMARY KEY (idSalon, idMembre)
 );
 
 CREATE TABLE ModerateurSalon (
                              idSalon INT,
                              idMembre INT,
-                             FOREIGN KEY (idSalon) REFERENCES Salon(idSalon),
-                             FOREIGN KEY (idMembre) REFERENCES Membre(idMembre),
+                             FOREIGN KEY (idSalon) REFERENCES Salon(idSalon) ON DELETE CASCADE,
+                             FOREIGN KEY (idMembre) REFERENCES Membre(idMembre) ON DELETE CASCADE,
                              PRIMARY KEY (idSalon, idMembre)
 );
 
@@ -39,14 +40,14 @@ CREATE TABLE Evenement (
                            isValide BOOLEAN,
                            nomCreateur VARCHAR(255) NOT NULL,
                            idSalon INT,
-                           FOREIGN KEY (idSalon) REFERENCES Salon(idSalon)
+                           FOREIGN KEY (idSalon) REFERENCES Salon(idSalon) ON DELETE CASCADE
 );
 
 CREATE TABLE PresenceEvenement (
                                  idMembre INT,
                                  idEvenement INT,
-                                 FOREIGN KEY (idEvenement) REFERENCES Evenement(idEvenement),
-                                 FOREIGN KEY (idMembre) REFERENCES Membre(idMembre),
+                                 FOREIGN KEY (idEvenement) REFERENCES Evenement(idEvenement) ON DELETE CASCADE,
+                                 FOREIGN KEY (idMembre) REFERENCES Membre(idMembre) ON DELETE CASCADE,
                                  PRIMARY KEY (idEvenement, idMembre)
 );
 
@@ -56,14 +57,17 @@ CREATE TABLE MessageSalon (
                                    nomAuteur VARCHAR(255),
                                    contenu VARCHAR(255),
                                    dateMessage VARCHAR(255),
+                                   FOREIGN KEY (idSalon) REFERENCES Salon(idSalon) ON DELETE CASCADE
+
 );
 
 CREATE TABLE MessageEvenement (
                                   idMessage INT AUTO_INCREMENT PRIMARY KEY,
-                                  idEvenement INT,
+                                  idEvenement INT ,
                                   nomAuteur VARCHAR(255),
                                   contenu VARCHAR(255),
                                   dateMessage VARCHAR(255),
+                                  FOREIGN KEY (idEvenement) REFERENCES Evenement(idEvenement) ON DELETE CASCADE
 );
 
 
