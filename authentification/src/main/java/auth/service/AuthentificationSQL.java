@@ -5,11 +5,7 @@ import java.sql.*;
 public class AuthentificationSQL {
 
 
-    public AuthentificationSQL(){
-    }
-
     public static Statement connecterAuthentificationSQL() throws SQLException {
-        // Connexion à la base de données MySQL
         String jdbcUrl = "jdbc:mysql://localhost:3306/authentification";
         String jdbcUser = "root";
         String jdbcPassword = "root";
@@ -19,10 +15,6 @@ public class AuthentificationSQL {
         return statement;
 
     }
-    public static void main(String[] args) throws SQLException {
-        supprimerUtilisateurSQL("vince");
-    }
-
 
     public static void inscriptionSQL(String pseudo, String mdp, String eMail) throws SQLException {
         Statement st = connecterAuthentificationSQL();
