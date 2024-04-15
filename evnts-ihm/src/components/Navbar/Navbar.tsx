@@ -3,14 +3,17 @@ import { NavLink } from 'react-router-dom'
 import user_placeholder from '../../assets/icons/user_placeholder.jpeg'
 import logo from '../../assets/logo/logo-black.png'
 
+
 function goToProfile() {
     window.location.href = '/profile';
   }
-
-function disconnect(){
-    window.location.href = '/connexion';
-
+async function disconnect(){
+        localStorage.setItem("authenticated","no")
+        localStorage.setItem("user","")
+        localStorage.setItem("register","no")
+        window.location.href = '/'
 }
+
 
 function Navbar() {
     return (
