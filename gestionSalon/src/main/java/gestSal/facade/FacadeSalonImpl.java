@@ -3,6 +3,7 @@ package gestSal.facade;
 import gestSal.dto.*;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.*;
+import gestSal.service.SalonSql;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -45,18 +46,25 @@ public class FacadeSalonImpl implements FacadeSalon {
             salonCree.setNumSalon(id);
         }
 
+        SalonDTO.creerSalonSQL(nomSalon,nomCreateur,"https://e7.pngegg.com/pngimages/872/540/png-clipart-computer-icons-event-management-event-miscellaneous-angle-thumbnail.png");
         return salonCree;
     }
 
 
     @Override
-    public Salon modifierSalon(Salon salon, String choix, String valeur) throws SalonInexistantException, NomSalonVideException, NumeroSalonVideException {
+    public Salon modifierSalon(Salon salon, String choix, String valeur)  {
         switch (choix) {
-//            case "num" -> salon.setNumSalon(Integer.parseInt(valeur));
             case "nom" -> salon.setNomSalon(valeur);
             case "logo" -> salon.setLogo(valeur);
             case "createur" -> salon.setNomCreateur(valeur);
         }
+        try {
+            salon = SalonDTO.modifierSalonSQL(salon,choix,valeur,salon.getNumSalon());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
         return salon;
     }
 
@@ -94,9 +102,15 @@ public class FacadeSalonImpl implements FacadeSalon {
 
     @Override
     public Salon getSalonByNum(int numSalon) throws SalonInexistantException {
+        Salon salon = new Salon();
         for(Salon s : salons){
             if(s.getNumSalon()==numSalon){
-                return s;
+                try {
+                    salon = SalonDTO.getSalonById(numSalon);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                return salon;
             }
         }
         throw new SalonInexistantException();
@@ -241,7 +255,7 @@ public class FacadeSalonImpl implements FacadeSalon {
         utilisateurDTO.setMesConversations(utilisateur.getMesConversations());
         return utilisateurDTO;
     }
-    public SalonDTO convertSalonToDTO(Salon salon){
+    public static SalonDTO convertSalonToDTO(Salon salon){
         SalonDTO salonDTO = new SalonDTO();
         salonDTO.setIdSalon(salon.getIdSalon());
         salonDTO.setNumSalon(salon.getNumSalon());

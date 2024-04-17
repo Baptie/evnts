@@ -23,7 +23,7 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
     }
 
     @Override
-    public void inscription(String pseudo, String mdp, String eMail) throws PseudoDejaPrisException, EMailDejaPrisException {
+    public void inscription(String pseudo, String mdp, String eMail) throws PseudoDejaPrisException, EMailDejaPrisException, EmailOuPseudoDejaPrisException {
 
         if (utilisateurs.containsKey(pseudo)) {
             throw new PseudoDejaPrisException();
@@ -34,15 +34,15 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
             }
         }
         this.utilisateurs.put(pseudo,new Utilisateur(pseudo,eMail,passwordEncoder.encode(mdp)));
-        UtilisateurDTO.enregistrerUser(eMail,pseudo,mdp);
+        UtilisateurDTO.enregistrerUser(eMail,pseudo,passwordEncoder.encode(mdp));
 
     }
 
     @Override
     public String connexion(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException {
-        if (!utilisateurs.containsKey(pseudo))
+        if (!utilisateurs.containsKey(pseudo)) {
             throw new UtilisateurInexistantException();
-
+        }
         Utilisateur u = utilisateurs.get(pseudo);
 
         if (!passwordEncoder.matches(mdp, u.getMdp()))
@@ -89,6 +89,7 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
         utilisateurs.remove(ancienPseudo);
         utilisateur.setPseudo(nouveauPseudo);
         utilisateurs.put(nouveauPseudo, utilisateur);
+        System.out.println("je fais la modif en bdd mtn");
         UtilisateurDTO.resetPseudo(ancienPseudo,nouveauPseudo);
 
     }
@@ -105,6 +106,7 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
 
         Utilisateur utilisateur = utilisateurs.get(pseudo);
         utilisateur.setMdp(passwordEncoder.encode(nouveauMDP));
+        UtilisateurDTO.resetMDP(pseudo,nouveauMDP);
     }
 
     @Override
@@ -118,6 +120,7 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
             throw new MdpIncorrecteException();
 
         utilisateurs.remove(pseudo);
+        UtilisateurDTO.supprimerUtilisateur(pseudo);
     }
 
 }

@@ -1,11 +1,13 @@
 package gestSal.dto;
 
 
+import gestSal.bdd.InteractionBDDSalon;
 import gestSal.modele.Evenement;
 import gestSal.modele.Message;
 import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class SalonDTO {
@@ -30,6 +32,29 @@ public class SalonDTO {
 
     public SalonDTO() {
     }
+
+    public static void creerSalonSQL(String nomSalon, String nomCreateur, String url) {
+        InteractionBDDSalon bdd = new InteractionBDDSalon();
+        try {
+            bdd.creerSalonSQL(nomSalon,nomCreateur,url);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static Salon getSalonById(int numSalon) throws SQLException {
+        InteractionBDDSalon bdd = new InteractionBDDSalon();
+        Salon salon = bdd.getSalonById(numSalon);
+        return salon;
+    }
+
+    public static Salon modifierSalonSQL(Salon salon,String choix, String valeur, int numSalon) throws SQLException {
+        InteractionBDDSalon bdd = new InteractionBDDSalon();
+        Salon salonReturn = bdd.modifierSalonSQL(salon,choix,valeur, numSalon);
+        return salonReturn;
+    }
+
 
 
 

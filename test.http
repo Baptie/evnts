@@ -1,8 +1,27 @@
 
 ###Inscription Personne expected = 201
-POST http://localhost:8080/auth/inscription?pseudo=test222&mdp=test222&eMail=test222
+POST http://localhost:8080/auth/inscription?pseudo=vincent5&mdp=vincent5&eMail=vincent.aubert5@evnt.com
 Content-Type: application/x-www-form-urlencoded
 Accept: */*
+
+###Inscription Personne expected = 201
+PATCH http://localhost:8080/auth/modification-pseudo?pseudo=vincent2&nouveauPseudo=vincent3
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+###Inscription Personne expected = 201
+PATCH http://localhost:8080/auth/modification-mdp?pseudo=vincent3&mdp=vincent2&nouveauMDP=mdpfdp
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+###Test
+PATCH http://localhost:8080/auth/modification-pseudo?pseudo=test2224&nouveauPseudo=test22245
+Content-Type: application/json
+
+###Test
+DELETE http://localhost:8080/auth/suppression?pseudo=vincent3&mdp=mdpfdp
+Content-Type: application/json
+
 
 ###connexion Personne expected = 201
 POST http://localhost:8080/auth/connexion
@@ -30,6 +49,8 @@ Content-Type: application/x-www-form-urlencoded
 Accept: */*
 
 email=vincentlpb@camacho.fr
+
+
 
 
 

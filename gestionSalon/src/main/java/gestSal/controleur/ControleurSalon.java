@@ -39,8 +39,6 @@ public class ControleurSalon {
         try {
             Salon salon = facadeSalon.creerSalon(nomCreateur, nomSalon);
 
-            SalonSql.creerSalonSQL(nomSalon,nomCreateur,"https://e7.pngegg.com/pngimages/872/540/png-clipart-computer-icons-event-management-event-miscellaneous-angle-thumbnail.png");
-
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/salon/{nomDuSalon}")
                     .buildAndExpand(salon.getNomSalon())
@@ -58,34 +56,28 @@ public class ControleurSalon {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body(new ApiResponseSalon("Erreur lors de la création du salon : " + e.getMessage()));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
 
 
     @PatchMapping("/{numSalon}")
-    public ResponseEntity<ApiResponseSalonDTO> modifierSalon(@PathVariable int numSalon, @RequestBody String choix, @RequestBody String valeur) {
+    public ResponseEntity<ApiResponseSalon> modifierSalon(@PathVariable int numSalon, @RequestBody String choix, @RequestBody String valeur) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
-            SalonDTO salonDTO = SalonSql.getSalonById(numSalon);
 
             if (salon == null) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponseSalonDTO("Salon introuvable"));
+                        .body(new ApiResponseSalon("Salon introuvable"));
             }
 
             salon = facadeSalon.modifierSalon(salon, choix, valeur);
-            salonDTO = SalonSql.modifierSalonSQL(salonDTO,choix,valeur,numSalon);
-            return ResponseEntity.ok(new ApiResponseSalonDTO(salonDTO));
+            return ResponseEntity.ok(new ApiResponseSalon(salon));
         } catch (SalonInexistantException | NomSalonVideException | NumeroSalonVideException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponseSalonDTO("Erreur lors de la modification du salon : " + e.getMessage()));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+                    .body(new ApiResponseSalon("Erreur lors de la modification du salon : " + e.getMessage()));
         }
     }
 
