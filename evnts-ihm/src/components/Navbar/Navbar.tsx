@@ -32,9 +32,6 @@ function Navbar() {
                 <div className="navbarLink">
                     <NavLink to="/salons" className='navbarLinkLabel'>Salons</NavLink>
                 </div>
-                <div className="navbarLink">
-                    <NavLink to="/messagerie" className='navbarLinkLabel'>Messagerie</NavLink>
-                </div>
                 
 
             </div>

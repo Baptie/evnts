@@ -6,6 +6,7 @@ import AllSalons from './pages/AllSalons/AllSalons';
 
 
 
+
 function App() {
 
 
@@ -16,6 +17,7 @@ function App() {
             
             <Route path="/" element={<Accueil/>}/>
             <Route path="/salons" element={<AllSalons/>}/>
+           
 
 
 
