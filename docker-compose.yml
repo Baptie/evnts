@@ -26,6 +26,7 @@ services:
 
   dbAuthentification:
     image: mysql:latest
+    container_name: dbAuthentification
     restart: always
     ports:
       - 3306:3306
@@ -37,6 +38,7 @@ services:
 
   dbSalon:
     image: mysql:latest
+    container_name: dbSalon
     restart: always
     ports:
       - 3307:3306
@@ -48,6 +50,7 @@ services:
 
   dbGestionUtilisateur:
     image: mysql:latest
+    container_name: dbGestionUtilisateur
     restart: always
     ports:
       - 3308:3306

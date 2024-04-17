@@ -9,7 +9,7 @@ public class GestionUtilisateurSQL {
 
 
     public static Statement connecterGestionUtilisateurSQL() throws SQLException {
-        String jdbcUrl = "jdbc:mysql://localhost:3308/utilisateur";
+        String jdbcUrl = "jdbc:mysql://dbGestionUtilisateur:3308/utilisateur";
         String jdbcUser = "root";
         String jdbcPassword = "root";
 
