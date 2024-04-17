@@ -16,7 +16,7 @@ public class SalonSql {
 
 
     public static Statement connecterAuSalonSQL() throws SQLException {
-        String jdbcUrl = "jdbc:mysql://localhost:3307/salon";
+        String jdbcUrl = "jdbc:mysql://dbSalon:3307/salon";
         String jdbcUser = "root";
         String jdbcPassword = "root";
 

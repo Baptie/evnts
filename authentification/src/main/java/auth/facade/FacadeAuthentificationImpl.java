@@ -1,5 +1,6 @@
 package auth.facade;
 
+import auth.dto.UtilisateurDTO;
 import auth.exception.*;
 import auth.modele.Utilisateur;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,14 +25,16 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
     @Override
     public void inscription(String pseudo, String mdp, String eMail) throws PseudoDejaPrisException, EMailDejaPrisException {
 
-        if (utilisateurs.containsKey(pseudo))
+        if (utilisateurs.containsKey(pseudo)) {
             throw new PseudoDejaPrisException();
-
-        for (Utilisateur utilisateur : utilisateurs.values())
-            if (utilisateur.getEMail().equals(eMail))
+        }
+        for (Utilisateur utilisateur : utilisateurs.values()){
+            if (utilisateur.getEMail().equals(eMail)){
                 throw new EMailDejaPrisException();
-
+            }
+        }
         this.utilisateurs.put(pseudo,new Utilisateur(pseudo,eMail,passwordEncoder.encode(mdp)));
+        UtilisateurDTO.enregistrerUser(eMail,pseudo,mdp);
 
     }
 
@@ -86,6 +89,8 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
         utilisateurs.remove(ancienPseudo);
         utilisateur.setPseudo(nouveauPseudo);
         utilisateurs.put(nouveauPseudo, utilisateur);
+        UtilisateurDTO.resetPseudo(ancienPseudo,nouveauPseudo);
+
     }
 
     @Override
