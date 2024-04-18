@@ -34,7 +34,7 @@ CREATE TABLE Evenement (
                            nomEvenement VARCHAR(255) NOT NULL,
                            nombrePersonneMax INT,
                            details TEXT,
-                           dateEvenement DATE,
+                           dateEvenement VARCHAR(255),
                            lieu VARCHAR(255),
                            isValide BOOLEAN,
                            nomCreateur VARCHAR(255) NOT NULL,

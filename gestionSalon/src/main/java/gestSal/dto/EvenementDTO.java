@@ -1,125 +1,64 @@
 package gestSal.dto;
 
+import gestSal.bdd.InteractionBDDSalon;
+import gestSal.facade.erreurs.EvenementIncompletException;
+import gestSal.modele.Evenement;
 import gestSal.modele.Message;
-import gestSal.modele.Utilisateur;
-
-import java.util.ArrayList;
-import java.util.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 public class EvenementDTO {
-    private int idEvenement,nombrePersonneMax;
+    private int nombrePersonneMax;
     private String nomEvenement,detailsEvenement,lieu,nomCreateur;
-    private List<Utilisateur> listeParticipants;
     private String date;
-    private boolean estValide, estTermine;
-    private List<Message> conversation;
+    private boolean estTermine,estValide;
 
-    public EvenementDTO(int idEvenement, int nombrePersonneMax, String nomEvenement, String detailsEvenement, String lieu, String nomCreateur, List<Utilisateur> listeParticipants, String date, boolean estValide, boolean estTermine) {
-        this.idEvenement = idEvenement;
-        this.nombrePersonneMax = nombrePersonneMax;
-        this.nomEvenement = nomEvenement;
-        this.detailsEvenement = detailsEvenement;
-        this.lieu = lieu;
-        this.nomCreateur = nomCreateur;
-        this.listeParticipants = listeParticipants;
-        this.date = date;
-        this.estValide = estValide;
-        this.estTermine = estTermine;
-        this.conversation=new ArrayList<>();
-    }
 
     public EvenementDTO() {
     }
 
-
-
-    public void setIdEvenement(int idEvenement) {
-        this.idEvenement = idEvenement;
+    public static Evenement getEvenementByNomEtNumSalon(int numSalon, String nomEvenement) throws SQLException {
+        return InteractionBDDSalon.getEvenementByNomEtNumSalonSQL(numSalon,nomEvenement);
     }
 
-    public int getIdEvenement() {
-        return idEvenement;
+    public static void modifierEvenement(Evenement evenement, String choix, String valeur) throws SQLException {
+        InteractionBDDSalon.modifierEvenementSQL(evenement,choix,valeur);
     }
 
-    public boolean isEstValide() {
-        return estValide;
+    public static void validerEvenement(Evenement evenement) throws SQLException, EvenementIncompletException {
+        InteractionBDDSalon.validerEvenementSQL(evenement);
     }
 
-    public boolean isEstTermine() {
-        return estTermine;
-    }
-
-    public void setEstTermine(boolean estTermine) {
-        this.estTermine = estTermine;
+    public static List<Message> getMessagesEvenement(Evenement evenement) throws SQLException {
+        return InteractionBDDSalon.getMessageEventSQL(evenement.getIdEvenement());
     }
 
     public int getNombrePersonneMax() {
         return nombrePersonneMax;
     }
 
-    public void setNombrePersonneMax(int nombrePersonneMax) {
-        this.nombrePersonneMax = nombrePersonneMax;
-    }
-
     public String getNomEvenement() {
         return nomEvenement;
-    }
-
-    public void setNomEvenement(String nomEvenement) {
-        this.nomEvenement = nomEvenement;
     }
 
     public String getDetailsEvenement() {
         return detailsEvenement;
     }
 
-    public void setDetailsEvenement(String detailsEvenement) {
-        this.detailsEvenement = detailsEvenement;
-    }
 
     public String getLieu() {
         return lieu;
-    }
-
-    public void setLieu(String lieu) {
-        this.lieu = lieu;
     }
 
     public String getNomCreateur() {
         return nomCreateur;
     }
 
-    public void setNomCreateur(String nomCreateur) {
-        this.nomCreateur = nomCreateur;
-    }
-
-    public List<Utilisateur> getListeParticipants() {
-        return listeParticipants;
-    }
-
-    public void setListeParticipants(List<Utilisateur> listeParticipants) {
-        this.listeParticipants = listeParticipants;
-    }
-
     public String getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
 
-    public void setEstValide(boolean estValide) {
-        this.estValide = estValide;
-    }
 
-    public List<Message> getConversation() {
-        return conversation;
-    }
-
-    public void setConversation(List<Message> conversation) {
-        this.conversation = conversation;
-    }
 }
 

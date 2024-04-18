@@ -178,6 +178,6 @@ public interface FacadeSalon {
 
     Utilisateur convertUserDTOtoUser(UtilisateurDTO utilisateurDTO);
 
-    void supprimerUtilisateur(String nomUtilisateur) throws UtilisateurInexistantException;
+    void supprimerUtilisateur(Utilisateur nomUtilisateur) throws UtilisateurInexistantException;
 
 }

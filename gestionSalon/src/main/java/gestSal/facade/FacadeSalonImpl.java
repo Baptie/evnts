@@ -3,12 +3,10 @@ package gestSal.facade;
 import gestSal.dto.*;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.*;
-import gestSal.service.SalonSql;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.sql.*;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -16,24 +14,13 @@ import java.util.*;
 @Component("facadeSalon")
 public class FacadeSalonImpl implements FacadeSalon {
 
-    public Map<String, Utilisateur> utilisateurs;
-
-    public List<Salon> salons;
-
-    public List<Evenement> evenements;
-
-    public List<Conversation> conversations;
 
     public FacadeSalonImpl(){
-        this.utilisateurs=new HashMap<>();
-        this.salons = new ArrayList<>();
-        this.evenements = new ArrayList<>();
-        this.conversations=new ArrayList<>();
     }
 
     @Override
-    public Salon creerSalon(String nomCreateur, String nomSalon) throws NomSalonVideException, NomTropCourtException, NumSalonDejaExistantException {
-        Salon salonCree = null;
+    public Salon creerSalon(String nomCreateur, String nomSalon) throws NomSalonVideException, NomTropCourtException {
+        Salon salonCree;
         if(nomSalon.isBlank()){
             throw new NomSalonVideException();
         }else if(nomSalon.length()<=3){
@@ -45,7 +32,6 @@ public class FacadeSalonImpl implements FacadeSalon {
             salonCree.setNomCreateur(nomCreateur);
             salonCree.setNumSalon(id);
         }
-
         SalonDTO.creerSalonSQL(nomSalon,nomCreateur,"https://e7.pngegg.com/pngimages/872/540/png-clipart-computer-icons-event-management-event-miscellaneous-angle-thumbnail.png");
         return salonCree;
     }
@@ -69,265 +55,146 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public void rejoindreSalon(Utilisateur utilisateur, Salon salonRejoint) throws SalonInexistantException, NomSalonVideException, UtilisateurInexistantException, NomUtilisateurVideException,UtilisateurDejaPresentException {
-        if(!salonRejoint.getListeMembre().contains(utilisateur)){
-            salonRejoint.getListeMembre().add(utilisateur);
-        }else{
-            throw new UtilisateurDejaPresentException();
+    public void rejoindreSalon(Utilisateur utilisateur, Salon salonRejoint)  {
+        try {
+            SalonDTO.rejoindreSalon(utilisateur,salonRejoint);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public String inviterUtilisateur(Salon salonInvite, Utilisateur utilisateurInvite) throws SalonInexistantException, UtilisateurInexistantException, NomSalonVideException, NomUtilisateurVideException {
+    public String inviterUtilisateur(Salon salonInvite, Utilisateur utilisateurInvite) {
 
         String baseUrl = "https://evnt.com/invitation?code=";
-        String invitationCode = generateRandomCode(8); // Vous pouvez ajuster la longueur du code ici
-        String invitationUrl = baseUrl + invitationCode;
+        String invitationCode = generateRandomCode(); // Vous pouvez ajuster la longueur du code ici
         //TODO ENVOIE DE LA NOTIF A LA PERSONNE, MAIL ?
-        return invitationUrl;
+        return baseUrl + invitationCode;
 
     }
 
     @Override
-    public Utilisateur getUtilisateurByPseudo(String pseudoUtilisateur) throws NomUtilisateurVideException,UtilisateurInexistantException {
+    public Utilisateur getUtilisateurByPseudo(String pseudoUtilisateur) throws NomUtilisateurVideException {
+        Utilisateur utilisateur ;
         if(pseudoUtilisateur.isEmpty()){
-            throw new NomUtilisateurVideException()
-                    ;
-        }else if(utilisateurs.containsKey(pseudoUtilisateur)){
-            return utilisateurs.get(pseudoUtilisateur);
-        }else{
-            throw new UtilisateurInexistantException();
-        }
-    }
-
-    @Override
-    public Salon getSalonByNum(int numSalon) throws SalonInexistantException {
-        Salon salon = new Salon();
-        for(Salon s : salons){
-            if(s.getNumSalon()==numSalon){
-                try {
-                    salon = SalonDTO.getSalonById(numSalon);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                return salon;
+            throw new NomUtilisateurVideException();
+        }else {
+            try {
+                utilisateur = UtilisateurDTO.getUtilisateurByPseudo(pseudoUtilisateur);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
-        throw new SalonInexistantException();
+        return utilisateur;
+
     }
 
     @Override
-    public Salon getSalonByNom(String nomSalon) throws SalonInexistantException,NomSalonVideException {
-        if(nomSalon.isBlank()){
-            throw new NomSalonVideException();
+    public Salon getSalonByNum(int numSalon)   {
+        Salon salon;
+        try {
+            salon = SalonDTO.getSalonById(numSalon);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        for(Salon s : salons){
-            if(s.getNomSalon()==nomSalon){
-                return s;
-            }
-        }
-        throw new SalonInexistantException();
+        return salon;
     }
 
     @Override
-    public void retirerModerateurDuSalon(Salon salon, Utilisateur utilisateurPlusModo) throws NomSalonVideException, NomUtilisateurVideException,UtilisateurPasModoException {
-        if(salon.getListeModerateur().contains(utilisateurPlusModo)){
-            salon.getListeModerateur().remove(utilisateurPlusModo);
-        }else{
-            throw new UtilisateurPasModoException();
+    public Salon getSalonByNom(String nomSalon)  {
+        Salon salon;
+        try {
+            salon = SalonDTO.getSalonByName(nomSalon);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return salon;
+    }
+
+    @Override
+    public void retirerModerateurDuSalon(Salon salon, Utilisateur utilisateurPlusModo) {
+        try {
+            SalonDTO.retirerModerateurDuSalon(salon,utilisateurPlusModo);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo)   {
+        try {
+            SalonDTO.ajouterModerateurAuSalon(nouveauModo,salonPourLeNouveauModo);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws NomUtilisateurVideException, NomSalonVideException, PasAdminException, UtilisateurDejaModoException, SalonInexistantException {
-        if(salons.contains(salonPourLeNouveauModo)){
-            throw new SalonInexistantException();
+    public List<Utilisateur> seDefiniCommePresentAUnEvenement(Utilisateur utilisateur, Salon salon, Evenement evenement)   {
+        List<Utilisateur> lesParticipants;
+        try {
+            lesParticipants = UtilisateurDTO.seDefiniCommePresentAUnEvenement(utilisateur,salon,evenement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
-        if(!salonPourLeNouveauModo.getListeModerateur().contains(nouveauModo)){
-            salonPourLeNouveauModo.getListeModerateur().add(nouveauModo);
-        }else{
-            throw new UtilisateurDejaModoException();
-        }
+        return lesParticipants;
     }
 
     @Override
-    public List<Utilisateur> seDefiniCommePresentAUnEvenement(Utilisateur utilisateur, Salon salon, Evenement evenement) throws UtilisateurInexistantException, SalonInexistantException, EvenementInexistantException {
-        if(!salons.contains(salon)){
-            throw new SalonInexistantException();
+    public List<Utilisateur> seDefiniCommeAbsentAUnEvenement(Utilisateur utilisateur, Salon salon, Evenement evenement)  {
+        List<Utilisateur> lesParticipants;
+        try {
+            lesParticipants = UtilisateurDTO.seDefiniCommeAbsentAUnEvenement(utilisateur,salon,evenement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        List<Evenement> lesEvenements = salon.getLesEvenements();
-        if(!salon.getListeMembre().contains(utilisateur)){
-            throw new UtilisateurInexistantException();
-        }else if(!lesEvenements.contains(evenement)){
-            throw new EvenementInexistantException();
-        }
-        if(lesEvenements.contains(evenement)){
-            evenement.getListeParticipants().add(utilisateur);
-        }
-        return evenement.getListeParticipants();
+        return lesParticipants;
     }
 
     @Override
-    public List<Utilisateur> seDefiniCommeAbsentAUnEvenement(Utilisateur utilisateur, Salon salon, Evenement evenement) throws UtilisateurInexistantException, SalonInexistantException, EvenementInexistantException {
-        if(!evenements.contains(evenement)){
-            throw new EvenementInexistantException();
-        }
-        if(!salons.contains(salon)){
-            throw new SalonInexistantException();
-        }
-
-        List<Evenement> lesEvenements = salon.getLesEvenements();
-        if(lesEvenements.contains(evenement)){
-            if(evenement.getListeParticipants().contains(utilisateur)){
-                evenement.getListeParticipants().remove(utilisateur);
-            }else{
-                throw new UtilisateurInexistantException();
-            }
-            return evenement.getListeParticipants();
-        }
-        throw new EvenementInexistantException();
-    }
-
-    @Override
-    public Evenement getEvenementByNomEtNumSalon(int numSalon, String nomEvenement) throws EvenementInexistantException {
-        for(Salon s : salons){ //parcours des salons
-            if(s.getNumSalon()==numSalon){ // si bon num salon on regarde ses evenements
-                for(Evenement e : s.getLesEvenements()){ //parcours evenement
-                    if(e.getNomEvenement()==nomEvenement){ // si bon nom = bon evenement
-                        return e;
-                    }
-                }
-            }
-        }
-        throw new EvenementInexistantException();
-    }
-
-    @Override
-    public Evenement creerEvenement(Salon salon, String nomEvenement, int nombrePersonneMax, String detailsEvenement, String lieu, Utilisateur createur, String date) throws NomEvenementDejaPrisException, NomEvenementVideException, SalonInexistantException {
-        if(evenements.contains(nomEvenement)){
-            throw new NomEvenementDejaPrisException();
-        }
-        Evenement event = null;
-        if(nomEvenement.isBlank()){
-            throw new NomEvenementVideException();
-        }else{
-            if(checkSiNomEvenementDejaPris(nomEvenement)){
-                throw new NomEvenementDejaPrisException();
-            }else{
-                event = new Evenement();
-                event.setNomCreateur(nomEvenement);
-            }
-        }
-        return event;
-    }
-
-    private boolean checkSiNomEvenementDejaPris(String nomEvenement){
-        for(Evenement e : evenements){
-            if(e.getNomEvenement()==nomEvenement){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkSiNomEvenementDejaPris(Salon salon, String nomEvenement) throws SalonInexistantException {
-        if(!salons.contains(salon)){
-            throw new SalonInexistantException();
-        }
-
-        for(Evenement e : salon.getLesEvenements()){
-            if(e.getNomEvenement()==nomEvenement){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public UtilisateurDTO convertUtilisateurToDTO(Utilisateur utilisateur){
-        UtilisateurDTO utilisateurDTO = new UtilisateurDTO();
-        utilisateurDTO.setIdUtilisateur(utilisateur.getIdUtilisateur());
-        utilisateurDTO.setPseudo(utilisateur.getPseudo());
-        utilisateurDTO.setEmail(utilisateur.getEmail());
-        utilisateurDTO.setDescription(utilisateur.getDescription());
-        utilisateurDTO.setStatus(utilisateur.getStatus());
-        utilisateurDTO.setPassword(utilisateur.getPassword());
-        utilisateurDTO.setMesConversations(utilisateur.getMesConversations());
-        return utilisateurDTO;
-    }
-    public static SalonDTO convertSalonToDTO(Salon salon){
-        SalonDTO salonDTO = new SalonDTO();
-        salonDTO.setIdSalon(salon.getIdSalon());
-        salonDTO.setNumSalon(salon.getNumSalon());
-        salonDTO.setNomSalon(salon.getNomSalon());
-        salonDTO.setNomCreateur(salon.getNomCreateur());
-        salonDTO.setLogo(salon.getLogo());
-        salonDTO.setListeMembre(salon.getListeMembre());
-        salonDTO.setListeModerateur(salon.getListeModerateur());
-        salonDTO.setConversation(salon.getConversation());
-        salonDTO.setLesEvenements(salon.getLesEvenements());
-        return salonDTO;
-    }
-
-    public EvenementDTO convertEvenementToDTO(Evenement event){
-        EvenementDTO evenementDTO = new EvenementDTO();
-        evenementDTO.setIdEvenement(event.getIdEvenement());
-        evenementDTO.setNombrePersonneMax(event.getNombrePersonneMax());
-        evenementDTO.setNomEvenement(event.getNomEvenement());
-        evenementDTO.setDetailsEvenement(event.getDetailsEvenement());
-        evenementDTO.setLieu(event.getLieu());
-        evenementDTO.setNomCreateur(event.getNomCreateur());
-        evenementDTO.setListeParticipants(event.getListeParticipants());
-        evenementDTO.setDate(event.getDate());
-        evenementDTO.setEstValide(event.isEstValide());
-        evenementDTO.setEstTermine(event.isEstTermine());
-        evenementDTO.setConversation(event.getConversation());
-
-        return evenementDTO;
-
-    }
-
-    public MessageDTO convertMessageToDTO(Message message){
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setIdMessage(message.getIdMessage());
-        messageDTO.setAuteur(message.getAuteur());
-        messageDTO.setReceveur(message.getReceveur());
-        messageDTO.setContenu(message.getContenu());
-        messageDTO.setDate(message.getDate());
-        messageDTO.setSeen(message.isSeen());
-        return messageDTO;
-    }
-    public ConversationDTO convertConversationToDto(Conversation conversation){
-        ConversationDTO convDto = new ConversationDTO();
-        convDto.setIdConversation(conversation.getIdConversation());
-        convDto.setUtilisateurUn(conversation.getUtilisateurUn());
-        convDto.setUtilisateurDeux(conversation.getUtilisateurDeux());
-        convDto.setLesMessagesDeLaConversation(conversation.getLesMessagesDeLaConversation());
-        return convDto;
-    }
-
-    @Override
-    public Evenement modifierEvenement(Evenement evenement, String choix, String valeur) throws EvenementInexistantException {
-        if(!evenements.contains(evenement)){
-            throw new EvenementInexistantException();
-        }
-        switch (choix) {
-            case "description" -> evenement.setDetailsEvenement(valeur);
-            case "date" -> evenement.setDate(valeur);
-            case "lieu" -> evenement.setLieu(valeur);
-            case "nombre" -> evenement.setNombrePersonneMax(Integer.parseInt(valeur));
-            case "nom" -> evenement.setNomEvenement(valeur);
+    public Evenement getEvenementByNomEtNumSalon(int numSalon, String nomEvenement)   {
+        Evenement evenement ;
+        try {
+            evenement = EvenementDTO.getEvenementByNomEtNumSalon(numSalon,nomEvenement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return evenement;
     }
 
     @Override
-    public boolean validerEvenement(Evenement evenement) throws EvenementInexistantException {
-        if(!evenements.contains(evenement)){
-            throw new EvenementInexistantException();
+    public Evenement creerEvenement(Salon salon, String nomEvenement, int nombrePersonneMax, String detailsEvenement, String lieu, Utilisateur createur, String date) {
+        Evenement event;
+        try {
+            event =SalonDTO.creerEvenement(salon,nomEvenement,nombrePersonneMax,detailsEvenement,lieu,createur,date);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return event;
+    }
+
+
+
+    @Override
+    public Evenement modifierEvenement(Evenement evenement, String choix, String valeur)   {
+        try {
+            EvenementDTO.modifierEvenement(evenement,choix,valeur);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return evenement;
+    }
+
+    @Override
+    public boolean validerEvenement(Evenement evenement)   {
+        boolean isValide;
+        try {
+            EvenementDTO.validerEvenement(evenement);
+        } catch (SQLException | EvenementIncompletException e) {
+            throw new RuntimeException(e);
         }
 
-        boolean isValide;
         if(evenement.getListeParticipants().size()==evenement.getNombrePersonneMax()){
             evenement.setEstValide(true);
             isValide = true;
@@ -339,45 +206,47 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public void envoyerMessageSalon(Salon salon, String pseudoUtilisateur, String contenu) throws SalonInexistantException, UtilisateurInexistantException {
-        if(!salons.contains(salon)){
-            throw new SalonInexistantException();
-        }if(!utilisateurs.containsKey(pseudoUtilisateur)){
-            throw new UtilisateurInexistantException();
-        }
+    public void envoyerMessageSalon(Salon salon, String pseudoUtilisateur, String contenu)  {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
-        // 2017-12-24 T 04:34:27.0871036
-        salon.getConversation().add(new Message(generateRandom4DigitNumber()+generateRandom4DigitNumber(),pseudoUtilisateur,salon.getNomSalon(),contenu,dateTime,false));
+        try {
+            SalonDTO.envoyerMessageSalon(salon.getIdSalon(),pseudoUtilisateur,contenu,dateTime);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void envoyerMessageEvenement(Evenement evenement, String pseudoUtilisateur, String contenu) throws EvenementInexistantException,UtilisateurInexistantException{
-        if(!evenements.contains(evenement)){
-            throw new EvenementInexistantException();
-        }if(!utilisateurs.containsKey(pseudoUtilisateur)){
-            throw new UtilisateurInexistantException();
-        }
+    public void envoyerMessageEvenement(Evenement evenement, String pseudoUtilisateur, String contenu) {
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+        try {
+            SalonDTO.envoyerMessageEvenement(evenement.getIdEvenement(),pseudoUtilisateur,contenu,dateTime);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
-        evenement.getConversation().add(new Message(generateRandom4DigitNumber()+generateRandom4DigitNumber(),pseudoUtilisateur,evenement.getNomEvenement(),contenu,dateTime,false));
     }
 
 
     @Override
-    public List<Message> getMessagesSalon(Salon salon) throws SalonInexistantException{
-        if(!salons.contains(salon)){
-            throw new SalonInexistantException();
+    public List<Message> getMessagesSalon(Salon salon)  {
+        List<Message> lesMessagesDuSalon;
+        try {
+            lesMessagesDuSalon = SalonDTO.getMessagesSalon(salon);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
-        return salon.getConversation();
+        return lesMessagesDuSalon;
     }
     @Override
-    public List<Message> getMessagesEvenement(Evenement evenement) throws EvenementInexistantException{
-        if(!evenements.contains(evenement)){
-            throw new EvenementInexistantException();
-        }
+    public List<Message> getMessagesEvenement(Evenement evenement) {
+        List<Message> lesMessagesDEvent;
 
-        return evenement.getConversation();
+        try {
+            lesMessagesDEvent = EvenementDTO.getMessagesEvenement(evenement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return lesMessagesDEvent;
     }
 
     @Override
@@ -393,19 +262,20 @@ public class FacadeSalonImpl implements FacadeSalon {
 
 
     @Override
-    public void supprimerUtilisateur(String pseudoUtilisateur) throws UtilisateurInexistantException {
-        if (!utilisateurs.containsKey(pseudoUtilisateur)) {
-            throw new UtilisateurInexistantException();
+    public void supprimerUtilisateur(Utilisateur pseudoUtilisateur) {
+        try {
+            UtilisateurDTO.supprimerUtilisateur(pseudoUtilisateur);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        utilisateurs.remove(pseudoUtilisateur);
     }
 
 
 
-    private String generateRandomCode(int length) {
+    private String generateRandomCode() {
         SecureRandom secureRandom = new SecureRandom();
         StringBuilder randomCode = new StringBuilder();
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < 8; i++) {
             int randomValue = secureRandom.nextInt('Z' - 'A' + 1) + 'A';
             randomCode.append((char) randomValue);
         }
