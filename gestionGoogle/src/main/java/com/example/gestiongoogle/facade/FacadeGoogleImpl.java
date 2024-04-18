@@ -12,10 +12,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.model.CalendarList;
-import com.google.api.services.calendar.model.CalendarListEntry;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -28,6 +25,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Component("facadeGoogle")
 public class FacadeGoogleImpl implements IFacadeGoogle {
@@ -40,6 +38,30 @@ public class FacadeGoogleImpl implements IFacadeGoogle {
     private EmailService emailService;
 
 
+    public List<Event> listerEvenements(Authentication authentication, String dateDebut, String dateFin) throws IOException, GeneralSecurityException {
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+        String clientRegistrationId = oauthToken.getAuthorizedClientRegistrationId();
+        OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient(clientRegistrationId, oauthToken.getName());
+        String accessToken = client.getAccessToken().getTokenValue();
+
+        NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+        GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
+        Calendar service = new com.google.api.services.calendar.Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+                .setApplicationName("Evnts")
+                .build();
+
+        //on convertit le string en formulaire
+        DateTime startDateTime = new DateTime(dateDebut+":00.000Z");
+        DateTime endDateTime = new DateTime(dateFin+":00.000Z");
+
+        Events events = service.events().list("primary")
+                .setTimeMin(startDateTime)
+                .setTimeMax(endDateTime)
+                .execute();
+
+        return events.getItems();
+    }
 
     public String ajouterEvenementCalendrier(Authentication authentication, String nom, String location, String debut, String fin, String description) throws IOException, GeneralSecurityException, AucunCalendrierTrouveException, DateFinEvenementInvalideException {
 
@@ -120,6 +142,14 @@ public class FacadeGoogleImpl implements IFacadeGoogle {
         }
     }
 
+    public void envoyerMailParContenu(String email, String sujet,String contenu) throws ProblemeEnvoiMailException {
+        try{
+            emailService.sendSimpleMessage(email,sujet,contenu);
+        }catch(Exception e){
+            throw new ProblemeEnvoiMailException();
+        }
+    }
+
     //TODO : verifier en base si mail deja un compte
     public boolean verifierUtilisateurExistant() {
         return true;
@@ -129,4 +159,6 @@ public class FacadeGoogleImpl implements IFacadeGoogle {
     public void newUtilisateur(String email, String pseudo, String bio) {
         Utilisateur utilisateur = new Utilisateur(email,pseudo,bio);
     }
+
+
 }

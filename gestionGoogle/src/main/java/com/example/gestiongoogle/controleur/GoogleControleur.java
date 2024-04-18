@@ -32,6 +32,7 @@ import com.example.gestiongoogle.service.EmailService;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 
 @RestController
 public class GoogleControleur {
@@ -67,11 +68,12 @@ public class GoogleControleur {
     public String secured(Authentication authentication, HttpServletRequest request) {
         OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
 
+        /*
         boolean nouvelUtilisateur = facadeGoogle.verifierUtilisateurExistant();
 
         if(nouvelUtilisateur){
             return "redirect:/newAccount";
-        }
+        }*/
 
         String email = oidcUser.getEmail();
         String name = oidcUser.getFullName();
@@ -82,8 +84,7 @@ public class GoogleControleur {
         String token = csrfToken.getToken();
 
         return "<!DOCTYPE html>" +
-                // ...
-                "<form action='/add-event' method='post'>" +
+                "<form action='/event' method='post'>" +
                 "Titre: <input type='text' name='nom'><br>" +
                 "Emplacement: <input type='text' name='location'><br>" +
                 "Début: <input type='datetime-local' name='debut'><br>" +
@@ -94,6 +95,13 @@ public class GoogleControleur {
                 "</form>" +
                 "<form action='/emailValidationEvenement' method='get'>" +
                 "<input type='submit' value='Envoyer un mail'>" +
+                "</form>" +
+                "</form>" +
+                "<form action='/events' method='post'>" +
+                "<input type='hidden' name='" + csrfToken.getParameterName() + "' value='" + token + "' />" +
+                "Début: <input type='datetime-local' name='dateDebut'><br>" +
+                "Fin: <input type='datetime-local' name='dateFin'><br>" +
+                "<input type='submit' value='Recuperer Les Evenements'>" +
                 "</form>" +
                  "</body>" +
                 "</html>";
@@ -126,7 +134,7 @@ public class GoogleControleur {
     }
 
     @PostMapping("/new-user")
-    public ResponseEntity<?> newUser(Authentication authentication,
+    public ResponseEntity<String> newUser(Authentication authentication,
                                      @RequestParam String email,
                                      @RequestParam String pseudo,
                                      @RequestParam String bio){
@@ -142,8 +150,8 @@ public class GoogleControleur {
 
     }
 
-    @PostMapping("/add-event")
-    public ResponseEntity<?> addEvent(Authentication authentication,
+    @PostMapping("/event")
+    public ResponseEntity<String> addEvent(Authentication authentication,
                                    @RequestParam String nom,
                                    @RequestParam String location,
                                    @RequestParam String debut,
@@ -164,9 +172,27 @@ public class GoogleControleur {
         }
 
     }
+    @PostMapping("/events")
+    public ResponseEntity<String> getEvents(Authentication authentication,
+                                            @RequestParam String dateDebut,
+                                            @RequestParam String dateFin){
+        try{
+            List<Event> listeEvenement = facadeGoogle.listerEvenements(authentication,dateDebut,dateFin);
+
+            return ResponseEntity.ok(listeEvenement.toString());
+        } catch (GeneralSecurityException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Probleme Recuperation Evenements Securite");
+        } catch (IOException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Probleme Recuperation Evenements");
+        }
+    }
 
     @GetMapping("/emailValidationEvenement")
-    public ResponseEntity<?> sendEmail(Authentication authentication) throws ProblemeEnvoiMailException {
+    public ResponseEntity<String> sendEmail(Authentication authentication) throws ProblemeEnvoiMailException {
         try{
             facadeGoogle.envoyerMailValidationEvenement(authentication);
 
@@ -178,6 +204,20 @@ public class GoogleControleur {
         }
 
     }
+
+    @GetMapping("/email")
+    public ResponseEntity<String> sendEmailAvecContenu(String email, String objet, String contenu)throws ProblemeEnvoiMailException{
+        try{
+            facadeGoogle.envoyerMailParContenu(email,objet,contenu);
+
+            return ResponseEntity.ok("Mail Envoue");
+        }catch(Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Probleme envoi mail");
+        }
+    }
+
 
 
 
