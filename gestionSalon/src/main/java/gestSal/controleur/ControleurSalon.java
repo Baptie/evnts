@@ -8,10 +8,7 @@ import gestSal.dto.EvenementDTO;
 import gestSal.dto.MessageDTO;
 import gestSal.facade.FacadeSalon;
 import gestSal.facade.erreurs.*;
-import gestSal.modele.Evenement;
-import gestSal.modele.Message;
-import gestSal.modele.Salon;
-import gestSal.modele.Utilisateur;
+import gestSal.modele.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +58,7 @@ public class ControleurSalon {
 
 
     @PatchMapping("/{numSalon}")
-    public ResponseEntity<ApiResponseSalon> modifierSalon(@PathVariable int numSalon, @RequestBody String choix, @RequestBody String valeur) {
+    public ResponseEntity<ApiResponseSalon> modifierSalon(@PathVariable int numSalon, @RequestBody SalonModificationRequest modifs) {
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
 
@@ -71,7 +68,7 @@ public class ControleurSalon {
                         .body(new ApiResponseSalon("Salon introuvable"));
             }
 
-            salon = facadeSalon.modifierSalon(salon, choix, valeur);
+            salon = facadeSalon.modifierSalon(salon, modifs.getChoix(), modifs.getValeur());
             return ResponseEntity.ok(new ApiResponseSalon(salon));
         } catch (SalonInexistantException | NomSalonVideException | NumeroSalonVideException e) {
             return ResponseEntity
@@ -133,10 +130,11 @@ public class ControleurSalon {
         return ResponseEntity.ok(new ApiResponseUtilisateur(utilisateur));
     }
 
-    @PatchMapping("{numSalon}/evenement/{id}")
-    public ResponseEntity<ApiResponseEvenement> modifierEvenement(@PathVariable int id, @PathVariable String numSalon, @RequestBody String choix, @RequestBody String valeur) {
+    @PatchMapping("/{id}/evenement/{idEvent}")
+    public ResponseEntity<ApiResponseEvenement> modifierEvenement(@PathVariable int id, @PathVariable int idEvent, @RequestBody SalonModificationRequest modifs) {
         try {
-            Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(id, numSalon);
+            String nomEvent = facadeSalon.getNomEvenementById(idEvent);
+            Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(id, nomEvent);
 
             if (evenement == null) {
                 return ResponseEntity
@@ -144,7 +142,7 @@ public class ControleurSalon {
                         .body(new ApiResponseEvenement("Événement introuvable"));
             }
 
-            evenement = facadeSalon.modifierEvenement(evenement, choix, valeur);
+            evenement = facadeSalon.modifierEvenement(id,evenement, modifs.getChoix(),modifs.getValeur());
 
             return ResponseEntity.ok(new ApiResponseEvenement(evenement));
         } catch (EvenementInexistantException e) {
@@ -157,15 +155,17 @@ public class ControleurSalon {
 
 
 
-    @PostMapping("{numSalon}/evenement/{nomEvenement}/presence")
-    public ResponseEntity<Object> seDefiniCommePresentAUnEvenement(@RequestBody String nomUtilisateur, @PathVariable String nomEvenement, @PathVariable int numSalon) {
+
+    @PostMapping("{numSalon}/evenement/{idEvent}/presence")
+    public ResponseEntity<Object> seDefiniCommePresentAUnEvenement(@RequestParam String nomUtilisateur, @PathVariable int idEvent, @PathVariable int numSalon) {
+        String nomEvent = facadeSalon.getNomEvenementById(idEvent);
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
             if (salon == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
 
-            Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(numSalon, nomEvenement);
+            Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(numSalon, nomEvent);
 
             if (evenement == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Événement introuvable");
@@ -186,8 +186,9 @@ public class ControleurSalon {
 
 
 
-    @DeleteMapping("{numSalon}/evenement/{nomEvent}/presence")
-    public ResponseEntity<Object> seDefiniCommeAbsentAUnEvenement(@PathVariable int numSalon, @PathVariable String nomEvent, @RequestParam String nomUtilisateur) {
+    @DeleteMapping("{numSalon}/evenement/{idEvent}/presence")
+    public ResponseEntity<Object> seDefiniCommeAbsentAUnEvenement(@PathVariable int numSalon, @PathVariable int idEvent, @RequestParam String nomUtilisateur) {
+        String nomEvent = facadeSalon.getNomEvenementById(idEvent);
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
 
@@ -229,8 +230,9 @@ public class ControleurSalon {
     }
 
 
-    @GetMapping("{numSalon}/evenement/{nomEvenement}")
-    public ResponseEntity<Object> getEvenementByNomEtNumSalon(@PathVariable int numSalon, @PathVariable String nomEvenement) {
+    @GetMapping("{numSalon}/evenement/{idEvent}")
+    public ResponseEntity<Object> getEvenementByNomEtNumSalon(@PathVariable int numSalon, @PathVariable int idEvent)   {
+        String nomEvenement = facadeSalon.getNomEvenementById(idEvent);
         try {
             Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(numSalon, nomEvenement);
             if (evenement == null) {
@@ -246,8 +248,9 @@ public class ControleurSalon {
 
 
 
-    @PatchMapping("{numSalon}/evenement/{nomEvent}/validation")
-    public ResponseEntity<Object> validerEvenement(@PathVariable int numSalon, @PathVariable String nomEvent) {
+    @PatchMapping("{numSalon}/evenement/{idEvent}/validation")
+    public ResponseEntity<Object> validerEvenement(@PathVariable int numSalon, @PathVariable int idEvent) {
+        String nomEvent = facadeSalon.getNomEvenementById(idEvent);
         try {
             Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(numSalon, nomEvent);
             if (evenement == null) {
@@ -280,20 +283,16 @@ public class ControleurSalon {
         }
     }
 
-    @PostMapping("{numSalon}/evenement/{nomEvent}/messages")
-    public ResponseEntity<Object> envoyerMessageEvenement(@PathVariable int numSalon, @PathVariable String nomEvent,@RequestBody MessageDTO messageDTO) {
+    @PostMapping("{numSalon}/evenement/{idEvent}/messages")
+    public ResponseEntity<Object> envoyerMessageEvenement(@PathVariable int numSalon, @PathVariable int idEvent,@RequestBody MessageDTO messageDTO) {
+        String nomEvent = facadeSalon.getNomEvenementById(idEvent);
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
             if (salon == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salon introuvable");
             }
-            Evenement evenement = null;
-            for(Evenement event : salon.getLesEvenements()){
-                if(event.getNomEvenement().equals(nomEvent) ){
-                    evenement = event;
-                }
-            }
-            if (evenement == null) {
+            Evenement evenement = facadeSalon.getEvenementByNomEtNumSalon(numSalon,nomEvent);
+                   if (evenement == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Événement introuvable");
             }
             facadeSalon.envoyerMessageEvenement(evenement,messageDTO.getAuteur(), messageDTO.getContenu());
@@ -319,8 +318,9 @@ public class ControleurSalon {
         }
     }
 
-    @GetMapping("{numSalon}/evenement/{nomEvent}/messages")
-    public ResponseEntity<Object> getMessagesEvenement(@PathVariable int numSalon,@PathVariable String nomEvent) {
+    @GetMapping("{numSalon}/evenement/{idEvent}/messages")
+    public ResponseEntity<Object> getMessagesEvenement(@PathVariable int numSalon,@PathVariable int idEvent) {
+        String nomEvent = facadeSalon.getNomEvenementById(idEvent);
         try {
             Salon salon = facadeSalon.getSalonByNum(numSalon);
 
@@ -362,7 +362,7 @@ public class ControleurSalon {
 
 
     @PostMapping("{numSalon}/adhesion")
-    public ResponseEntity<?> rejoindreSalon(@PathVariable int numSalon, @RequestBody String pseudoUtilisateur){
+    public ResponseEntity<?> rejoindreSalon(@PathVariable int numSalon, @RequestParam String pseudoUtilisateur){
         try{
             Salon salon = facadeSalon.getSalonByNum(numSalon);
 
@@ -414,7 +414,7 @@ public class ControleurSalon {
 
 
     @PostMapping("/{numSalon}/moderation")
-    public ResponseEntity<?> ajouterModerateur(@PathVariable int numSalon, @RequestBody String nomModerateur){
+    public ResponseEntity<?> ajouterModerateur(@PathVariable int numSalon, @RequestParam String nomModerateur){
         try{
             Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(nomModerateur);
             if(utilisateur==null){
@@ -439,7 +439,7 @@ public class ControleurSalon {
     }
 
     @DeleteMapping("/{numSalon}/moderation")
-    public ResponseEntity<?> supprimerModerateur(@PathVariable int numSalon, @RequestBody String nomModerateur){
+    public ResponseEntity<?> supprimerModerateur(@PathVariable int numSalon, @RequestParam String nomModerateur){
         try{
             Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(nomModerateur);
 

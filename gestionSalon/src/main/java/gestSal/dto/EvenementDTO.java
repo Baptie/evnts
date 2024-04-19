@@ -21,16 +21,20 @@ public class EvenementDTO {
         return InteractionBDDSalon.getEvenementByNomEtNumSalonSQL(numSalon,nomEvenement);
     }
 
-    public static void modifierEvenement(Evenement evenement, String choix, String valeur) throws SQLException {
-        InteractionBDDSalon.modifierEvenementSQL(evenement,choix,valeur);
+    public static void modifierEvenement(int idSalon, Evenement evenement, String choix, String valeur) throws SQLException {
+        InteractionBDDSalon.modifierEvenementSQL(idSalon,evenement,choix,valeur);
     }
 
-    public static void validerEvenement(Evenement evenement) throws SQLException, EvenementIncompletException {
-        InteractionBDDSalon.validerEvenementSQL(evenement);
+    public static Boolean validerEvenement(Evenement evenement) throws SQLException, EvenementIncompletException {
+        return InteractionBDDSalon.validerEvenementSQL(evenement);
     }
 
     public static List<Message> getMessagesEvenement(Evenement evenement) throws SQLException {
         return InteractionBDDSalon.getMessageEventSQL(evenement.getIdEvenement());
+    }
+
+    public static String getEvenementById(int idEvent) throws SQLException {
+        return InteractionBDDSalon.getEvenementById(idEvent);
     }
 
     public int getNombrePersonneMax() {
