@@ -31,9 +31,12 @@ public class InteractionBDDSalon {
         nomCreateur = nomCreateur.replace("'", "\\'");
         logo = logo.replace("'", "\\'");
 
-        String SQL = "INSERT INTO Salon (nomSalon, nomCreateur, logo) VALUES ('"+nomSalon+"', '"+nomCreateur+"', '"+logo+"')";
+        String SQL = "INSERT INTO Salon (nomSalon, nomCreateur, logo) " +
+                "SELECT '"+nomSalon+"', '"+nomCreateur+"', '"+logo+"' " +
+                "WHERE NOT EXISTS (SELECT 1 FROM Salon WHERE nomSalon = '"+nomSalon+"')";
         st.executeUpdate(SQL);
     }
+
 
     public static Salon getSalonById(int id) throws SQLException {
         Salon salon = new Salon();
@@ -193,9 +196,21 @@ public class InteractionBDDSalon {
 
     public static void ajouterModerateurAuSalon(Utilisateur utilisateurDTO, Salon salonDTO) throws SQLException {
         Statement st = connecterAuSalonSQL();
-        String SQL = "INSERT INTO ModerateurSalon (idSalon,idMembre) values ("+salonDTO.getIdSalon()+",+"+utilisateurDTO.getIdUtilisateur()+")";
+
+        // Vérifier si l'utilisateur est déjà un modérateur du salon
+        String checkIfExistsSQL = "SELECT COUNT(*) FROM ModerateurSalon WHERE idSalon = " + salonDTO.getIdSalon() + " AND idMembre = " + utilisateurDTO.getIdUtilisateur();
+        ResultSet resultSet = st.executeQuery(checkIfExistsSQL);
+        resultSet.next();
+        int count = resultSet.getInt(1);
+
+        if (count > 0) {
+            return;
+        }
+
+        String SQL = "INSERT INTO ModerateurSalon (idSalon, idMembre) VALUES (" + salonDTO.getIdSalon() + ", " + utilisateurDTO.getIdUtilisateur() + ")";
         st.executeUpdate(SQL);
     }
+
 
     public static List<Utilisateur> seDefiniCommePresentAUnEvenementSQL(Utilisateur utilisateurDTO, Evenement evenementDTO) throws SQLException {
         List<Utilisateur> participants = new ArrayList<>();

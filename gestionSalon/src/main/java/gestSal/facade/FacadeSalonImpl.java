@@ -120,7 +120,7 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo)   {
+    public void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws UtilisateurDejaModoException {
         try {
             SalonDTO.ajouterModerateurAuSalon(nouveauModo,salonPourLeNouveauModo);
         } catch (SQLException e) {
