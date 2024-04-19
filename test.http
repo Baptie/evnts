@@ -1,6 +1,6 @@
 
 ###Inscription Personne expected = 201
-POST http://localhost:8080/auth/inscription?pseudo=vincent5&mdp=vincent5&eMail=vincent.aubert5@evnt.com
+POST http://localhost:8080/auth/inscription?pseudo=vincent52&mdp=vincent52&eMail=vincent.aubert5@evnt2.com
 Content-Type: application/x-www-form-urlencoded
 Accept: */*
 
@@ -50,7 +50,8 @@ Accept: */*
 
 email=vincentlpb@camacho.fr
 
-
+### TEST CREATION SALON
+POST http://localhost:8080/salon?nomCreateur=John&nomSalon=SuperSalon
 
 
 

@@ -1,21 +1,18 @@
-package gestUtil.service;
+package gestUtil.bdd;
 
 import gestUtil.dto.UtilisateurDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class GestionUtilisateurSQL {
-
-
+public class InteractionBDDUtilisateur {
     public static Statement connecterGestionUtilisateurSQL() throws SQLException {
         String jdbcUrl = "jdbc:mysql://dbGestionUtilisateur:3308/utilisateur";
         String jdbcUser = "root";
         String jdbcPassword = "root";
 
         Connection connection = DriverManager.getConnection(jdbcUrl,jdbcUser,jdbcPassword);
-        Statement statement = connection.createStatement();
-        return statement;
+        return connection.createStatement();
 
     }
     public static void main(String[] args) throws SQLException {
@@ -97,7 +94,7 @@ public class GestionUtilisateurSQL {
         int id1 =getIdByPseudo(pseudo);
         ArrayList<String> lesContacts = new ArrayList<>();
         Statement st = connecterGestionUtilisateurSQL();
-        String SQLUser = "SELECT idUser2 FROM ListeContact where idUser="+id1+"";
+        String SQLUser = "SELECT idUser2 FROM ListeContact where idUser="+id1;
         ResultSet rs = st.executeQuery(SQLUser);
         while (rs.next()){
             int idRecup = rs.getInt("idUser2");
@@ -112,8 +109,7 @@ public class GestionUtilisateurSQL {
         String SQLUser = "SELECT * FROM User where pseudo='"+pseudo+"'";
         ResultSet rs = st.executeQuery(SQLUser);
         while(rs.next()){
-            int id = rs.getInt("idUser");
-            userid = id;
+            userid = rs.getInt("idUser");
         }
         return userid;
     }
@@ -124,8 +120,7 @@ public class GestionUtilisateurSQL {
         String SQLUser = "SELECT * FROM User where idUser="+id;
         ResultSet rs = st.executeQuery(SQLUser);
         while(rs.next()){
-            String pseudoRecup = rs.getString("pseudo");
-            pseudo = pseudoRecup;
+            pseudo = rs.getString("pseudo");
         }
         return pseudo;
     }

@@ -1,9 +1,8 @@
 package gestUtil.facade;
 
 
-import gestUtil.dto.UtilisateurPublicDTO;
+import gestUtil.dto.UtilisateurDTO;
 import gestUtil.exceptions.EMailDejaPrisException;
-import gestUtil.exceptions.MdpIncorrectException;
 import gestUtil.exceptions.PseudoDejaPrisException;
 import gestUtil.exceptions.UtilisateurNonTrouveException;
 
@@ -65,7 +64,7 @@ public interface IFacadeGestionUtilisateur {
      * Permet d'obtenir les informations publiques d'un utilisateur
      * @param pseudo
      */
-    UtilisateurPublicDTO getInformationsPubliques(String pseudo) throws UtilisateurNonTrouveException;
+    UtilisateurDTO getInformationsPubliques(String pseudo) throws UtilisateurNonTrouveException;
 
 
     /**

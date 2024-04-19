@@ -38,7 +38,7 @@ services:
 
   dbSalon:
     image: mysql:latest
-    container_name: dbSalon
+    container_name: dbSalonName
     restart: always
     ports:
       - 3307:3306

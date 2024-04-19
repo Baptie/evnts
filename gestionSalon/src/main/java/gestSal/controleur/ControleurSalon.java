@@ -34,7 +34,7 @@ public class ControleurSalon {
 
 
     @PostMapping(value = "")
-    public ResponseEntity<ApiResponseSalon> creerSalon(@RequestBody String nomCreateur, @RequestBody String nomSalon) {
+    public ResponseEntity<ApiResponseSalon> creerSalon(@RequestParam String nomCreateur, @RequestParam String nomSalon) {
         try {
             Salon salon = facadeSalon.creerSalon(nomCreateur, nomSalon);
 
@@ -133,34 +133,6 @@ public class ControleurSalon {
         return ResponseEntity.ok(new ApiResponseUtilisateur(utilisateur));
     }
 
-    @PostMapping("/salon/adhesion")
-    public ResponseEntity<ApiResponseSalonDTO> rejoindreSalon(@RequestBody String nomUtilisateur, @RequestBody int numSalon) {
-        try {
-            Salon salonRejoint = facadeSalon.getSalonByNum(numSalon);
-
-            if (salonRejoint == null) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponseSalonDTO("Salon introuvable"));
-            }
-
-            Utilisateur utilisateur = facadeSalon.getUtilisateurByPseudo(nomUtilisateur);
-
-            if (utilisateur == null) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponseSalonDTO("Utilisateur introuvable"));
-            }
-
-            facadeSalon.rejoindreSalon(utilisateur, salonRejoint);
-
-            return ResponseEntity.ok(new ApiResponseSalonDTO("Utilisateur rejoint le salon avec succès"));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponseSalonDTO("Erreur : " + e.getMessage()));
-        }
-    }
     @PatchMapping("{numSalon}/evenement/{id}")
     public ResponseEntity<ApiResponseEvenement> modifierEvenement(@PathVariable int id, @PathVariable String numSalon, @RequestBody String choix, @RequestBody String valeur) {
         try {
