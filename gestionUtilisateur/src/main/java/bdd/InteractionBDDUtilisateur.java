@@ -1,4 +1,4 @@
-package gestUtil.bdd;
+package bdd;
 
 import gestUtil.dto.UtilisateurDTO;
 
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class InteractionBDDUtilisateur {
     public static Statement connecterGestionUtilisateurSQL() throws SQLException {
-        String jdbcUrl = "jdbc:mysql://dbGestionUtilisateur:3308/utilisateur";
+        String jdbcUrl = "jdbc:mysql://dbGestionUtilisateur:3306/utilisateur";
         String jdbcUser = "root";
         String jdbcPassword = "root";
 

@@ -1,6 +1,6 @@
 package gestSal.dto;
 
-import gestSal.bdd.InteractionBDDSalon;
+import bdd.InteractionBDDSalon;
 import gestSal.facade.erreurs.EvenementIncompletException;
 import gestSal.modele.Evenement;
 import gestSal.modele.Message;

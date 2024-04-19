@@ -6,6 +6,7 @@ import gestUtil.exceptions.EMailDejaPrisException;
 import gestUtil.exceptions.PseudoDejaPrisException;
 import gestUtil.exceptions.UtilisateurNonTrouveException;
 import gestUtil.facade.IFacadeGestionUtilisateur;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/utilisateurs")
 public class ControleurUtilisateur {
 
-    final
+    @Autowired
     IFacadeGestionUtilisateur facadeUtilisateur;
 
-    public ControleurUtilisateur(IFacadeGestionUtilisateur facadeUtilisateur) {
-        this.facadeUtilisateur = facadeUtilisateur;
-    }
 
     @PostMapping(value = "/inscription")
     public ResponseEntity<String> inscription(@RequestParam String pseudo, @RequestParam String email, @RequestParam String bio, @RequestParam String photoDeProfil ) {

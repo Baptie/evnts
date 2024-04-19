@@ -35,19 +35,22 @@ public class ControleurAuthentification {
     public ResponseEntity<String> connexion (@RequestParam String pseudo, @RequestParam String mdp){
         try {
             String token = this.facadeAuth.connexion(pseudo,mdp);
-            return ResponseEntity.status(HttpStatus.OK).header("token",token).body("Token généré disponible dans le header !");
+            return ResponseEntity.status(HttpStatus.OK).header("token",token).body(token);
         } catch (UtilisateurInexistantException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais identifiants !");
         } catch (MdpIncorrecteException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mauvais mot de passe");
         }
-
     }
 
     @PostMapping(value = "/deconnexion")
     public ResponseEntity<String> deconnexion (@RequestParam String pseudo){
         try {
-            this.facadeAuth.deconnexion(pseudo);
+            try {
+                this.facadeAuth.deconnexion(pseudo);
+            } catch (UtilisateurDejaDeconnecteException e) {
+                throw new RuntimeException(e);
+            }
             return ResponseEntity.ok("Déconnexion de "+pseudo+" faite !");
         } catch (UtilisateurInexistantException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais identifiants !");

@@ -35,7 +35,7 @@ public interface FacadeAuthentificationInterface {
          * @param pseudo
          * @throws UtilisateurInexistantException
          */
-        void deconnexion(String pseudo) throws UtilisateurInexistantException;
+        void deconnexion(String pseudo) throws UtilisateurInexistantException, UtilisateurDejaDeconnecteException;
 
         boolean getStatus(String pseudo) throws UtilisateurInexistantException;
 

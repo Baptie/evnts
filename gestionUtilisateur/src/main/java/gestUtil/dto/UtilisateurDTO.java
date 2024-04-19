@@ -1,6 +1,6 @@
 package gestUtil.dto;
 
-import gestUtil.bdd.InteractionBDDUtilisateur;
+import bdd.InteractionBDDUtilisateur;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

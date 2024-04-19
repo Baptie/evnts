@@ -1,4 +1,4 @@
-package gestSal.bdd;
+package bdd;
 
 
 import gestSal.dto.UtilisateurDTO;
@@ -15,7 +15,7 @@ import java.util.List;
 public class InteractionBDDSalon {
 
     public static Statement connecterAuSalonSQL() throws SQLException {
-        String jdbcUrl = "jdbc:mysql://dbSalonName:3307/salon";
+        String jdbcUrl = "jdbc:mysql://dbSalonName:3306/salon";
         String jdbcUser = "root";
         String jdbcPassword = "root";
 

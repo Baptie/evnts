@@ -1,7 +1,7 @@
 package gestSal.dto;
 
 
-import gestSal.bdd.InteractionBDDSalon;
+import bdd.InteractionBDDSalon;
 import gestSal.modele.Evenement;
 import gestSal.modele.Message;
 import gestSal.modele.Salon;
