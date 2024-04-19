@@ -494,4 +494,17 @@ public class ControleurSalon {
         }
         return lesEvents;
     }
+
+    @PostMapping("/utilisateur/{nomMembre}")
+    public ResponseEntity<?> ajouterMembre(@PathVariable String nomMembre){
+        try{
+            facadeSalon.ajouterMembre(nomMembre);
+            return ResponseEntity.ok().body("Membre ajouté");
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Echec de l'ajout");
+        }
+    }
+
+
+
 }

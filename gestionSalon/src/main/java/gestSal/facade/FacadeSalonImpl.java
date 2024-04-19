@@ -296,6 +296,15 @@ public class FacadeSalonImpl implements FacadeSalon {
         }
     }
 
+    @Override
+    public void ajouterMembre(String nomMembre) {
+        try {
+            UtilisateurDTO.ajouterMembre(nomMembre);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private String generateRandomCode() {
         SecureRandom secureRandom = new SecureRandom();

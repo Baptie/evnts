@@ -189,4 +189,6 @@ public interface FacadeSalon {
     List<Integer> getEvenementUser(int idUser);
 
     Evenement getEventById(int idEvent);
+
+    void ajouterMembre(String nomMembre);
 }

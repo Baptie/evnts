@@ -51,6 +51,10 @@ public class UtilisateurDTO {
         return InteractionBDDSalon.getEventById(idEvenement);
     }
 
+    public static void ajouterMembre(String nomMembre) throws SQLException {
+        InteractionBDDSalon.ajouterMembre(nomMembre);
+    }
+
 
     public void setIdUtilisateur(int idUtilisateur) {
         this.idUtilisateur = idUtilisateur;

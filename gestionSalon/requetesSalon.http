@@ -111,3 +111,7 @@ GET http://localhost:8080/salon/utilisateur/Vince/salons
 
 ### RECUPERER LES EVENEMENTS DE L'UTILISATEUR
 GET http://localhost:8080/salon/utilisateur/Vince/evenements
+
+
+###AJOUTER MEMBRE
+POST http://localhost:8080/salon/utilisateur/SidBaptie

@@ -360,6 +360,12 @@ public class InteractionBDDSalon {
         return evenement;
     }
 
+    public static void ajouterMembre(String nomMembre) throws SQLException {
+        Statement st = connecterAuSalonSQL();
+        String SQL = "INSERT INTO Membre (nomMembre) values ('"+nomMembre+"')";
+        st.executeUpdate(SQL);
+    }
+
     public void envoyerMessageSalonSQL(int idSalon, String pseudoUtilisateur, String contenu, String dateTime) throws SQLException {
         Statement st = connecterAuSalonSQL();
         String SQL = "INSERT INTO MessageSalon (idSalon,nomAuteur,contenu,dateMessage) values ("+idSalon+",'"+pseudoUtilisateur+"','"+contenu+"','"+dateTime+"')";
