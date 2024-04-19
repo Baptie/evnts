@@ -1,8 +1,12 @@
 package gestSal.dto;
 
+import bdd.InteractionBDDSalon;
 import gestSal.modele.Conversation;
+import gestSal.modele.Evenement;
+import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class UtilisateurDTO {
@@ -10,27 +14,32 @@ public class UtilisateurDTO {
     private String pseudo,email,description, status, password;
     private List<Conversation> mesConversations;
 
-    public UtilisateurDTO(int idUtilisateur, String pseudo, String email, String description, String status, String password, List<Conversation> mesConversations) {
-        this.idUtilisateur = idUtilisateur;
-        this.pseudo = pseudo;
-        this.email = email;
-        this.description = description;
-        this.status = status;
-        this.password = password;
-        this.mesConversations = mesConversations;
-    }
-
     public UtilisateurDTO() {
     }
 
+    public static Utilisateur getUtilisateurByPseudo(String pseudoUtilisateur) throws SQLException {
+        return InteractionBDDSalon.getUtilisateurByPseudoSQL(pseudoUtilisateur);
+    }
+
+    public static List<Utilisateur> seDefiniCommePresentAUnEvenement(Utilisateur utilisateur, Salon salon, Evenement evenement) throws SQLException {
+        List<Utilisateur> lesParticipants;
+        lesParticipants = InteractionBDDSalon.seDefiniCommePresentAUnEvenementSQL(utilisateur,evenement);
+        return lesParticipants;
+    }
+
+    public static List<Utilisateur> seDefiniCommeAbsentAUnEvenement(Utilisateur utilisateur, Salon salon, Evenement evenement) throws SQLException {
+        List<Utilisateur> lesParticipants ;
+        lesParticipants = InteractionBDDSalon.seDefiniCommeAbsentAUnEvenementSQL(utilisateur,evenement);
+        return lesParticipants;
+    }
+
+    public static void supprimerUtilisateur(Utilisateur pseudoUtilisateur) throws SQLException {
+        InteractionBDDSalon.supprimerUtilisateurSQL(pseudoUtilisateur);
+    }
 
 
     public void setIdUtilisateur(int idUtilisateur) {
         this.idUtilisateur = idUtilisateur;
-    }
-
-    public int getIdUtilisateur() {
-        return idUtilisateur;
     }
 
 
@@ -46,39 +55,16 @@ public class UtilisateurDTO {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public List<Conversation> getMesConversations() {
         return mesConversations;
     }
 
-    public void setMesConversations(List<Conversation> mesConversations) {
-        this.mesConversations = mesConversations;
-    }
 }

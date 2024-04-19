@@ -1,10 +1,10 @@
 package gestUtil.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import bdd.InteractionBDDUtilisateur;
 
-//@AllArgsConstructor
-//@Entity
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 public class UtilisateurDTO  {
     //@Id
     private String email;
@@ -19,17 +19,38 @@ public class UtilisateurDTO  {
     private ArrayList<String> listeContact;
 
 
-    public UtilisateurDTO(int id, String email, String pseudo, String bio, String photoDeProfil, String status, ArrayList<String>listeContact) {
-        this.id=id;
-        this.email = email;
-        this.pseudo = pseudo;
-        this.bio = bio;
-        this.photoDeProfil = photoDeProfil;
-        this.status = status;
-        this.listeContact = listeContact;
+    public UtilisateurDTO() {
     }
 
-    public UtilisateurDTO() {
+    public static void creerCompte(String pseudo, String email, String bio, String photoDeProfil) throws SQLException {
+        InteractionBDDUtilisateur.creerCompteSQL(pseudo,email,bio,photoDeProfil);
+    }
+
+    public static void changerPseudo(String email, String pseudo) throws SQLException {
+        InteractionBDDUtilisateur.changerPseudoSQL(email,pseudo);
+
+    }
+
+    public static void changementBio(String email, String nouvelleBio) throws SQLException {
+        InteractionBDDUtilisateur.changerBioSQL(email,nouvelleBio);
+    }
+
+    public static void changerPhotoDeProfil(String email, String nouvellePhotoDeProfil) throws SQLException {
+        InteractionBDDUtilisateur.changerPhotoDeProfilSQL(email,nouvellePhotoDeProfil);
+    }
+
+    public static void supprimerCompte(String email) throws SQLException {
+        InteractionBDDUtilisateur.supprimerCompteSQL(email);
+    }
+
+    public static UtilisateurDTO getInformationsPubliques(String pseudo) throws SQLException {
+        UtilisateurDTO userDTO = InteractionBDDUtilisateur.getInformationsPubliquesSQL(pseudo);
+        userDTO.setListeContact(InteractionBDDUtilisateur.getListeContactByPseudo(pseudo));
+        return userDTO;
+    }
+
+    public static void ajoutContact(String pseudo1, String pseudo2) throws SQLException {
+        InteractionBDDUtilisateur.ajoutContactSQL(pseudo1,pseudo2);
     }
 
     public ArrayList<String> getListeContact() {

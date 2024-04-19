@@ -26,6 +26,10 @@ public class Salon {
     public Salon() {
     }
 
+    public void setIdSalon(int idSalon) {
+        this.idSalon = idSalon;
+    }
+
     public int getIdSalon() {
         return idSalon;
     }

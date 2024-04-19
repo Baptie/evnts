@@ -29,6 +29,11 @@ public class Evenement {
     public Evenement() {
     }
 
+
+    public void setIdEvenement(int idEvenement) {
+        this.idEvenement = idEvenement;
+    }
+
     public int getIdEvenement() {
         return idEvenement;
     }

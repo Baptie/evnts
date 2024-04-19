@@ -16,7 +16,7 @@ public interface FacadeAuthentificationInterface {
          * @throws PseudoDejaPrisException
          * @throws EMailDejaPrisException
          */
-        void inscription(String pseudo, String mdp, String eMail) throws PseudoDejaPrisException, EMailDejaPrisException;
+        void inscription(String pseudo, String mdp, String eMail) throws PseudoDejaPrisException, EMailDejaPrisException, EmailOuPseudoDejaPrisException;
 
         /**
          * Connexion de l'utilisateur sur le site
@@ -35,7 +35,7 @@ public interface FacadeAuthentificationInterface {
          * @param pseudo
          * @throws UtilisateurInexistantException
          */
-        void deconnexion(String pseudo) throws UtilisateurInexistantException;
+        void deconnexion(String pseudo) throws UtilisateurInexistantException, UtilisateurDejaDeconnecteException;
 
         boolean getStatus(String pseudo) throws UtilisateurInexistantException;
 
