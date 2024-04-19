@@ -16,6 +16,42 @@ spring:
           enabled: false
 
     gateway:
+      routes:
+        - id: auth
+          uri: lb://authentification
+          predicates:
+            - Path=/auth/**
+          filters:
+            - RewritePath=/auth/(?<path>.*), /auth/$\{path}
+            - PreserveHostHeader=true
+        - id: gestUtil
+          uri: lb://gestionUtilisateur
+          predicates:
+            - Path=/utilisateurs/**
+          filters:
+            - RewritePath=/utilisateurs/(?<path>.*), /utilisateurs/$\{path}
+            - PreserveHostHeader=true
+        - id: gestSal
+          uri: lb://gestionSalon
+          predicates:
+            - Path=/salon/**
+          filters:
+            - RewritePath=/salon/(?<path>.*), /salon/$\{path}
+            - PreserveHostHeader=true
+        - id: contact
+          uri: lb://contact
+          predicates:
+            - Path=/contact/**
+          filters:
+            - RewritePath=/contact/(?<path>.*), /contact/$\{path}
+            - PreserveHostHeader=true
+#        - id: gestiongoogle
+#          uri: lb://gestionGoogle
+#          predicates:
+#            - Path=/google/**
+#          filters:
+#            - RewritePath=/google/(?<path>.*), /google/$\{path}
+#            - PreserveHostHeader=true
       globalcors:
         cors-configurations:
           '[/**]':
@@ -28,30 +64,3 @@ spring:
               - OPTIONS
             allowedHeaders: "*"
             maxAge: 3600
-
-      discovery:
-        locator:
-          enabled: true
-#
-#      routes:
-#        - id: rewritepath_route_auth
-#          uri: lb://authentification
-#          predicates:
-#            - Path=/auth/**
-#          filters:
-#            - RewritePath=/auth(?<segment>/?.*), /authent$\{segment}
-#        - id: rewritepath_route_pileouface
-#          uri: lb://gestionUtilisateur
-#          predicates:
-#            - Path=/utilisateurs/**
-#          filters:
-#            - RewritePath=/utilisateurs(?<segment>/?.*), /jeu$\{segment}
-#            - PreserveHostHeader
-
-  # Propriétés de Spring Boot Actuator
-  management:
-    endpoints:
-      web:
-        base-path: /actuator
-        exposure:
-          include: "*"

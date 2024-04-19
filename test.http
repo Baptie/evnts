@@ -1,6 +1,6 @@
 
 ###Inscription Personne expected = 201
-POST http://localhost:8080/auth/inscription?pseudo=test222&mdp=test222&eMail=test222
+POST http://localhost:8080/auth/inscription?pseudo=test2&mdp=tes22&eMail=tet222
 Content-Type: application/x-www-form-urlencoded
 Accept: */*
 
@@ -9,7 +9,7 @@ POST http://localhost:8080/auth/connexion
 Content-Type: application/x-www-form-urlencoded
 Accept: */*
 
-pseudo=bibi&mdp=lustucru
+pseudo=test2&mdp=tes22
 
 ###Token Personne expected = 201
 GET http://localhost:8080/auth/token?token=4e141818-7734-4efe-8d85-ed6b776f23fe
