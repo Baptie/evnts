@@ -6,6 +6,7 @@ import gestSal.apireponses.ApiResponseSalonDTO;
 import gestSal.apireponses.ApiResponseUtilisateur;
 import gestSal.dto.EvenementDTO;
 import gestSal.dto.MessageDTO;
+import gestSal.dto.SalonDTO;
 import gestSal.facade.FacadeSalon;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -463,4 +465,33 @@ public class ControleurSalon {
         }
     }
 
+    @GetMapping("/utilisateur/{nomUtilisateur}/salons")
+    public List<Salon> recupererSalonDeLutilisateur(@PathVariable String nomUtilisateur) throws AucunSalonException, NomUtilisateurVideException, UtilisateurInexistantException, SalonInexistantException, NumeroSalonVideException {
+        int idUser = facadeSalon.getUtilisateurByPseudo(nomUtilisateur).getIdUtilisateur();
+        List<Integer> lesSalonsDeLUser = facadeSalon.getSalonByUser(idUser);
+        List<Salon> lesSalons = new ArrayList<>();
+        if(lesSalonsDeLUser.isEmpty()){
+            throw new AucunSalonException();
+        }else{
+            for(int idSalon : lesSalonsDeLUser){
+                lesSalons.add(facadeSalon.getSalonByNum(idSalon));
+            }
+        }
+        return lesSalons;
+    }
+
+    @GetMapping("/utilisateur/{nomUtilisateur}/evenements")
+    public List<Evenement> recupererEventDeLutilisateur(@PathVariable String nomUtilisateur) throws NomUtilisateurVideException, UtilisateurInexistantException, SalonInexistantException, NumeroSalonVideException, AucunEventException {
+        int idUser = facadeSalon.getUtilisateurByPseudo(nomUtilisateur).getIdUtilisateur();
+        List<Integer> lesIdEvent = facadeSalon.getEvenementUser(idUser);
+        List<Evenement> lesEvents = new ArrayList<>();
+        if(lesIdEvent.isEmpty()){
+            throw new AucunEventException();
+        }else{
+            for(int idSalon : lesIdEvent){
+                lesEvents.add(facadeSalon.getEventById(idSalon));
+            }
+        }
+        return lesEvents;
+    }
 }

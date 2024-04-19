@@ -91,7 +91,7 @@ GET http://localhost:8080/salon/1/messages
 GET http://localhost:8080/salon/1/evenement/1/messages
 
 ###REJOINDRE SALON
-POST http://localhost:8080/salon/1/adhesion?pseudoUtilisateur=Camacho
+POST http://localhost:8080/salon/1/adhesion?pseudoUtilisateur=Vince
 Content-Type: application/json
 
 ###SUPPRIMER UTILISATEUR : 204
@@ -106,3 +106,8 @@ POST http://localhost:8080/salon/1/moderation?nomModerateur=Vince
 ###SUPPRIMER MODERATEUR
 DELETE http://localhost:8080/salon/1/moderation?nomModerateur=Vince
 
+### RECUPERER LES SALONS DE l'UTILISATEUR
+GET http://localhost:8080/salon/utilisateur/Vince/salons
+
+### RECUPERER LES EVENEMENTS DE L'UTILISATEUR
+GET http://localhost:8080/salon/utilisateur/Vince/evenements

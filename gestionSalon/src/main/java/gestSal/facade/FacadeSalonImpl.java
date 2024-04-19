@@ -270,6 +270,32 @@ public class FacadeSalonImpl implements FacadeSalon {
         }
     }
 
+    @Override
+    public List<Integer> getSalonByUser(int idUser) {
+        try {
+            return UtilisateurDTO.getSalonByUser(idUser);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Integer> getEvenementUser(int idUser) {
+        try {
+            return UtilisateurDTO.getEventByUser(idUser);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }    }
+
+    @Override
+    public Evenement getEventById(int idEvenement) {
+        try {
+            return UtilisateurDTO.getEventById(idEvenement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private String generateRandomCode() {
         SecureRandom secureRandom = new SecureRandom();

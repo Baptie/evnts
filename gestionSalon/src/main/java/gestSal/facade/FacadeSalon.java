@@ -1,5 +1,6 @@
 package gestSal.facade;
 
+import gestSal.dto.SalonDTO;
 import gestSal.dto.UtilisateurDTO;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
@@ -182,4 +183,10 @@ public interface FacadeSalon {
     void supprimerUtilisateur(Utilisateur nomUtilisateur) throws UtilisateurInexistantException;
 
     String getNomEvenementById(int idEvent);
+
+    List<Integer> getSalonByUser(int idUser);
+
+    List<Integer> getEvenementUser(int idUser);
+
+    Evenement getEventById(int idEvent);
 }

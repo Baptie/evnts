@@ -320,6 +320,46 @@ public class InteractionBDDSalon {
         return nomEvent;
     }
 
+    public static List<Integer> getSalonByUser(int idUtilisateur) throws SQLException {
+        List<Integer> listeIdSalon = new ArrayList<>();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from SalonMembre where idMembre="+idUtilisateur;
+        ResultSet rs = st.executeQuery(SQL);
+        while(rs.next()){
+            listeIdSalon.add(rs.getInt("idSalon"));
+        }
+        return listeIdSalon;
+    }
+
+    public static List<Integer> getEventByUser(int idUtilisateur) throws SQLException {
+        List<Integer> listeIdEvent = new ArrayList<>();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from PresenceEvenement where idMembre="+idUtilisateur;
+        ResultSet rs = st.executeQuery(SQL);
+        while(rs.next()){
+            listeIdEvent.add(rs.getInt("idEvenement"));
+        }
+        return listeIdEvent;
+    }
+
+    public static Evenement getEventById(int idEvenement) throws SQLException {
+        Evenement evenement = new Evenement();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from Evenement where idEvenement="+idEvenement;
+        ResultSet rs = st.executeQuery(SQL);
+        while(rs.next()){
+            evenement.setNomEvenement(rs.getString("nomEvenement"));
+            evenement.setNombrePersonneMax(rs.getInt("nombrePersonneMax"));
+            evenement.setNomCreateur(rs.getString("nomCreateur"));
+            evenement.setLieu(rs.getString("lieu"));
+            evenement.setDetailsEvenement(rs.getString("details"));
+            evenement.setDate(String.valueOf(rs.getDate("dateEvenement")));
+            evenement.setEstValide(rs.getBoolean("isValide"));
+
+        }
+        return evenement;
+    }
+
     public void envoyerMessageSalonSQL(int idSalon, String pseudoUtilisateur, String contenu, String dateTime) throws SQLException {
         Statement st = connecterAuSalonSQL();
         String SQL = "INSERT INTO MessageSalon (idSalon,nomAuteur,contenu,dateMessage) values ("+idSalon+",'"+pseudoUtilisateur+"','"+contenu+"','"+dateTime+"')";

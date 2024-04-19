@@ -37,6 +37,20 @@ public class UtilisateurDTO {
         InteractionBDDSalon.supprimerUtilisateurSQL(pseudoUtilisateur);
     }
 
+    public static List<Integer> getSalonByUser( int idUtilisateur) throws SQLException {
+        return InteractionBDDSalon.getSalonByUser(idUtilisateur);
+
+    }
+
+    public static List<Integer> getEventByUser(int idUser) throws SQLException {
+        return InteractionBDDSalon.getEventByUser(idUser);
+
+    }
+
+    public static Evenement getEventById(int idEvenement) throws SQLException {
+        return InteractionBDDSalon.getEventById(idEvenement);
+    }
+
 
     public void setIdUtilisateur(int idUtilisateur) {
         this.idUtilisateur = idUtilisateur;
