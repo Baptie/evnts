@@ -27,6 +27,10 @@ public class InteractionBDDSalon {
 
     public static void creerSalonSQL(String nomSalon, String nomCreateur, String logo) throws SQLException {
         Statement st = connecterAuSalonSQL();
+        nomSalon = nomSalon.replace("'", "\\'");
+        nomCreateur = nomCreateur.replace("'", "\\'");
+        logo = logo.replace("'", "\\'");
+
         String SQL = "INSERT INTO Salon (nomSalon, nomCreateur, logo) VALUES ('"+nomSalon+"', '"+nomCreateur+"', '"+logo+"')";
         st.executeUpdate(SQL);
     }
@@ -63,6 +67,7 @@ public class InteractionBDDSalon {
 
     public static Salon modifierSalonSQL(Salon salon, String choix, String valeur, int id) throws SQLException {
         Statement st = connecterAuSalonSQL();
+        valeur = valeur.replace("'", "\\'");
 
         switch (choix){
             case "nom" -> {
@@ -147,6 +152,7 @@ public class InteractionBDDSalon {
 
     public static void modifierEvenementSQL(int idSalon, Evenement evenement, String choix, String valeur) throws SQLException {
         int idEvenement = getEvenementByNomEtNumSalonSQL(idSalon,evenement.getNomEvenement()).getIdEvenement();
+        valeur = valeur.replace("'", "\\'");
         Statement st = connecterAuSalonSQL();
         switch (choix) {
             case "description" -> {
@@ -362,12 +368,18 @@ public class InteractionBDDSalon {
 
     public static void ajouterMembre(String nomMembre) throws SQLException {
         Statement st = connecterAuSalonSQL();
+        nomMembre = nomMembre.replace("'", "\\'");
+
         String SQL = "INSERT INTO Membre (nomMembre) values ('"+nomMembre+"')";
         st.executeUpdate(SQL);
     }
 
     public void envoyerMessageSalonSQL(int idSalon, String pseudoUtilisateur, String contenu, String dateTime) throws SQLException {
         Statement st = connecterAuSalonSQL();
+        pseudoUtilisateur = pseudoUtilisateur.replace("'", "\\'");
+        contenu = contenu.replace("'", "\\'");
+        dateTime = dateTime.replace("'", "\\'");
+
         String SQL = "INSERT INTO MessageSalon (idSalon,nomAuteur,contenu,dateMessage) values ("+idSalon+",'"+pseudoUtilisateur+"','"+contenu+"','"+dateTime+"')";
         st.executeUpdate(SQL);
 
@@ -375,6 +387,10 @@ public class InteractionBDDSalon {
 
     public void envoyerMessageEventSQL(int idEvenement, String pseudoUtilisateur, String contenu, String dateTime) throws SQLException {
         Statement st = connecterAuSalonSQL();
+        pseudoUtilisateur = pseudoUtilisateur.replace("'", "\\'");
+        contenu = contenu.replace("'", "\\'");
+        dateTime = dateTime.replace("'", "\\'");
+
         String SQL = "INSERT INTO MessageEvenement (idEvenement,nomAuteur,contenu,dateMessage) values ("+idEvenement+",'"+pseudoUtilisateur+"','"+contenu+"','"+dateTime+"')";
         st.executeUpdate(SQL);
     }
