@@ -4,8 +4,7 @@ import { Link} from 'react-router-dom'
 import logo from '../../assets/logo/logo-black-nocurve.png';
 import{ useState } from 'react';
 import axios from "axios";
-
-const API_URL = "http://localhost:8080/auth/";
+import config from '../../config';
 
 
 const Connexion = () => {
@@ -16,13 +15,11 @@ const Connexion = () => {
       const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         await axios
-            .post(API_URL + "connexion", {
-                email,
-                password,
-            })
+            .post(config.url.root_api + config.url.auth.connexion+"?pseudo="+email+"&mdp="+password)
             .then(response =>{
                 localStorage.setItem("user", JSON.stringify(response.data));
                 localStorage.setItem("authenticated", "yes");
+                window.location.reload();
             })
             .catch(error =>{
                 console.log("Erreur lors de l'authentification : ", error);           

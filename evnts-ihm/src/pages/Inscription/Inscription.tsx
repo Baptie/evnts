@@ -12,18 +12,27 @@ const Inscription = () => {
     const [nom, setNom] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
+    async function connexion(login:string,pwd:string){
+        await axios
+                .post(API_URL + "connexion/pseudo="+login+"&mdp="+pwd)
+                .then(response =>{
+                    localStorage.setItem("user", JSON.stringify(response.data));
+                    localStorage.setItem("authenticated", "yes");
+                    window.location.reload();
+                })
+                .catch(error =>{
+                    console.log("Erreur lors de l'authentification : ", error);           
+                    alert("Erreur lors de l'authentification")
+                });
+    }
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         await axios
-            .post(API_URL + "inscription", {
-                nom,
-                email,
-                password,
-            })
+            .post(API_URL + "inscription?pseudo="+nom+"&mdp="+password+"&eMail="+email)
             .then(response =>{
-                localStorage.setItem("user", JSON.stringify(response.data));
-                localStorage.setItem("authenticated", "yes");
+                connexion(nom,password);
+                
             })
             .catch(error =>{
                 console.log("Erreur lors de l'authentification : ", error);           

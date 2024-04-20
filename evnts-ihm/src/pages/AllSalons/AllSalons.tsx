@@ -2,6 +2,8 @@ import Navbar from "../../components/Navbar/Navbar";
 import './AllSalons.scss'
 import user_placeholder from '../../assets/icons/user_placeholder.jpeg'
 import axios from "axios";
+import { useState } from "react";
+
 
 
 const API_URL="http://localhost:8080/auth/";
@@ -32,12 +34,25 @@ salons.forEach(salon => {
 });
 */
 
-
-const events = [
-    'Evenement 1; Lieu 1; Horaire 1',
-    'Evenement 2; Lieu 2; Horaire 2',
-    'Evenement 3; Lieu 3; Horaire 3',
-    'Evenement 4; Lieu 4; Horaire 4'
+// TODO : Fetch la liste des Salons de l'utilisateur
+const salons = [
+    {
+        nom:'Salon1',
+        
+    },
+    {
+        nom:'Salon2',
+      
+    },
+    {
+        nom:'Salon3',
+       
+    },
+    {
+        nom:'SaloN4',
+        
+    },
+    
 ]
 
 async function fetchData(idUser:string){
@@ -46,27 +61,34 @@ async function fetchData(idUser:string){
     await axios
     .get(API_URL+idUser+"/salons")
     .then( response => {
-        events.push(response.data)
+        salons.push(response.data)
     })
     .catch(error =>{
         console.log(error)
     });
 
 }
-function AllSalons(){
-    const listSalonRender = events.map(event => 
-        <div className="rowSalon">
-            <div className="salonPPContainer">
-                 <img src={user_placeholder} alt="pp_salon" className='salonPP' />
-            </div>
 
+
+function AllSalons(){
+    
+    const listSalonRender = salons.map(event => 
+        <li className="rowSalon" key={event.nom}>
             <div className="salonNameContainer">
-                <span className="labelSalonName">
-                    {event}
-                </span>
+                <div className="labelSalonName" >
+                    {event.nom}
+                </div>
             </div>
-         </div>
+         </li>
         )
+
+    const [nomSalon,setNomSalon] = useState("");
+
+    function nouveauSalon(){
+        const user = localStorage.getItem("user")
+        console.log("Nom salon :")
+        console.log(nomSalon,user)
+    }
 
     return(
         <div className="page">
@@ -80,14 +102,18 @@ function AllSalons(){
                 </div>
 
                 <div className="contentContainer">
-                    <div className="allRowsSalon">
+
+                    <form onSubmit={nouveauSalon}>
+                        <label>Nom</label>
+                        <input type="text" required value={nomSalon} onChange={(event) => setNomSalon(event.target.value)}/>
+                        <button id="newSalonButton" type="submit">Créer salon</button>
+                    </form>
+                    
+                    <ul className="allRowsSalon">
                         {listSalonRender}
-                    </div>
+                    </ul>
 
-                    <div className="contenuSalon">
-
-
-                    </div>
+                
                         
                     
                 </div>
