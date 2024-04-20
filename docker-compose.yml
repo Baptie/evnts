@@ -23,6 +23,7 @@ services:
       - authentificationApp
       - gestionUtilisateurApp
       - contactApp
+      - googleApp
 
   dbAuthentification:
     image: mysql:latest
@@ -71,6 +72,17 @@ services:
     volumes:
       - ./contact-init.sql:/docker-entrypoint-initdb.d/contact-init.sql
 
+  dbGoogle:
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3310:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: google
+    volumes:
+      - ./google-init.sql:/docker-entrypoint-initdb.d/google-init.sql
+
   salonApp:
     build:
       context: ./gestionSalon
@@ -118,6 +130,19 @@ services:
     depends_on:
       - dbContact
       - consul
+
+  googleApp:
+    build:
+      context: ./gestionGoogle
+      dockerfile: Dockerfile
+    image: mon-application-google
+    restart: always
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+    depends_on:
+      - dbGoogle
+      - consul
+
 
   frontend:
     build:
