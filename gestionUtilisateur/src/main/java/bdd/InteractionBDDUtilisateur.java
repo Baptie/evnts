@@ -15,10 +15,6 @@ public class InteractionBDDUtilisateur {
         return connection.createStatement();
 
     }
-    public static void main(String[] args) throws SQLException {
-        getListeContactByPseudo("Vince");
-
-    }
 
     public static void creerCompteSQL(String pseudo, String email, String bio, String photoDeProfil) throws SQLException {
         Statement st = connecterGestionUtilisateurSQL();
@@ -65,20 +61,24 @@ public class InteractionBDDUtilisateur {
         UtilisateurDTO userDTO = new UtilisateurDTO();
         String SQLUser = "SELECT * FROM User where pseudo='"+pseudo+"'";
         ResultSet rs = st.executeQuery(SQLUser);
-        while(rs.next()){
-            int id = rs.getInt("idUser");
-            String email = rs.getString("email");
-            String pseudoSQL = rs.getString("pseudo");
-            String description = rs.getString("description");
-            String status = rs.getString("status");
-            String photo = rs.getString("photo");
+        if(!rs.next()){
+            throw new SQLException("Aucun utilisateur trouvé", "404");
+        }else {
+            while (rs.next()) {
+                int id = rs.getInt("idUser");
+                String email = rs.getString("email");
+                String pseudoSQL = rs.getString("pseudo");
+                String description = rs.getString("description");
+                String status = rs.getString("status");
+                String photo = rs.getString("photo");
 
-            userDTO.setId(id);
-            userDTO.setEmail(email);
-            userDTO.setPseudo(pseudoSQL);
-            userDTO.setBio(description);
-            userDTO.setStatus(status);
-            userDTO.setPhotoDeProfil(photo);
+                userDTO.setId(id);
+                userDTO.setEmail(email);
+                userDTO.setPseudo(pseudoSQL);
+                userDTO.setBio(description);
+                userDTO.setStatus(status);
+                userDTO.setPhotoDeProfil(photo);
+            }
         }
         return userDTO;
 
@@ -103,9 +103,13 @@ public class InteractionBDDUtilisateur {
         Statement st = connecterGestionUtilisateurSQL();
         String SQLUser = "SELECT idUser2 FROM ListeContact where idUser="+id1;
         ResultSet rs = st.executeQuery(SQLUser);
-        while (rs.next()){
-            int idRecup = rs.getInt("idUser2");
-            lesContacts.add(getPseudoById(idRecup));
+        if(!rs.next()){
+            throw new SQLException("Aucun contact trouvé", "404");
+        }else {
+            while (rs.next()) {
+                int idRecup = rs.getInt("idUser2");
+                lesContacts.add(getPseudoById(idRecup));
+            }
         }
         return lesContacts;
     }
@@ -115,8 +119,12 @@ public class InteractionBDDUtilisateur {
         int userid = 0;
         String SQLUser = "SELECT * FROM User where pseudo='"+pseudo+"'";
         ResultSet rs = st.executeQuery(SQLUser);
-        while(rs.next()){
-            userid = rs.getInt("idUser");
+        if(!rs.next()){
+            throw new SQLException("Aucun utilisateur trouvé", "404");
+        }else {
+            while (rs.next()) {
+                userid = rs.getInt("idUser");
+            }
         }
         return userid;
     }
@@ -126,8 +134,12 @@ public class InteractionBDDUtilisateur {
         String pseudo =null;
         String SQLUser = "SELECT * FROM User where idUser="+id;
         ResultSet rs = st.executeQuery(SQLUser);
-        while(rs.next()){
-            pseudo = rs.getString("pseudo");
+        if(!rs.next()){
+            throw new SQLException("Aucun utilisateur trouvé", "404");
+        }else {
+            while (rs.next()) {
+                pseudo = rs.getString("pseudo");
+            }
         }
         return pseudo;
     }

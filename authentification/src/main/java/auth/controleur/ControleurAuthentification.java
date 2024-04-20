@@ -76,6 +76,8 @@ public class ControleurAuthentification {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais pseudo !");
         } catch (MdpIncorrecteException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais mdp !");
+        } catch (CombinaisonPseudoMdpIncorrect e) {
+            throw new RuntimeException(e);
         }
     }
 
