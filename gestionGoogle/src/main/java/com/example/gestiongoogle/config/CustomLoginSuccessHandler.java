@@ -12,8 +12,8 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
-                                        Authentication authentication) throws IOException, IOException {
+                                        Authentication authentication) throws IOException {
         // Redirige apres la connexion
-        getRedirectStrategy().sendRedirect(request, response, "/secured");
+        getRedirectStrategy().sendRedirect(request, response, "/google/secured");
     }
 }
