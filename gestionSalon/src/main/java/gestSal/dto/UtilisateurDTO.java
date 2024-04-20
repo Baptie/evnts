@@ -21,6 +21,11 @@ public class UtilisateurDTO {
         return InteractionBDDSalon.getUtilisateurByPseudoSQL(pseudoUtilisateur);
     }
 
+    public static Utilisateur getUtilisateurByEmail(String email) throws SQLException {
+        System.out.println("STEP 3"+email);
+        return InteractionBDDSalon.getUtilisateurByEmail(email);
+    }
+
     public static List<Utilisateur> seDefiniCommePresentAUnEvenement(Utilisateur utilisateur, Salon salon, Evenement evenement) throws SQLException {
         List<Utilisateur> lesParticipants;
         lesParticipants = InteractionBDDSalon.seDefiniCommePresentAUnEvenementSQL(utilisateur,evenement);
@@ -51,8 +56,8 @@ public class UtilisateurDTO {
         return InteractionBDDSalon.getEventById(idEvenement);
     }
 
-    public static void ajouterMembre(String nomMembre) throws SQLException {
-        InteractionBDDSalon.ajouterMembre(nomMembre);
+    public static void ajouterMembre(String nomMembre, String email) throws SQLException {
+        InteractionBDDSalon.ajouterMembre(nomMembre, email);
     }
 
 
@@ -85,4 +90,7 @@ public class UtilisateurDTO {
         return mesConversations;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

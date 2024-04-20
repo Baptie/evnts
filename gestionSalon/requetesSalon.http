@@ -114,4 +114,7 @@ GET http://localhost:8080/salon/utilisateur/Vince/evenements
 
 
 ###AJOUTER MEMBRE
-POST http://localhost:8080/salon/utilisateur/SidBaptie
+POST http://localhost:8080/salon/utilisateur/SidBaptie?email=1234657@gmail.com
+
+###RECUPER UTILISATEUR PAR EMAIL
+GET http://localhost:8080/salon/utilisateurs/mail/1234657@gmail.com

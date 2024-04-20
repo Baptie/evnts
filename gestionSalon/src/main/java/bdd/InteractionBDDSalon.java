@@ -112,10 +112,29 @@ public class InteractionBDDSalon {
             while (rs.next()) {
                 userDTO.setIdUtilisateur(rs.getInt("idMembre"));
                 userDTO.setPseudo(rs.getString("nomMembre"));
+                userDTO.setEmail(rs.getString("email"));
             }
         }
 
         return userDTO;
+    }
+
+    public static Utilisateur getUtilisateurByEmail(String email) throws SQLException{
+        Utilisateur utilisateur = new Utilisateur();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from Membre where email='"+email+"'";
+        System.out.println("SQL :"+SQL);
+        ResultSet rs = st.executeQuery(SQL);
+
+        while (rs.next()) {
+            System.out.println("I'M INSIDE");
+            utilisateur.setIdUtilisateur(rs.getInt("idMembre"));
+            utilisateur.setPseudo(rs.getString("nomMembre"));
+            utilisateur.setEmail(rs.getString("email"));
+        }
+
+        System.out.println("PSEUDO "+utilisateur.getPseudo());
+        return utilisateur;
     }
 
     public static UtilisateurDTO getUtilisateurByIdSQL(int idUtilisateur) throws SQLException {
@@ -129,6 +148,7 @@ public class InteractionBDDSalon {
             while (rs.next()) {
                 userDTO.setIdUtilisateur(rs.getInt("idMembre"));
                 userDTO.setPseudo(rs.getString("nomMembre"));
+                userDTO.setEmail(rs.getString("email"));
             }
         }
         return userDTO;
@@ -380,6 +400,7 @@ public class InteractionBDDSalon {
         return nomEvent;
     }
 
+
     public static List<Integer> getSalonByUser(int idUtilisateur) throws SQLException {
         List<Integer> listeIdSalon = new ArrayList<>();
         Statement st = connecterAuSalonSQL();
@@ -432,18 +453,16 @@ public class InteractionBDDSalon {
         return evenement;
     }
 
-    public static void ajouterMembre(String nomMembre) throws SQLException {
+    public static void ajouterMembre(String nomMembre, String email) throws SQLException {
         Statement st = connecterAuSalonSQL();
         nomMembre = nomMembre.replace("'", "\\'");
 
-        // Vérifier si le membre existe déjà
-        String checkIfExistsSQL = "SELECT COUNT(*) FROM Membre WHERE nomMembre = '" + nomMembre + "'";
+        String checkIfExistsSQL = "SELECT COUNT(*) FROM Membre WHERE nomMembre = '" + nomMembre + "' AND email='"+email+"'";
         ResultSet rs = st.executeQuery(checkIfExistsSQL);
         rs.next();
         int count = rs.getInt(1);
         if (count == 0) {
-            // Le membre n'existe pas, l'insérer
-            String SQL = "INSERT INTO Membre (nomMembre) VALUES ('" + nomMembre + "')";
+            String SQL = "INSERT INTO Membre (nomMembre,email) VALUES ('" + nomMembre + "','"+email+"')";
             st.executeUpdate(SQL);
         }else{
             throw new SQLException("Le membre est déjà présent","409");

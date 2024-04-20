@@ -190,5 +190,7 @@ public interface FacadeSalon {
 
     Evenement getEventById(int idEvent);
 
-    void ajouterMembre(String nomMembre);
+    void ajouterMembre(String nomMembre, String email);
+
+    Utilisateur getUtilisateurByEmail(String email);
 }

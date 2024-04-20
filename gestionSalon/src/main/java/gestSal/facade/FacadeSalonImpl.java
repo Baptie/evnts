@@ -240,6 +240,15 @@ public class FacadeSalonImpl implements FacadeSalon {
         return lesMessagesDEvent;
     }
 
+    public Utilisateur getUtilisateurByEmail(String email){
+        System.out.println("STEP2");
+        try {
+            return UtilisateurDTO.getUtilisateurByEmail(email);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public Utilisateur convertUserDTOtoUser(UtilisateurDTO utilisateurDTO) {
         Utilisateur utilisateur = new Utilisateur();
@@ -297,9 +306,9 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public void ajouterMembre(String nomMembre) {
+    public void ajouterMembre(String nomMembre, String email) {
         try {
-            UtilisateurDTO.ajouterMembre(nomMembre);
+            UtilisateurDTO.ajouterMembre(nomMembre,email);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
