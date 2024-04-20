@@ -249,17 +249,6 @@ public class FacadeSalonImpl implements FacadeSalon {
         }
     }
 
-    @Override
-    public Utilisateur convertUserDTOtoUser(UtilisateurDTO utilisateurDTO) {
-        Utilisateur utilisateur = new Utilisateur();
-        utilisateur.setPseudo(utilisateurDTO.getPseudo());
-        utilisateur.setEmail(utilisateurDTO.getEmail());
-        utilisateur.setDescription(utilisateurDTO.getDescription());
-        utilisateur.setStatus(utilisateurDTO.getStatus());
-        utilisateur.setMesConversations(utilisateurDTO.getMesConversations());
-        return utilisateur;
-    }
-
 
     @Override
     public void supprimerUtilisateur(Utilisateur pseudoUtilisateur) {

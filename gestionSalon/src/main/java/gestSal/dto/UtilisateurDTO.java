@@ -11,8 +11,7 @@ import java.util.List;
 
 public class UtilisateurDTO {
     private int idUtilisateur;
-    private String pseudo,email,description, status, password;
-    private List<Conversation> mesConversations;
+    private String pseudo,email;
 
     public UtilisateurDTO() {
     }
@@ -22,7 +21,6 @@ public class UtilisateurDTO {
     }
 
     public static Utilisateur getUtilisateurByEmail(String email) throws SQLException {
-        System.out.println("STEP 3"+email);
         return InteractionBDDSalon.getUtilisateurByEmail(email);
     }
 
@@ -78,17 +76,6 @@ public class UtilisateurDTO {
         return email;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public List<Conversation> getMesConversations() {
-        return mesConversations;
-    }
 
     public void setEmail(String email) {
         this.email = email;

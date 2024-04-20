@@ -1,7 +1,17 @@
+###AJOUTER MEMBRE
+POST http://localhost:8080/salon/utilisateur/SidBaptie?email=1234657@gmail.com
+
+###RECUPER UTILISATEUR PAR EMAIL
+GET http://localhost:8080/salon/utilisateurs/mail/1234657@gmail.com
+
+
 ###CREATION SALON : 201
 POST http://localhost:8080/salon?nomCreateur=Vince&nomSalon=Salon3
 Content-Type: application/x-www-form-urlencoded
 Accept: */*
+
+###GET SALON BY NAME : 200
+GET http://localhost:8080/salon/byname/Salon3
 
 
 ###MODIFIER SALON : 200
@@ -16,12 +26,25 @@ Content-Type: application/json
 ###GET SALON BY NUM : 200
 GET http://localhost:8080/salon/1
 
-###GET SALON BY NAME : 200
-GET http://localhost:8080/salon/byname/nouveauNom
+
 
 ###GET UTILISATEUR PAR PSEUDO : 200
 GET http://localhost:8080/salon/getUtilisateur/Vince
 
+
+### CREER EVENEMENT
+POST http://localhost:8080/salon/1/evenement
+Content-Type: application/json
+Accept: application/json
+
+{
+  "nomCreateur": "NomUtilisateur",
+  "nomEvenement": "NomEvenement",
+  "nombrePersonneMax": 1,
+  "detailsEvenement": "Détails de l'événement",
+  "lieu": "Lieu de l'événement",
+  "date": "2024-04-20T12:00:00"
+}
 
 ###MODIFIER EVENEMENT : 200
 PATCH http://localhost:8080/salon/1/evenement/1
@@ -41,19 +64,7 @@ DELETE http://localhost:8080/salon/1/evenement/1/presence?nomUtilisateur=Vince
 Content-Type: application/json
 
 
-### CREER EVENEMENT
-POST http://localhost:8080/salon/1/evenement
-Content-Type: application/json
-Accept: application/json
 
-{
-  "nomCreateur": "NomUtilisateur",
-  "nomEvenement": "NomEvenement",
-  "nombrePersonneMax": 10,
-  "detailsEvenement": "Détails de l'événement",
-  "lieu": "Lieu de l'événement",
-  "date": "2024-04-20T12:00:00"
-}
 
 
 ### RECUPERER L'EVENEMENT : 200
@@ -113,8 +124,4 @@ GET http://localhost:8080/salon/utilisateur/Vince/salons
 GET http://localhost:8080/salon/utilisateur/Vince/evenements
 
 
-###AJOUTER MEMBRE
-POST http://localhost:8080/salon/utilisateur/SidBaptie?email=1234657@gmail.com
 
-###RECUPER UTILISATEUR PAR EMAIL
-GET http://localhost:8080/salon/utilisateurs/mail/1234657@gmail.com

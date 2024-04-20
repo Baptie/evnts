@@ -6,14 +6,13 @@ import java.util.Date;
 
 public class MessageDTO {
     private int idMessage;
-    private String auteur,receveur,contenu;
+    private String auteur,contenu;
     private String date;
     private boolean isSeen;
 
-    public MessageDTO(int idMessage, String auteur, String receveur, String contenu, String date, boolean isSeen) {
+    public MessageDTO(int idMessage, String auteur, String contenu, String date, boolean isSeen) {
         this.idMessage = idMessage;
         this.auteur = auteur;
-        this.receveur = receveur;
         this.contenu = contenu;
         this.date = date;
         this.isSeen = isSeen;
@@ -41,13 +40,6 @@ public class MessageDTO {
         this.auteur = auteur;
     }
 
-    public String getReceveur() {
-        return receveur;
-    }
-
-    public void setReceveur(String receveur) {
-        this.receveur = receveur;
-    }
 
     public String getContenu() {
         return contenu;

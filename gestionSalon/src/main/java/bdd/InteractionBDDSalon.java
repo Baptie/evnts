@@ -43,16 +43,14 @@ public class InteractionBDDSalon {
         Statement st = connecterAuSalonSQL();
         String SQL = "select * from Salon where idSalon="+id;
         ResultSet rs = st.executeQuery(SQL);
-        if(!rs.next()){
-            throw new SQLException("Le salon n'existe pas", "404");
-        }else {
-            while (rs.next()) {
-                salon.setIdSalon(rs.getInt("idSalon"));
-                salon.setNomSalon(rs.getString("nomSalon"));
-                salon.setNomCreateur(rs.getString("nomCreateur"));
-                salon.setLogo(rs.getString("logo"));
-            }
+
+        while (rs.next()) {
+            salon.setIdSalon(rs.getInt("idSalon"));
+            salon.setNomSalon(rs.getString("nomSalon"));
+            salon.setNomCreateur(rs.getString("nomCreateur"));
+            salon.setLogo(rs.getString("logo"));
         }
+
         return salon;
 
     }
@@ -62,15 +60,12 @@ public class InteractionBDDSalon {
         Statement st = connecterAuSalonSQL();
         String SQL = "select * from Salon where nomSalon='"+nom+"'";
         ResultSet rs = st.executeQuery(SQL);
-        if(!rs.next()){
-            throw new SQLException("Le salon n'existe pas", "404");
-        }else {
-            while (rs.next()) {
-                salon.setIdSalon(rs.getInt("idSalon"));
-                salon.setNomSalon(rs.getString("nomSalon"));
-                salon.setNomCreateur(rs.getString("nomCreateur"));
-                salon.setLogo(rs.getString("logo"));
-            }
+        while (rs.next()) {
+            salon.setIdSalon(rs.getInt("idSalon"));
+            salon.setNomSalon(rs.getString("nomSalon"));
+            salon.setNomCreateur(rs.getString("nomCreateur"));
+            salon.setLogo(rs.getString("logo"));
+
         }
         return salon;
 
@@ -95,9 +90,10 @@ public class InteractionBDDSalon {
                 salon.setNomCreateur(valeur);
                 String SQL = "UPDATE Salon SET nomCreateur = '" + valeur + "' WHERE idSalon = " + id;
                 st.executeUpdate(SQL);
+
             }
         }
-        return salon;
+        return getSalonById(id);
     }
 
 
@@ -106,15 +102,13 @@ public class InteractionBDDSalon {
         Statement st = connecterAuSalonSQL();
         String SQL = "select * from Membre where nomMembre='"+pseudoUtilisateur+"'";
         ResultSet rs = st.executeQuery(SQL);
-        if(!rs.next()){
-            throw new SQLException("L'utilisateur "+pseudoUtilisateur+" n'existe pas", "404");
-        }else {
-            while (rs.next()) {
-                userDTO.setIdUtilisateur(rs.getInt("idMembre"));
-                userDTO.setPseudo(rs.getString("nomMembre"));
-                userDTO.setEmail(rs.getString("email"));
-            }
+
+        while (rs.next()) {
+           userDTO.setIdUtilisateur(rs.getInt("idMembre"));
+           userDTO.setPseudo(rs.getString("nomMembre"));
+           userDTO.setEmail(rs.getString("email"));
         }
+
 
         return userDTO;
     }
@@ -142,15 +136,12 @@ public class InteractionBDDSalon {
         Statement st = connecterAuSalonSQL();
         String SQL = "select * from Membre where idMembre="+idUtilisateur;
         ResultSet rs = st.executeQuery(SQL);
-        if(!rs.next()){
-            throw new SQLException("L'utilisateu n'existe pas", "404");
-        }else {
-            while (rs.next()) {
-                userDTO.setIdUtilisateur(rs.getInt("idMembre"));
-                userDTO.setPseudo(rs.getString("nomMembre"));
-                userDTO.setEmail(rs.getString("email"));
-            }
+        while (rs.next()) {
+            userDTO.setIdUtilisateur(rs.getInt("idMembre"));
+            userDTO.setPseudo(rs.getString("nomMembre"));
+            userDTO.setEmail(rs.getString("email"));
         }
+
         return userDTO;
     }
 
@@ -173,20 +164,17 @@ public class InteractionBDDSalon {
         Statement st = connecterAuSalonSQL();
         String SQL = "select * from Evenement where nomEvenement='"+nomEvenement+"' and idSalon ="+id;
         ResultSet rs = st.executeQuery(SQL);
-        if(!rs.next()){
-            throw new SQLException("L'évènement n'existe pas", "404");
-        }else {
-            while (rs.next()) {
-                evenement.setIdEvenement(rs.getInt("idEvenement"));
-                evenement.setNombrePersonneMax(rs.getInt("nombrePersonneMax"));
-                evenement.setNomEvenement(rs.getString("nomEvenement"));
-                evenement.setDetailsEvenement(rs.getString("details"));
-                evenement.setDate(rs.getString("dateEvenement"));
-                evenement.setLieu(rs.getString("lieu"));
-                evenement.setEstValide(rs.getBoolean("isValide"));
-                evenement.setNomCreateur(rs.getString("nomCreateur"));
-            }
+        while (rs.next()) {
+            evenement.setIdEvenement(rs.getInt("idEvenement"));
+            evenement.setNombrePersonneMax(rs.getInt("nombrePersonneMax"));
+            evenement.setNomEvenement(rs.getString("nomEvenement"));
+            evenement.setDetailsEvenement(rs.getString("details"));
+            evenement.setDate(rs.getString("dateEvenement"));
+            evenement.setLieu(rs.getString("lieu"));
+            evenement.setEstValide(rs.getBoolean("isValide"));
+            evenement.setNomCreateur(rs.getString("nomCreateur"));
         }
+
         return evenement;
     }
 
@@ -256,15 +244,14 @@ public class InteractionBDDSalon {
 
         String SQL2 = "select * from PresenceEvenement where idEvenement="+evenementDTO.getIdEvenement();
         ResultSet rs = st.executeQuery(SQL2);
-        if(!rs.next()){
-            throw new SQLException("La présence a l'évènement n'a pas pu être trouvé", "404");
-        }else {
-            while (rs.next()) {
-                Utilisateur user = new Utilisateur();
-                user.setPseudo(getUtilisateurByIdSQL(rs.getInt("idMembre")).getPseudo());
-                participants.add(user);
-            }
+
+        while (rs.next()) {
+            Utilisateur user = new Utilisateur();
+            user.setPseudo(getUtilisateurByIdSQL(rs.getInt("idMembre")).getPseudo());
+            user.setEmail(getUtilisateurByIdSQL(rs.getInt("idMembre")).getEmail());
+            participants.add(user);
         }
+
         return participants;
     }
 
@@ -281,6 +268,7 @@ public class InteractionBDDSalon {
         while(rs.next()){
             Utilisateur user = new Utilisateur();
             user.setPseudo(getUtilisateurByIdSQL(rs.getInt("idMembre")).getPseudo());
+            user.setEmail(getUtilisateurByIdSQL(rs.getInt("idMembre")).getEmail());
             participants.add(user);
         }
         return participants;
@@ -319,19 +307,17 @@ public class InteractionBDDSalon {
         Statement st = connecterAuSalonSQL();
         String SQLMessage = "select * from MessageSalon where idSalon="+numSalon;
         ResultSet rs = st.executeQuery(SQLMessage);
-        if(!rs.next()){
-            throw new SQLException("Aucun message", "200");
-        }else {
-            while (rs.next()) {
-                Message message = new Message();
-                String auteur = rs.getString("nomAuteur");
-                String contenu = rs.getString("contenu");
-                String dateMessage = rs.getString("dateMessage");
-                message.setAuteur(auteur);
-                message.setContenu(contenu);
-                message.setDate(dateMessage);
-                lesMessages.add(message);
-            }
+
+        while (rs.next()) {
+            Message message = new Message();
+            String auteur = rs.getString("nomAuteur");
+            String contenu = rs.getString("contenu");
+            String dateMessage = rs.getString("dateMessage");
+            message.setAuteur(auteur);
+            message.setContenu(contenu);
+            message.setDate(dateMessage);
+            lesMessages.add(message);
+
         }
         return lesMessages;
     }
@@ -342,19 +328,17 @@ public class InteractionBDDSalon {
         Statement st = connecterAuSalonSQL();
         String SQL = "select * from MessageEvenement where idEvenement="+idEvenement;
         ResultSet rs = st.executeQuery(SQL);
-        if(!rs.next()){
-            throw new SQLException("Aucun message", "200");
-        }else {
-            while (rs.next()) {
-                Message message = new Message();
-                String auteur = rs.getString("nomAuteur");
-                String contenu = rs.getString("contenu");
-                String dateMessage = rs.getString("dateMessage");
-                message.setAuteur(auteur);
-                message.setContenu(contenu);
-                message.setDate(dateMessage);
-                lesMessages.add(message);
-            }
+
+        while (rs.next()) {
+            Message message = new Message();
+            String auteur = rs.getString("nomAuteur");
+            String contenu = rs.getString("contenu");
+            String dateMessage = rs.getString("dateMessage");
+            message.setAuteur(auteur);
+            message.setContenu(contenu);
+            message.setDate(dateMessage);
+            lesMessages.add(message);
+
         }
         return lesMessages;
     }
@@ -406,13 +390,11 @@ public class InteractionBDDSalon {
         Statement st = connecterAuSalonSQL();
         String SQL = "select * from SalonMembre where idMembre="+idUtilisateur;
         ResultSet rs = st.executeQuery(SQL);
-        if(!rs.next()){
-            throw new SQLException("L'utilisateur n'est dans aucun salon", "200");
-        }else {
-            while (rs.next()) {
-                listeIdSalon.add(rs.getInt("idSalon"));
-            }
+
+        while (rs.next()) {
+            listeIdSalon.add(rs.getInt("idSalon"));
         }
+
         return listeIdSalon;
     }
 
@@ -421,13 +403,11 @@ public class InteractionBDDSalon {
         Statement st = connecterAuSalonSQL();
         String SQL = "select * from PresenceEvenement where idMembre="+idUtilisateur;
         ResultSet rs = st.executeQuery(SQL);
-        if(!rs.next()){
-            throw new SQLException("L'utilisateur n'a pas d'event", "404");
-        }else {
-            while (rs.next()) {
-                listeIdEvent.add(rs.getInt("idEvenement"));
-            }
+
+        while (rs.next()) {
+            listeIdEvent.add(rs.getInt("idEvenement"));
         }
+
         return listeIdEvent;
     }
 
@@ -436,19 +416,16 @@ public class InteractionBDDSalon {
         Statement st = connecterAuSalonSQL();
         String SQL = "select * from Evenement where idEvenement="+idEvenement;
         ResultSet rs = st.executeQuery(SQL);
-        if(!rs.next()){
-            throw new SQLException("Aucun event trouvé", "404");
-        }else {
-            while (rs.next()) {
-                evenement.setNomEvenement(rs.getString("nomEvenement"));
-                evenement.setNombrePersonneMax(rs.getInt("nombrePersonneMax"));
-                evenement.setNomCreateur(rs.getString("nomCreateur"));
-                evenement.setLieu(rs.getString("lieu"));
-                evenement.setDetailsEvenement(rs.getString("details"));
-                evenement.setDate(String.valueOf(rs.getDate("dateEvenement")));
-                evenement.setEstValide(rs.getBoolean("isValide"));
 
-            }
+        while (rs.next()) {
+            evenement.setNomEvenement(rs.getString("nomEvenement"));
+            evenement.setNombrePersonneMax(rs.getInt("nombrePersonneMax"));
+            evenement.setNomCreateur(rs.getString("nomCreateur"));
+            evenement.setLieu(rs.getString("lieu"));
+            evenement.setDetailsEvenement(rs.getString("details"));
+            evenement.setDate(String.valueOf(rs.getDate("dateEvenement")));
+            evenement.setEstValide(rs.getBoolean("isValide"));
+
         }
         return evenement;
     }

@@ -177,9 +177,6 @@ public interface FacadeSalon {
 
     List<Message> getMessagesEvenement(Evenement evenement) throws EvenementInexistantException;
 
-
-    Utilisateur convertUserDTOtoUser(UtilisateurDTO utilisateurDTO);
-
     void supprimerUtilisateur(Utilisateur nomUtilisateur) throws UtilisateurInexistantException;
 
     String getNomEvenementById(int idEvent);
