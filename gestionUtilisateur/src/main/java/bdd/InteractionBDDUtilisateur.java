@@ -78,9 +78,6 @@ public class InteractionBDDUtilisateur {
 
         }
         return userDTO;
-
-
-
     }
 
     public static void ajoutContactSQL(String pseudo1, String pseudo2) throws SQLException {

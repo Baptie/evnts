@@ -6,9 +6,10 @@ GET http://localhost:8080/salon/utilisateurs/mail/1234657@gmail.com
 
 
 ###CREATION SALON : 201
-POST http://localhost:8080/salon?nomCreateur=Vince&nomSalon=Salon3
+POST http://localhost:8080/salon?nomCreateur=pseudo&nomSalon=Salon3
 Content-Type: application/x-www-form-urlencoded
 Accept: */*
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoidmluY2VudC5hdWJlcnRAZXZudDIuY29tIiwiZXhwIjoxNzEzNjgzMDAxLCJpYXQiOjE3MTM2NDcwMDEsInNjb3BlIjoiIn0.T9pKO78U1wYj8kyl2gr7Ks7HrWuz7OQTc7Uq1I5fsxc9exINwYMtbCq4bqZCFEin0JT7_igc2FRwuz8rrJKGuOr6f_rqJkML4jMA4MNyhnIs_ZAB1XpaUpk83QM7I9zqXiMHQZ6y0iVzvqKvEGGHEovgR4JWYObyrULKhDARQh824ZiUXUGqAuN6PutpkrvdYDkyrFRh5rbEMAzDi6XGWlv0JEs0q7gb42VURrx5gDE-c_6SpQPb-_ikZt0gvsYCFxvcnj1AvS93xEOxrMAnhuey3ANdIqgScyOSOV6Sbv_0KDnRabAC7cka8PujCudyTCHPiIhjJ_6aK3PTFn9Ccg
 
 ###GET SALON BY NAME : 200
 GET http://localhost:8080/salon/byname/Salon3

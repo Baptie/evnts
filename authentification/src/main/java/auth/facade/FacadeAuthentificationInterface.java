@@ -27,7 +27,7 @@ public interface FacadeAuthentificationInterface {
          * @throws UtilisateurInexistantException
          * @throws MdpIncorrecteException
          */
-        String connexion(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException;
+        Utilisateur connexion(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException;
 
         /**
          * Déconnexion de l'utilisateur sur le site

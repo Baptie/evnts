@@ -4,6 +4,7 @@ import auth.exception.CombinaisonPseudoMdpIncorrect;
 import auth.exception.EMailDejaPrisException;
 import auth.exception.EmailOuPseudoDejaPrisException;
 import auth.exception.UtilisateurInexistantException;
+import auth.modele.Utilisateur;
 import bdd.InteractionBDDAuthentification;
 
 import java.sql.SQLException;
@@ -52,32 +53,43 @@ public class UtilisateurDTO {
         }
     }
 
-    public int getId() {
-        return id;
+    public static UtilisateurDTO connexionUser(String pseudo, String mdp) {
+        InteractionBDDAuthentification bdd = new InteractionBDDAuthentification();
+        UtilisateurDTO uDTO = new UtilisateurDTO();
+        try {
+            uDTO = bdd.connexionUtilisateur(pseudo,mdp);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return uDTO;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getId() {
+        return id;
     }
 
     public String getPseudo() {
         return pseudo;
     }
 
-    public void setPseudo(String pseudo) {
-        this.pseudo = pseudo;
-    }
-
     public String getMdp() {
         return mdp;
     }
 
-    public void setMdp(String mdp) {
-        this.mdp = mdp;
-    }
-
     public String getEmail() {
         return email;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
+    public void setMdp(String mdp) {
+        this.mdp = mdp;
     }
 
     public void setEmail(String email) {

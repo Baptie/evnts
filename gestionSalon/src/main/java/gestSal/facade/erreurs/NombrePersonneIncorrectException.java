@@ -1,4 +1,4 @@
 package gestSal.facade.erreurs;
 
-public class NombrePersonneIncorrectException extends Throwable {
+public class NombrePersonneIncorrectException extends Exception {
 }

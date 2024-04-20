@@ -14,6 +14,9 @@ public class Utilisateur {
         this.status = false;
     }
 
+    public Utilisateur() {
+    }
+
     public String getPseudo() {
         return pseudo;
     }
@@ -35,4 +38,5 @@ public class Utilisateur {
     public void setMdp(String mdp) {
         this.mdp = mdp;
     }
+    public void seteMail(String eMail) { this.eMail = eMail; }
 }

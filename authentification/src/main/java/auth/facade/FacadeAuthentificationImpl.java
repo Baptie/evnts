@@ -3,11 +3,13 @@ package auth.facade;
 import auth.dto.UtilisateurDTO;
 import auth.exception.*;
 import auth.modele.Utilisateur;
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.UUID;
 
 @Component("facadeAuth")
 public class FacadeAuthentificationImpl implements FacadeAuthentificationInterface {
@@ -16,18 +18,17 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
     String idConnection;
 
     public FacadeAuthentificationImpl(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder=passwordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void inscription(String pseudo, String mdp, String eMail) throws EMailDejaPrisException, EmailOuPseudoDejaPrisException {
-        UtilisateurDTO.enregistrerUser(eMail,pseudo,passwordEncoder.encode(mdp));
+        UtilisateurDTO.enregistrerUser(eMail,pseudo,mdp);
     }
 
     @Override
-    public String connexion(String pseudo, String mdp){
-        idConnection = UUID.randomUUID().toString();
-        return idConnection;
+    public Utilisateur connexion(String pseudo, String mdp){
+        return mapToUtilisateur(UtilisateurDTO.connexionUser(pseudo,mdp));
     }
 
     @Override
@@ -67,6 +68,15 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
     @Override
     public Map<String, Utilisateur> getUtilisateurs() {
         return null;
+    }
+
+    private static Utilisateur mapToUtilisateur(UtilisateurDTO utilisateurDTO) {
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setPseudo(utilisateurDTO.getPseudo());
+        utilisateur.setMdp(utilisateurDTO.getMdp());
+        utilisateur.seteMail(utilisateurDTO.getEmail());
+        System.out.println("email log : " + utilisateur.getEMail());
+        return utilisateur;
     }
 
 }

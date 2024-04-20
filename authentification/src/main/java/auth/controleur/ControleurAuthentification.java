@@ -1,13 +1,16 @@
 package auth.controleur;
 
+import auth.dto.UtilisateurDTO;
 import auth.exception.*;
 import auth.facade.FacadeAuthentificationInterface;
+import auth.modele.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.function.Function;
 
 @RestController
 @RequestMapping(value = "/auth")
@@ -16,9 +19,13 @@ public class ControleurAuthentification {
     private static final String MAUVAIS_PSEUDO = "Mauvais pseudo !";
     private static final String MAUVAIS_MDP = "Mauvais mdp !";
     private static final String MAUVAIS_IDENTIFIANT = "Mauvais identifiant !";
+    private static final Object TOKEN_PREFIX = "Bearer ";
 
     @Autowired
     FacadeAuthentificationInterface facadeAuth;
+
+    @Autowired
+    Function<Utilisateur,String> genereToken;
 
     @PostMapping(value = "/inscription")
     public ResponseEntity<String> inscription(@RequestParam String pseudo, @RequestParam String mdp, @RequestParam String eMail) {
@@ -38,8 +45,8 @@ public class ControleurAuthentification {
     @PostMapping(value = "/connexion")
     public ResponseEntity<String> connexion (@RequestParam String pseudo, @RequestParam String mdp){
         try {
-            String token = this.facadeAuth.connexion(pseudo,mdp);
-            return ResponseEntity.status(HttpStatus.OK).header("token",token).body(token);
+            Utilisateur u = this.facadeAuth.connexion(pseudo,mdp);
+            return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + genereToken.apply(u)).build();
         } catch (UtilisateurInexistantException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_IDENTIFIANT);
         } catch (MdpIncorrecteException e) {

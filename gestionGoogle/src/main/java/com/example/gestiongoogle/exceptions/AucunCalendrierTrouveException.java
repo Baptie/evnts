@@ -1,4 +1,4 @@
 package com.example.gestiongoogle.exceptions;
 
-public class AucunCalendrierTrouveException extends Throwable {
+public class AucunCalendrierTrouveException extends Exception {
 }
