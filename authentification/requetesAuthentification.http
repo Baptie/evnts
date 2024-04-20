@@ -1,10 +1,14 @@
 ###Inscription Personne expected = 200 OK
-POST http://localhost:8080/auth/inscription?pseudo=pseudo&mdp=mdp&eMail=vincent.aubert@evnt2.com
+POST http://localhost:8080/auth/inscription?pseudo=pseudo12&mdp=mdp&eMail=vincent.aubert@evnt12.com
 Content-Type: application/x-www-form-urlencoded
 Accept: */*
 
+###Inscription Personne expected = 200 OK
+POST http://localhost:8080/auth/connexion/pseudo=VinceLeBg&mdp=Ratio
+
+
 ###Connexion expected=200 + token
-POST http://localhost:8080/auth/connexion?pseudo=vincent52&mdp=vincent52
+POST http://localhost:8080/auth/connexion?pseudo=pseudo12&mdp=mdp
 
 ###Modification mdp expected = 200
 PATCH http://localhost:8080/auth/modification-mdp?pseudo=pseudo_new&mdp=mdp&nouveauMDP=mdp2
