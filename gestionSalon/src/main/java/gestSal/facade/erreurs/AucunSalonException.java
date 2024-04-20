@@ -1,4 +1,4 @@
 package gestSal.facade.erreurs;
 
-public class AucunSalonException extends Throwable {
+public class AucunSalonException extends Exception {
 }

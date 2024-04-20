@@ -4,7 +4,7 @@ Content-Type: application/x-www-form-urlencoded
 Accept: */*
 
 ###Connexion expected=200 + token
-POST http://localhost:8080/auth/connexion?pseudo=vincent52&mdp=vincent52
+POST http://localhost:8080/auth/connexion?pseudo=pseudo&mdp=mdp
 
 ###Modification mdp expected = 200
 PATCH http://localhost:8080/auth/modification-mdp?pseudo=pseudo_new&mdp=mdp&nouveauMDP=mdp2

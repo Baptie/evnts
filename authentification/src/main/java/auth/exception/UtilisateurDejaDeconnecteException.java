@@ -1,4 +1,4 @@
 package auth.exception;
 
-public class UtilisateurDejaDeconnecteException extends Throwable {
+public class UtilisateurDejaDeconnecteException extends Exception {
 }
