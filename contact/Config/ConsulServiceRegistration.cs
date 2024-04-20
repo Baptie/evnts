@@ -1,17 +1,12 @@
 ﻿using Consul;
-using Microsoft.Extensions.Configuration;
+using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace contact.Config
 {
     public class ConsulServiceRegistration
     {
-        private readonly IConfiguration _configuration;
-
-        public ConsulServiceRegistration(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
         public async Task RegisterServiceAsync(string serviceName, int servicePort)
         {
             var consulClient = new ConsulClient();
@@ -20,10 +15,17 @@ namespace contact.Config
             {
                 ID = Guid.NewGuid().ToString(),
                 Name = serviceName,
-                Address = "localhost", // Adresse de l'hôte où votre service est hébergé
-                Port = servicePort
+                Address = "localhost", 
+                Port = servicePort,
+                Check = new AgentServiceCheck
+                {
+                    HTTP = $"http://{Dns.GetHostName()}:{servicePort}/health", 
+                    Interval = TimeSpan.FromSeconds(10),
+                    Timeout = TimeSpan.FromSeconds(5) 
+                }
             };
 
+            // Enregistrement du service auprès de Consul
             await consulClient.Agent.ServiceRegister(registration);
         }
     }

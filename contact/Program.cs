@@ -11,30 +11,19 @@ namespace contact
     {
         public static void Main(string[] args)
         {
-            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddSingleton<IContactService, ContactService>(); // Enregistrement de l'impl�mentation de IContactService
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddSingleton<IContactService, ContactService>();
             builder.Services.AddControllers();
+            builder.Services.AddSingleton<ConsulServiceRegistration>(); // Ajout de la dépendance
 
-            WebApplication app = builder.Build();
+            var app = builder.Build();
 
-            // Enregistrement du service aupr�s de Consul
-            ConsulServiceRegistration consulServiceRegistration = new ConsulServiceRegistration(app.Configuration);
-            consulServiceRegistration.RegisterServiceAsync("contact", 8084).Wait();
+            // Récupération de la dépendance ConsulServiceRegistration
+            var consulRegistration = app.Services.GetRequiredService<ConsulServiceRegistration>();
+            // Appel de la méthode pour enregistrer le service auprès de Consul
+            consulRegistration.RegisterServiceAsync("contact", 8084).Wait();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.MapControllers();
 
             app.Run();
         }

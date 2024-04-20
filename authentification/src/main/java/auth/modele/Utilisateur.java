@@ -3,7 +3,7 @@ package auth.modele;
 public class Utilisateur {
 
     private String pseudo;
-    private final String eMail;
+    private String eMail;
     private String mdp;
     private boolean status;
 
