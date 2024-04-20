@@ -100,8 +100,6 @@ public class ControleurSalon {
 
     }
 
-
-
     @GetMapping("/byname/{nomSalon}")
     public ResponseEntity<?> getSalonByNom(@PathVariable String nomSalon){
         try{
