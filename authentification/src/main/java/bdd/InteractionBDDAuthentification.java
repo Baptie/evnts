@@ -2,15 +2,13 @@ package bdd;
 
 import java.sql.*;
 
+import auth.dto.UtilisateurDTO;
 import auth.exception.EMailDejaPrisException;
 import auth.exception.EmailOuPseudoDejaPrisException;
 import auth.exception.UtilisateurInexistantException;
 
 
 public class InteractionBDDAuthentification {
-
-
-
 
     public static Statement connecterAuthentificationSQL() throws SQLException {
         String jdbcUrl = "jdbc:mysql://dbAuthentification:3306/authentification";
@@ -39,7 +37,7 @@ public class InteractionBDDAuthentification {
 
     public void resetPseudo(String ancienPseudo, String nouveauPseudo) throws SQLException, UtilisateurInexistantException {
         Statement st = connecterAuthentificationSQL();
-        ResultSet rs = st.executeQuery("SELECT * FROM Utilisateur WHERE pseudo = '" + ancienPseudo + "'");
+        ResultSet rs = executeQueryForUser(ancienPseudo);
         if (rs.next()) {
             String SQL = "UPDATE Utilisateur SET pseudo = '" + nouveauPseudo + "' WHERE pseudo = '" + ancienPseudo + "'";
             st.executeUpdate(SQL);
@@ -53,7 +51,7 @@ public class InteractionBDDAuthentification {
     public void resetMDP(String pseudo, String nouveauMDP) throws SQLException {
         Statement st = connecterAuthentificationSQL();
         pseudo = pseudo.replace("'", "\\'");
-        ResultSet rs = st.executeQuery("SELECT * FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
+        ResultSet rs = executeQueryForUser(pseudo);
         if (rs.next()) {
             String SQL = "UPDATE Utilisateur SET motDePasse = '" + nouveauMDP + "' WHERE pseudo = '" + pseudo + "'";
             st.executeUpdate(SQL);
@@ -63,7 +61,7 @@ public class InteractionBDDAuthentification {
     }
     public void supprimerUtilisateur(String pseudo) throws SQLException {
         Statement st = connecterAuthentificationSQL();
-        ResultSet rs = st.executeQuery("SELECT * FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
+        ResultSet rs = executeQueryForUser(pseudo);
         if (rs.next()) {
             st.executeUpdate("DELETE FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
         } else {
@@ -71,4 +69,31 @@ public class InteractionBDDAuthentification {
         }
     }
 
+    public UtilisateurDTO connexionUtilisateur(String pseudo, String mdp) throws SQLException {
+        System.out.println(pseudo + "    dfdsfsdfsdfdsfsdf " + mdp);
+        Statement st = connecterAuthentificationSQL();
+        UtilisateurDTO userDTO = new UtilisateurDTO();
+        String SQLUser = "SELECT * FROM Utilisateur where pseudo='" + pseudo + "'AND motDePasse = '" + mdp + "'";
+        ResultSet rs = st.executeQuery(SQLUser);
+        while(rs.next()){
+            int id = rs.getInt("idUtilisateur");
+            String email = rs.getString("email");
+            String pseudoSQL = rs.getString("pseudo");
+            String motDePasse = rs.getString("motDePasse");
+
+            System.out.println("email BDD : " + email);
+
+            userDTO.setId(id);
+            userDTO.setEmail(email);
+            userDTO.setPseudo(pseudoSQL);
+            userDTO.setMdp(motDePasse);
+        }
+        return userDTO;
+    }
+
+    private ResultSet executeQueryForUser(String pseudo) throws SQLException {
+        Statement st = connecterAuthentificationSQL();
+        String query = "SELECT * FROM Utilisateur WHERE pseudo = '" + pseudo + "'";
+        return st.executeQuery(query);
+    }
 }

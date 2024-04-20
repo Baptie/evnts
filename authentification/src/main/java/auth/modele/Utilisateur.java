@@ -4,7 +4,7 @@ public class Utilisateur {
 
     private String pseudo;
 
-    private final String eMail;
+    private String eMail;
 
     private String mdp;
 
@@ -15,6 +15,9 @@ public class Utilisateur {
         this.eMail = eMail;
         this.mdp = mdp;
         this.status = false;
+    }
+
+    public Utilisateur() {
     }
 
     public String getPseudo() {
@@ -44,4 +47,6 @@ public class Utilisateur {
     public void setMdp(String mdp) {
         this.mdp = mdp;
     }
+
+    public void seteMail(String eMail) { this.eMail = eMail; }
 }

@@ -40,6 +40,12 @@ import java.util.function.Function;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    @Value("${jwt.public.key}")
+    RSAPublicKey key;
+
+    @Value("${jwt.private.key}")
+    RSAPrivateKey priv;
+
     @Bean
     public PasswordEncoder delegatingPasswordEncoder() {
         String idForEncode = "bcrypt";
@@ -52,12 +58,6 @@ public class SecurityConfig {
 
         return new DelegatingPasswordEncoder(idForEncode, encoders);
     }
-
-    @Value("${jwt.public.key}")
-    RSAPublicKey key;
-
-    @Value("${jwt.private.key}")
-    RSAPrivateKey priv;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

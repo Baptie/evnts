@@ -1,24 +1,34 @@
 package auth.controleur;
 
+import auth.dto.UtilisateurDTO;
 import auth.exception.*;
 import auth.facade.FacadeAuthentificationInterface;
+import auth.modele.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.function.Function;
 
 @RestController
 @RequestMapping(value = "/auth")
 public class ControleurAuthentification {
 
+    private static final Object TOKEN_PREFIX = "Bearer ";
+
     @Autowired
     FacadeAuthentificationInterface facadeAuth;
+
+    @Autowired
+    Function<Utilisateur,String> genereToken;
 
     @PostMapping(value = "/inscription")
     public ResponseEntity<String> inscription(@RequestParam String pseudo, @RequestParam String mdp, @RequestParam String eMail) {
         try {
             this.facadeAuth.inscription(pseudo,mdp,eMail);
-            return ResponseEntity.ok("Compte créé !");
+            return ResponseEntity.created(null).body("Compte créé !");
         } catch (PseudoDejaPrisException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Pseudo "+pseudo+" déjà pris");
         }catch (EMailDejaPrisException e) {
@@ -32,8 +42,8 @@ public class ControleurAuthentification {
     @PostMapping(value = "/connexion")
     public ResponseEntity<String> connexion (@RequestParam String pseudo, @RequestParam String mdp){
         try {
-            String token = this.facadeAuth.connexion(pseudo,mdp);
-            return ResponseEntity.status(HttpStatus.OK).header("token",token).body(token);
+            Utilisateur u = this.facadeAuth.connexion(pseudo,mdp);
+            return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + genereToken.apply(u)).build();
         } catch (UtilisateurInexistantException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais identifiants !");
         } catch (MdpIncorrecteException e) {
