@@ -1,5 +1,6 @@
 package auth.dto;
 
+import auth.exception.CombinaisonPseudoMdpIncorrect;
 import auth.exception.EMailDejaPrisException;
 import auth.exception.EmailOuPseudoDejaPrisException;
 import auth.exception.UtilisateurInexistantException;
