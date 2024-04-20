@@ -39,13 +39,14 @@ public class FacadeSalonImpl implements FacadeSalon {
 
     @Override
     public Salon modifierSalon(Salon salon, String choix, String valeur)  {
-        switch (choix) {
-            case "nom" -> salon.setNomSalon(valeur);
-            case "logo" -> salon.setLogo(valeur);
-            case "createur" -> salon.setNomCreateur(valeur);
+        int id = 0;
+        try {
+            id = SalonDTO.getSalonByName(salon.getNomSalon()).getIdSalon();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         try {
-            salon = SalonDTO.modifierSalonSQL(salon,choix,valeur,salon.getNumSalon());
+            salon = SalonDTO.modifierSalonSQL(salon,choix,valeur,id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -76,15 +77,12 @@ public class FacadeSalonImpl implements FacadeSalon {
     @Override
     public Utilisateur getUtilisateurByPseudo(String pseudoUtilisateur) throws NomUtilisateurVideException {
         Utilisateur utilisateur ;
-        if(pseudoUtilisateur.isEmpty()){
-            throw new NomUtilisateurVideException();
-        }else {
-            try {
-                utilisateur = UtilisateurDTO.getUtilisateurByPseudo(pseudoUtilisateur);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            utilisateur = UtilisateurDTO.getUtilisateurByPseudo(pseudoUtilisateur);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+
         return utilisateur;
 
     }
@@ -122,7 +120,7 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo)   {
+    public void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws UtilisateurDejaModoException {
         try {
             SalonDTO.ajouterModerateurAuSalon(nouveauModo,salonPourLeNouveauModo);
         } catch (SQLException e) {
@@ -177,9 +175,9 @@ public class FacadeSalonImpl implements FacadeSalon {
 
 
     @Override
-    public Evenement modifierEvenement(Evenement evenement, String choix, String valeur)   {
+    public Evenement modifierEvenement(int idSalon, Evenement evenement, String choix, String valeur)   {
         try {
-            EvenementDTO.modifierEvenement(evenement,choix,valeur);
+            EvenementDTO.modifierEvenement(idSalon,evenement,choix,valeur);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -190,18 +188,11 @@ public class FacadeSalonImpl implements FacadeSalon {
     public boolean validerEvenement(Evenement evenement)   {
         boolean isValide;
         try {
-            EvenementDTO.validerEvenement(evenement);
+            isValide = EvenementDTO.validerEvenement(evenement);
         } catch (SQLException | EvenementIncompletException e) {
             throw new RuntimeException(e);
         }
 
-        if(evenement.getListeParticipants().size()==evenement.getNombrePersonneMax()){
-            evenement.setEstValide(true);
-            isValide = true;
-        }else{
-            evenement.setEstValide(false);
-            isValide = false;
-        }
         return isValide;
     }
 
@@ -270,6 +261,49 @@ public class FacadeSalonImpl implements FacadeSalon {
         }
     }
 
+    @Override
+    public String getNomEvenementById(int idEvent) {
+        try {
+            return EvenementDTO.getEvenementById(idEvent);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Integer> getSalonByUser(int idUser) {
+        try {
+            return UtilisateurDTO.getSalonByUser(idUser);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Integer> getEvenementUser(int idUser) {
+        try {
+            return UtilisateurDTO.getEventByUser(idUser);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }    }
+
+    @Override
+    public Evenement getEventById(int idEvenement) {
+        try {
+            return UtilisateurDTO.getEventById(idEvenement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ajouterMembre(String nomMembre) {
+        try {
+            UtilisateurDTO.ajouterMembre(nomMembre);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     private String generateRandomCode() {

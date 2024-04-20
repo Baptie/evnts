@@ -22,12 +22,19 @@ public class InteractionBDDUtilisateur {
 
     public static void creerCompteSQL(String pseudo, String email, String bio, String photoDeProfil) throws SQLException {
         Statement st = connecterGestionUtilisateurSQL();
+        pseudo = pseudo.replace("'", "\\'");
+        bio = bio.replace("'", "\\'");
+        photoDeProfil = photoDeProfil.replace("'", "\\'");
+        email = email.replace("'", "\\'");
+
         String SQL = "insert into User(email, pseudo, description,status,photo) VALUES ('"+email+"', '"+pseudo+"','"+bio+"','Actif','"+photoDeProfil+"')";
         st.executeUpdate(SQL);
     }
 
     public static void changerPseudoSQL(String email, String nouveauPseudo) throws SQLException {
         Statement st = connecterGestionUtilisateurSQL();
+        nouveauPseudo = nouveauPseudo.replace("'", "\\'");
+
         String SQL = "UPDATE User SET pseudo = '"+nouveauPseudo+"' WHERE email = '"+email+"'";
         st.executeUpdate(SQL);
     }

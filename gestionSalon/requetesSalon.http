@@ -1,0 +1,117 @@
+###CREATION SALON : 201
+POST http://localhost:8080/salon?nomCreateur=Vince&nomSalon=Salon3
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+
+###MODIFIER SALON : 200
+PATCH http://localhost:8080/salon/1
+Content-Type: application/json
+
+{
+  "choix": "nom",
+  "valeur": "nouveauNom"
+}
+
+###GET SALON BY NUM : 200
+GET http://localhost:8080/salon/1
+
+###GET SALON BY NAME : 200
+GET http://localhost:8080/salon/byname/nouveauNom
+
+###GET UTILISATEUR PAR PSEUDO : 200
+GET http://localhost:8080/salon/getUtilisateur/Vince
+
+
+###MODIFIER EVENEMENT : 200
+PATCH http://localhost:8080/salon/1/evenement/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "choix": "nom",
+  "valeur": "nouvelleValeur"
+}
+
+###SE METTRE PRESENT A UN EVENEMENT
+POST http://localhost:8080/salon/1/evenement/1/presence?nomUtilisateur=Vince
+
+###SE RETIRER D'UN EVENEMENT
+DELETE http://localhost:8080/salon/1/evenement/1/presence?nomUtilisateur=Vince
+Content-Type: application/json
+
+
+### CREER EVENEMENT
+POST http://localhost:8080/salon/1/evenement
+Content-Type: application/json
+Accept: application/json
+
+{
+  "nomCreateur": "NomUtilisateur",
+  "nomEvenement": "NomEvenement",
+  "nombrePersonneMax": 10,
+  "detailsEvenement": "Détails de l'événement",
+  "lieu": "Lieu de l'événement",
+  "date": "2024-04-20T12:00:00"
+}
+
+
+### RECUPERER L'EVENEMENT : 200
+GET http://localhost:8080/salon/1/evenement/1
+
+### VALIDER EVENEMENT
+PATCH http://localhost:8080/salon/1/evenement/1/validation
+
+###ENVOYER UN MESSAGE SUR LE SALON
+POST http://localhost:8080/salon/1/messages
+Content-Type: application/json
+Accept: application/json
+
+{
+  "auteur": "Vince",
+  "contenu": "Coucou moi",
+  "date": "14/01/1998"
+}
+
+###ENVOYER UN MSG DANS L'EVENEMENT
+POST http://localhost:8080/salon/1/evenement/1/messages
+Content-Type: application/json
+Accept: application/json
+
+{
+  "auteur": "Vince",
+  "contenu": "Bonjour à tous !",
+  "date": "15/01/1998"
+}
+
+###RECUPERER MESSAGES DU SALON
+GET http://localhost:8080/salon/1/messages
+
+###RECUPER MESSAGES DE l'EVENEMENT
+GET http://localhost:8080/salon/1/evenement/1/messages
+
+###REJOINDRE SALON
+POST http://localhost:8080/salon/1/adhesion?pseudoUtilisateur=Vince
+Content-Type: application/json
+
+###SUPPRIMER UTILISATEUR : 204
+DELETE http://localhost:8080/salon/utilisateur/Camacho
+
+###RECUP DONNEES UTILISATEUR
+GET http://localhost:8080/salon/utilisateur/Vince
+
+###AJOUTER MODERATEUR
+POST http://localhost:8080/salon/1/moderation?nomModerateur=Vince
+
+###SUPPRIMER MODERATEUR
+DELETE http://localhost:8080/salon/1/moderation?nomModerateur=Vince
+
+### RECUPERER LES SALONS DE l'UTILISATEUR
+GET http://localhost:8080/salon/utilisateur/Vince/salons
+
+### RECUPERER LES EVENEMENTS DE L'UTILISATEUR
+GET http://localhost:8080/salon/utilisateur/Vince/evenements
+
+
+###AJOUTER MEMBRE
+POST http://localhost:8080/salon/utilisateur/SidBaptie

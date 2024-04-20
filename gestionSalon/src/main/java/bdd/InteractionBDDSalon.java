@@ -27,9 +27,16 @@ public class InteractionBDDSalon {
 
     public static void creerSalonSQL(String nomSalon, String nomCreateur, String logo) throws SQLException {
         Statement st = connecterAuSalonSQL();
-        String SQL = "INSERT INTO Salon (nomSalon, nomCreateur, logo) VALUES ('"+nomSalon+"', '"+nomCreateur+"', '"+logo+"')";
+        nomSalon = nomSalon.replace("'", "\\'");
+        nomCreateur = nomCreateur.replace("'", "\\'");
+        logo = logo.replace("'", "\\'");
+
+        String SQL = "INSERT INTO Salon (nomSalon, nomCreateur, logo) " +
+                "SELECT '"+nomSalon+"', '"+nomCreateur+"', '"+logo+"' " +
+                "WHERE NOT EXISTS (SELECT 1 FROM Salon WHERE nomSalon = '"+nomSalon+"')";
         st.executeUpdate(SQL);
     }
+
 
     public static Salon getSalonById(int id) throws SQLException {
         Salon salon = new Salon();
@@ -63,6 +70,7 @@ public class InteractionBDDSalon {
 
     public static Salon modifierSalonSQL(Salon salon, String choix, String valeur, int id) throws SQLException {
         Statement st = connecterAuSalonSQL();
+        valeur = valeur.replace("'", "\\'");
 
         switch (choix){
             case "nom" -> {
@@ -91,8 +99,10 @@ public class InteractionBDDSalon {
         String SQL = "select * from Membre where nomMembre='"+pseudoUtilisateur+"'";
         ResultSet rs = st.executeQuery(SQL);
         while(rs.next()){
+            userDTO.setIdUtilisateur(rs.getInt("idMembre"));
             userDTO.setPseudo(rs.getString("nomMembre"));
         }
+
 
         return userDTO;
     }
@@ -143,33 +153,35 @@ public class InteractionBDDSalon {
         return evenement;
     }
 
-    public static void modifierEvenementSQL(Evenement evenement, String choix, String valeur) throws SQLException {
+    public static void modifierEvenementSQL(int idSalon, Evenement evenement, String choix, String valeur) throws SQLException {
+        int idEvenement = getEvenementByNomEtNumSalonSQL(idSalon,evenement.getNomEvenement()).getIdEvenement();
+        valeur = valeur.replace("'", "\\'");
         Statement st = connecterAuSalonSQL();
         switch (choix) {
             case "description" -> {
                 evenement.setDetailsEvenement(valeur);
-                String SQL = "UPDATE Evenement SET details = '" + valeur + "' WHERE idEvenement = " + evenement.getIdEvenement();
+                String SQL = "UPDATE Evenement SET details = '" + valeur + "' WHERE idEvenement = " + idEvenement;
                 st.executeUpdate(SQL);
             }
             case "date" -> {
                 evenement.setDate(valeur);
-                String SQL = "UPDATE Evenement SET dateEvenement = '" + valeur + "' WHERE idEvenement = " + evenement.getIdEvenement();
+                String SQL = "UPDATE Evenement SET dateEvenement = '" + valeur + "' WHERE idEvenement = " + idEvenement;
                 st.executeUpdate(SQL);
             }
             case "lieu" -> {
                 evenement.setLieu(valeur);
-                String SQL = "UPDATE Evenement SET lieu = '" + valeur + "' WHERE idEvenement = " + evenement.getIdEvenement();
+                String SQL = "UPDATE Evenement SET lieu = '" + valeur + "' WHERE idEvenement = " + idEvenement;
                 st.executeUpdate(SQL);
             }
             case "nombre" ->
             {
                 evenement.setNombrePersonneMax(Integer.parseInt(valeur));
-                String SQL = "UPDATE Evenement SET nombrePersonneMax = " + Integer.parseInt(valeur) + " WHERE idEvenement = " + evenement.getIdEvenement();
+                String SQL = "UPDATE Evenement SET nombrePersonneMax = " + Integer.parseInt(valeur) + " WHERE idEvenement = " + idEvenement;
                 st.executeUpdate(SQL);
             }
             case "nom" -> {
                 evenement.setNomEvenement(valeur);
-                String SQL = "UPDATE Evenement SET nomEvenement = '" + valeur + "' WHERE idEvenement = " + evenement.getIdEvenement();
+                String SQL = "UPDATE Evenement SET nomEvenement = '" + valeur + "' WHERE idEvenement = " + idEvenement;
                 st.executeUpdate(SQL);
             }
         }
@@ -184,12 +196,25 @@ public class InteractionBDDSalon {
 
     public static void ajouterModerateurAuSalon(Utilisateur utilisateurDTO, Salon salonDTO) throws SQLException {
         Statement st = connecterAuSalonSQL();
-        String SQL = "INSERT INTO ModerateurSalon (idSalon,idMembre) values ("+salonDTO.getIdSalon()+",+"+utilisateurDTO.getIdUtilisateur()+")";
+
+        // Vérifier si l'utilisateur est déjà un modérateur du salon
+        String checkIfExistsSQL = "SELECT COUNT(*) FROM ModerateurSalon WHERE idSalon = " + salonDTO.getIdSalon() + " AND idMembre = " + utilisateurDTO.getIdUtilisateur();
+        ResultSet resultSet = st.executeQuery(checkIfExistsSQL);
+        resultSet.next();
+        int count = resultSet.getInt(1);
+
+        if (count > 0) {
+            return;
+        }
+
+        String SQL = "INSERT INTO ModerateurSalon (idSalon, idMembre) VALUES (" + salonDTO.getIdSalon() + ", " + utilisateurDTO.getIdUtilisateur() + ")";
         st.executeUpdate(SQL);
     }
 
+
     public static List<Utilisateur> seDefiniCommePresentAUnEvenementSQL(Utilisateur utilisateurDTO, Evenement evenementDTO) throws SQLException {
         List<Utilisateur> participants = new ArrayList<>();
+
         Statement st = connecterAuSalonSQL();
         String SQL = "INSERT INTO PresenceEvenement (idMembre,idEvenement) values ("+utilisateurDTO.getIdUtilisateur()+",+"+evenementDTO.getIdEvenement()+")";
         st.executeUpdate(SQL);
@@ -224,7 +249,8 @@ public class InteractionBDDSalon {
 
 
 
-    public static void validerEvenementSQL(Evenement evenementDTO) throws SQLException, EvenementIncompletException {
+    public static Boolean validerEvenementSQL(Evenement evenementDTO) throws SQLException, EvenementIncompletException {
+        Boolean isValide = false;
         int idEvenement = evenementDTO.getIdEvenement();
         int nombrePersonneMax = evenementDTO.getNombrePersonneMax();
 
@@ -237,11 +263,13 @@ public class InteractionBDDSalon {
         }
 
         if (nombrePersonnesPresentes == nombrePersonneMax) {
+            isValide=true;
             String updateSQL = "UPDATE Evenement SET isValide = true WHERE idEvenement = " + idEvenement;
             st.executeUpdate(updateSQL);
         } else {
             throw new EvenementIncompletException();
         }
+        return isValide;
     }
 
 
@@ -293,12 +321,80 @@ public class InteractionBDDSalon {
 
     public static void creerEvenement(Salon salon, String nomEvenement, int nombrePersonneMax, String detailsEvenement, String lieu, Utilisateur createur, String date) throws SQLException {
         Statement st = connecterAuSalonSQL();
+        detailsEvenement = detailsEvenement.replace("'", "\\'");
+        nomEvenement = nomEvenement.replace("'", "\\'");
+        lieu = lieu.replace("'", "\\'");
+        date = date.replace("'", "\\'");
+
         String SQL = "INSERT INTO Evenement (nomEvenement,nombrePersonneMax,details,dateEvenement,lieu,isValide,nomCreateur,idSalon) values ('"+nomEvenement+"',"+nombrePersonneMax+",'"+detailsEvenement+"','"+date+"','"+lieu+"',false,'"+createur.getPseudo()+"',"+salon.getIdSalon()+")";
+        st.executeUpdate(SQL);
+    }
+
+    public static String getEvenementById(int idEvent) throws SQLException {
+        String nomEvent = null;
+        Statement st = connecterAuSalonSQL();
+        String SQL = "SELECT * from Evenement WHERE idEvenement="+idEvent;
+        ResultSet rs = st.executeQuery(SQL);
+        while (rs.next()){
+            nomEvent = rs.getString("nomEvenement");
+        }
+        return nomEvent;
+    }
+
+    public static List<Integer> getSalonByUser(int idUtilisateur) throws SQLException {
+        List<Integer> listeIdSalon = new ArrayList<>();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from SalonMembre where idMembre="+idUtilisateur;
+        ResultSet rs = st.executeQuery(SQL);
+        while(rs.next()){
+            listeIdSalon.add(rs.getInt("idSalon"));
+        }
+        return listeIdSalon;
+    }
+
+    public static List<Integer> getEventByUser(int idUtilisateur) throws SQLException {
+        List<Integer> listeIdEvent = new ArrayList<>();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from PresenceEvenement where idMembre="+idUtilisateur;
+        ResultSet rs = st.executeQuery(SQL);
+        while(rs.next()){
+            listeIdEvent.add(rs.getInt("idEvenement"));
+        }
+        return listeIdEvent;
+    }
+
+    public static Evenement getEventById(int idEvenement) throws SQLException {
+        Evenement evenement = new Evenement();
+        Statement st = connecterAuSalonSQL();
+        String SQL = "select * from Evenement where idEvenement="+idEvenement;
+        ResultSet rs = st.executeQuery(SQL);
+        while(rs.next()){
+            evenement.setNomEvenement(rs.getString("nomEvenement"));
+            evenement.setNombrePersonneMax(rs.getInt("nombrePersonneMax"));
+            evenement.setNomCreateur(rs.getString("nomCreateur"));
+            evenement.setLieu(rs.getString("lieu"));
+            evenement.setDetailsEvenement(rs.getString("details"));
+            evenement.setDate(String.valueOf(rs.getDate("dateEvenement")));
+            evenement.setEstValide(rs.getBoolean("isValide"));
+
+        }
+        return evenement;
+    }
+
+    public static void ajouterMembre(String nomMembre) throws SQLException {
+        Statement st = connecterAuSalonSQL();
+        nomMembre = nomMembre.replace("'", "\\'");
+
+        String SQL = "INSERT INTO Membre (nomMembre) values ('"+nomMembre+"')";
         st.executeUpdate(SQL);
     }
 
     public void envoyerMessageSalonSQL(int idSalon, String pseudoUtilisateur, String contenu, String dateTime) throws SQLException {
         Statement st = connecterAuSalonSQL();
+        pseudoUtilisateur = pseudoUtilisateur.replace("'", "\\'");
+        contenu = contenu.replace("'", "\\'");
+        dateTime = dateTime.replace("'", "\\'");
+
         String SQL = "INSERT INTO MessageSalon (idSalon,nomAuteur,contenu,dateMessage) values ("+idSalon+",'"+pseudoUtilisateur+"','"+contenu+"','"+dateTime+"')";
         st.executeUpdate(SQL);
 
@@ -306,6 +402,10 @@ public class InteractionBDDSalon {
 
     public void envoyerMessageEventSQL(int idEvenement, String pseudoUtilisateur, String contenu, String dateTime) throws SQLException {
         Statement st = connecterAuSalonSQL();
+        pseudoUtilisateur = pseudoUtilisateur.replace("'", "\\'");
+        contenu = contenu.replace("'", "\\'");
+        dateTime = dateTime.replace("'", "\\'");
+
         String SQL = "INSERT INTO MessageEvenement (idEvenement,nomAuteur,contenu,dateMessage) values ("+idEvenement+",'"+pseudoUtilisateur+"','"+contenu+"','"+dateTime+"')";
         st.executeUpdate(SQL);
     }

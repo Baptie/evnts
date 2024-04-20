@@ -2,6 +2,7 @@ package gestSal.dto;
 
 
 import bdd.InteractionBDDSalon;
+import gestSal.facade.erreurs.UtilisateurDejaModoException;
 import gestSal.modele.Evenement;
 import gestSal.modele.Message;
 import gestSal.modele.Salon;
@@ -43,7 +44,7 @@ public class SalonDTO {
         InteractionBDDSalon.retirerModerateurDuSalonSQL(salon, utilisateurPlusModo);
     }
 
-    public static void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws SQLException {
+    public static void ajouterModerateurAuSalon(Utilisateur nouveauModo, Salon salonPourLeNouveauModo) throws SQLException, UtilisateurDejaModoException {
         InteractionBDDSalon.ajouterModerateurAuSalon(nouveauModo, salonPourLeNouveauModo);
     }
 

@@ -28,6 +28,8 @@ public class InteractionBDDAuthentification {
         if (rs.next()) {
             throw new EmailOuPseudoDejaPrisException();
         } else {
+            email = email.replace("'", "\\'");
+            pseudo = pseudo.replace("'", "\\'");
             String SQL = "INSERT INTO Utilisateur(email, pseudo, motDePasse) VALUES ('" + email + "', '" + pseudo + "','" + mdp + "')";
             st.executeUpdate(SQL);
         }
@@ -50,6 +52,7 @@ public class InteractionBDDAuthentification {
 
     public void resetMDP(String pseudo, String nouveauMDP) throws SQLException {
         Statement st = connecterAuthentificationSQL();
+        pseudo = pseudo.replace("'", "\\'");
         ResultSet rs = st.executeQuery("SELECT * FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
         if (rs.next()) {
             String SQL = "UPDATE Utilisateur SET motDePasse = '" + nouveauMDP + "' WHERE pseudo = '" + pseudo + "'";

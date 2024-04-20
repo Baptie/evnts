@@ -20,6 +20,10 @@ public class Utilisateur {
     public Utilisateur() {
     }
 
+    public void setIdUtilisateur(int idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
+    }
+
     public int getIdUtilisateur() {
         return idUtilisateur;
     }
@@ -72,4 +76,6 @@ public class Utilisateur {
     public void setMesConversations(List<Conversation> mesConversations) {
         this.mesConversations = mesConversations;
     }
+
+
 }
