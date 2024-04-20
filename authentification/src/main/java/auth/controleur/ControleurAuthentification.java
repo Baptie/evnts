@@ -7,12 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+
 @RestController
 @RequestMapping(value = "/auth")
 public class ControleurAuthentification {
 
     private static final String MAUVAIS_PSEUDO = "Mauvais pseudo !";
     private static final String MAUVAIS_MDP = "Mauvais mdp !";
+    private static final String MAUVAIS_IDENTIFIANT = "Mauvais identifiant !";
 
     @Autowired
     FacadeAuthentificationInterface facadeAuth;
@@ -38,7 +41,7 @@ public class ControleurAuthentification {
             String token = this.facadeAuth.connexion(pseudo,mdp);
             return ResponseEntity.status(HttpStatus.OK).header("token",token).body(token);
         } catch (UtilisateurInexistantException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais identifiants !");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_IDENTIFIANT);
         } catch (MdpIncorrecteException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mauvais mot de passe");
         }
@@ -50,7 +53,7 @@ public class ControleurAuthentification {
             this.facadeAuth.deconnexion(pseudo);
             return ResponseEntity.ok("Déconnexion de "+pseudo+" faite !");
         } catch (UtilisateurInexistantException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais identifiants !");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_IDENTIFIANT);
         } catch (UtilisateurDejaDeconnecteException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Déjà connecté !");
         }
@@ -75,6 +78,8 @@ public class ControleurAuthentification {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_PSEUDO);
         } catch (MdpIncorrecteException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_MDP);
+        } catch (CombinaisonPseudoMdpIncorrect e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(MAUVAIS_IDENTIFIANT);
         }
     }
 

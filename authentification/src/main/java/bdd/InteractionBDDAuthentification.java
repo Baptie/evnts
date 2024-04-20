@@ -50,22 +50,26 @@ public class InteractionBDDAuthentification {
 
 
 
-    public void resetMDP(String pseudo, String nouveauMDP) throws SQLException, UtilisateurInexistantException {
+    public void resetMDP(String pseudo, String nouveauMDP) throws SQLException, CombinaisonPseudoMdpIncorrect {
         Statement st = connecterAuthentificationSQL();
         pseudo = pseudo.replace("'", "\\'");
         ResultSet rs = st.executeQuery("SELECT * FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
         if (rs.next()) {
             String SQL = "UPDATE Utilisateur SET motDePasse = '" + nouveauMDP + "' WHERE pseudo = '" + pseudo + "'";
             st.executeUpdate(SQL);
-        } else throw new UtilisateurInexistantException();
-
+        } else {
+            throw new CombinaisonPseudoMdpIncorrect();
+        }
     }
     public void supprimerUtilisateur(String pseudo) throws SQLException, UtilisateurInexistantException {
         Statement st = connecterAuthentificationSQL();
         ResultSet rs = st.executeQuery("SELECT * FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
         if (rs.next()) {
+
             st.executeUpdate("DELETE FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
-        } else throw new UtilisateurInexistantException();
+        } else {
+            throw new UtilisateurInexistantException();
+        }
     }
 
 }

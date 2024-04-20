@@ -41,7 +41,7 @@ public interface FacadeAuthentificationInterface {
 
         void reSetPseudo(String ancienPseudo, String nouveauPseudo) throws UtilisateurInexistantException;
 
-        void reSetMDP(String pseudo, String mdp, String nouveauMDP) throws UtilisateurInexistantException, MdpIncorrecteException;
+        void reSetMDP(String pseudo, String mdp, String nouveauMDP) throws UtilisateurInexistantException, MdpIncorrecteException, CombinaisonPseudoMdpIncorrect;
 
         void supprimerUtilisateur(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException;
 

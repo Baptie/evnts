@@ -11,14 +11,17 @@ import java.util.List;
 
 public class UtilisateurDTO {
     private int idUtilisateur;
-    private String pseudo,email,description, status, password;
-    private List<Conversation> mesConversations;
+    private String pseudo,email;
 
     public UtilisateurDTO() {
     }
 
     public static Utilisateur getUtilisateurByPseudo(String pseudoUtilisateur) throws SQLException {
         return InteractionBDDSalon.getUtilisateurByPseudoSQL(pseudoUtilisateur);
+    }
+
+    public static Utilisateur getUtilisateurByEmail(String email) throws SQLException {
+        return InteractionBDDSalon.getUtilisateurByEmail(email);
     }
 
     public static List<Utilisateur> seDefiniCommePresentAUnEvenement(Utilisateur utilisateur, Salon salon, Evenement evenement) throws SQLException {
@@ -51,8 +54,8 @@ public class UtilisateurDTO {
         return InteractionBDDSalon.getEventById(idEvenement);
     }
 
-    public static void ajouterMembre(String nomMembre) throws SQLException {
-        InteractionBDDSalon.ajouterMembre(nomMembre);
+    public static void ajouterMembre(String nomMembre, String email) throws SQLException {
+        InteractionBDDSalon.ajouterMembre(nomMembre, email);
     }
 
 
@@ -73,16 +76,8 @@ public class UtilisateurDTO {
         return email;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
-    public String getStatus() {
-        return status;
+    public void setEmail(String email) {
+        this.email = email;
     }
-
-    public List<Conversation> getMesConversations() {
-        return mesConversations;
-    }
-
 }

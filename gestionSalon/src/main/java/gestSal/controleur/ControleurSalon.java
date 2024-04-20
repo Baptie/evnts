@@ -460,15 +460,25 @@ public class ControleurSalon {
     }
 
     @PostMapping("/utilisateur/{nomMembre}")
-    public ResponseEntity<?> ajouterMembre(@PathVariable String nomMembre){
+    public ResponseEntity<?> ajouterMembre(@PathVariable String nomMembre, @RequestParam String email){
         try{
-            facadeSalon.ajouterMembre(nomMembre);
+            facadeSalon.ajouterMembre(nomMembre,email);
             return ResponseEntity.ok().body("Membre ajouté");
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Echec de l'ajout");
         }
     }
 
+    @GetMapping("/utilisateurs/mail/{email}")
+    public ResponseEntity<?> getUtilisateurByEmail(@PathVariable String email){
+        try{
+            System.out.println("STEP1");
+            Utilisateur user = facadeSalon.getUtilisateurByEmail(email);
+            return ResponseEntity.ok().body(user);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Echec de la récupération");
+        }
+    }
 
 
 }

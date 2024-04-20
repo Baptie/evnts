@@ -15,8 +15,8 @@ CREATE TABLE Message (
                          dateEnvoi DATETIME NOT NULL,
                          idSender INT,
                          idReceiver INT,
-                         FOREIGN KEY (idSender) REFERENCES User(idUser),
-                         FOREIGN KEY (idReceiver) REFERENCES User(idUser)
+                         FOREIGN KEY (idSender) REFERENCES User(idUser) ON DELETE CASCADE,
+                         FOREIGN KEY (idReceiver) REFERENCES User(idUser)ON DELETE CASCADE
 );
 
 
@@ -24,8 +24,8 @@ CREATE TABLE Message (
 CREATE TABLE ListeContact (
                               idUser INT,
                               idUser2 INT,
-                              FOREIGN KEY (idUser) REFERENCES User(idUser),
-                              FOREIGN KEY (idUser2) REFERENCES User(idUser)
+                              FOREIGN KEY (idUser) REFERENCES User(idUser)ON DELETE CASCADE,
+                              FOREIGN KEY (idUser2) REFERENCES User(idUser)ON DELETE CASCADE
 );
 
 

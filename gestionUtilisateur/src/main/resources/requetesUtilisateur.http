@@ -1,0 +1,36 @@
+###TestInscriptionFull
+POST http://localhost:8080/utilisateurs/inscription
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+pseudo=sid&mdp=baptielpb&email=vincentlpb@camacho.fr&bio=salutcmoi&photoDeProfil=www.googleimage.fr/sidlpb
+
+
+###ChangerPseudo expected=200
+PATCH http://localhost:8080/utilisateurs/changementPseudo?email=vincentlpb@camacho.fr&nouveauPseudo=new_pseudo
+
+
+
+###changementBio expected=200
+PATCH http://localhost:8080/utilisateurs/changementBio?email=vincentlpb@camacho.fr&nouvelleBio=new_bio
+
+
+###changementPhotoDeProfil expected=200
+PATCH http://localhost:8080/utilisateurs/changementPhotoDeProfil?email=vincentlpb@camacho.fr&nouvellePhotoDeProfil=new_photo
+
+
+###AJOUT CONTACT expected = 200
+POST http://localhost:8080/utilisateurs/ajoutContact?pseudo1=new_pseudo&pseudo2=vince
+
+
+
+###GET INFO COMPTE Expecte =200
+GET http://localhost:8080/utilisateurs/new_pseudo
+
+
+
+
+###DELETE COMPTE Expected = 200
+DELETE http://localhost:8080/utilisateurs/suppressionCompte?email=vincentlpb@camacho.fr
+
+

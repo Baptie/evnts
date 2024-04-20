@@ -4,17 +4,14 @@ import java.util.Date;
 
 public class Message {
     private int idMessage;
-    private String auteur,receveur,contenu;
+    private String auteur,contenu;
     private String date;
-    private boolean isSeen;
 
-    public Message(int idMessage, String auteur, String receveur, String contenu, String date, boolean isSeen) {
+    public Message(int idMessage, String auteur , String contenu, String date ) {
         this.idMessage = idMessage;
         this.auteur = auteur;
-        this.receveur = receveur;
         this.contenu = contenu;
         this.date = date;
-        this.isSeen = isSeen;
     }
 
     public Message() {
@@ -33,14 +30,6 @@ public class Message {
         this.auteur = auteur;
     }
 
-    public String getReceveur() {
-        return receveur;
-    }
-
-    public void setReceveur(String receveur) {
-        this.receveur = receveur;
-    }
-
     public String getContenu() {
         return contenu;
     }
@@ -57,11 +46,4 @@ public class Message {
         this.date = date;
     }
 
-    public boolean isSeen() {
-        return isSeen;
-    }
-
-    public void setSeen(boolean seen) {
-        isSeen = seen;
-    }
 }

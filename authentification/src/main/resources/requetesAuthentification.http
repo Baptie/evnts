@@ -10,13 +10,13 @@ POST http://localhost:8080/auth/connexion/pseudo=VinceLeBg&mdp=Ratio
 ###Connexion expected=200 + token
 POST http://localhost:8080/auth/connexion?pseudo=pseudo12&mdp=mdp
 
-###Modification mdp expected = 200
-PATCH http://localhost:8080/auth/modification-mdp?pseudo=pseudo_new&mdp=mdp&nouveauMDP=mdp2
+###Modification pseudo expected = 200
+PATCH http://localhost:8080/auth/modification-pseudo?pseudo=pseudo&nouveauPseudo=pseudo_new
 Content-Type: application/x-www-form-urlencoded
 Accept: */*
 
-###Modification pseudo expected = 200
-PATCH http://localhost:8080/auth/modification-pseudo?pseudo=pseudo&nouveauPseudo=pseudo_new
+###Modification mdp expected = 200
+PATCH http://localhost:8080/auth/modification-mdp?pseudo=pseudo_new&mdp=mdp&nouveauMDP=mdp2
 Content-Type: application/x-www-form-urlencoded
 Accept: */*
 

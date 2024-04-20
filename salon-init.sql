@@ -3,6 +3,7 @@ USE salon;
 
 CREATE TABLE Membre (
                         idMembre INT AUTO_INCREMENT PRIMARY KEY,
+                        email VARCHAR(255) NOT NULL,
                         nomMembre VARCHAR(255) NOT NULL
 );
 
@@ -74,8 +75,8 @@ CREATE TABLE MessageEvenement (
 INSERT INTO Salon (nomSalon, nomCreateur, logo) VALUES ('Mon Premier Salon', 'Vince', 'https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png');
 
 -- Insérer des membres
-INSERT INTO Membre (nomMembre) VALUES ('Vince');
-INSERT INTO Membre (nomMembre) VALUES ('Camacho');
+INSERT INTO Membre (nomMembre,email) VALUES ('Vince','vincent.aubert@gmail.com');
+INSERT INTO Membre (nomMembre,email) VALUES ('Camacho','romain.camacho@gmail.com');
 
 -- Associer des membres à un salon
 INSERT INTO SalonMembre (idSalon, idMembre) VALUES (1, 1); -- Associer Vince à Mon Premier Salon

@@ -177,9 +177,6 @@ public interface FacadeSalon {
 
     List<Message> getMessagesEvenement(Evenement evenement) throws EvenementInexistantException;
 
-
-    Utilisateur convertUserDTOtoUser(UtilisateurDTO utilisateurDTO);
-
     void supprimerUtilisateur(Utilisateur nomUtilisateur) throws UtilisateurInexistantException;
 
     String getNomEvenementById(int idEvent);
@@ -190,5 +187,7 @@ public interface FacadeSalon {
 
     Evenement getEventById(int idEvent);
 
-    void ajouterMembre(String nomMembre);
+    void ajouterMembre(String nomMembre, String email);
+
+    Utilisateur getUtilisateurByEmail(String email);
 }

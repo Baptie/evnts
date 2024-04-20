@@ -33,7 +33,7 @@ public class UtilisateurDTO {
 
     }
 
-    public static void resetMDP(String pseudo, String nouveauMDP) throws UtilisateurInexistantException {
+    public static void resetMDP(String pseudo, String nouveauMDP) throws CombinaisonPseudoMdpIncorrect {
         InteractionBDDAuthentification bdd = new InteractionBDDAuthentification();
         try {
             bdd.resetMDP(pseudo, nouveauMDP);
