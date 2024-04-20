@@ -58,11 +58,11 @@ spring:
           filters:
             - RewritePath=/contact/(?<path>.*), /contact/$\{path}
             - PreserveHostHeader=true
-#        - id: gestiongoogle
-#          uri: lb://gestionGoogle
-#          predicates:
-#            - Path=/google/**
-#          filters:
-#            - RewritePath=/google/(?<path>.*), /google/$\{path}
-#            - PreserveHostHeader=true
+        - id: gestiongoogle
+          uri: lb://gestionGoogle
+          predicates:
+            - Path=/google/**
+          filters:
+            - RewritePath=/google/(?<path>.*), /google/$\{path}
+            - PreserveHostHeader=true
 

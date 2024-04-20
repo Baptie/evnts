@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/auth")
 public class ControleurAuthentification {
 
+    private static final String MAUVAIS_PSEUDO = "Mauvais pseudo !";
+    private static final String MAUVAIS_MDP = "Mauvais mdp !";
+
     @Autowired
     FacadeAuthentificationInterface facadeAuth;
 
@@ -18,7 +21,7 @@ public class ControleurAuthentification {
     public ResponseEntity<String> inscription(@RequestParam String pseudo, @RequestParam String mdp, @RequestParam String eMail) {
         try {
             this.facadeAuth.inscription(pseudo,mdp,eMail);
-            return ResponseEntity.ok("Compte créé !");
+            return ResponseEntity.created(null).body("Compte créé !");
         } catch (PseudoDejaPrisException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Pseudo "+pseudo+" déjà pris");
         }catch (EMailDejaPrisException e) {
@@ -44,14 +47,12 @@ public class ControleurAuthentification {
     @PostMapping(value = "/deconnexion")
     public ResponseEntity<String> deconnexion (@RequestParam String pseudo){
         try {
-            try {
-                this.facadeAuth.deconnexion(pseudo);
-            } catch (UtilisateurDejaDeconnecteException e) {
-                throw new RuntimeException(e);
-            }
+            this.facadeAuth.deconnexion(pseudo);
             return ResponseEntity.ok("Déconnexion de "+pseudo+" faite !");
         } catch (UtilisateurInexistantException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais identifiants !");
+        } catch (UtilisateurDejaDeconnecteException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Déjà connecté !");
         }
     }
 
@@ -61,7 +62,7 @@ public class ControleurAuthentification {
             this.facadeAuth.reSetPseudo(pseudo,nouveauPseudo);
             return ResponseEntity.ok("Pseudo : "+pseudo+" changé en :" + nouveauPseudo+" !");
         } catch (UtilisateurInexistantException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais pseudo !");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_PSEUDO);
         }
     }
 
@@ -71,9 +72,9 @@ public class ControleurAuthentification {
             this.facadeAuth.reSetMDP(pseudo,mdp,nouveauMDP);
             return ResponseEntity.ok("Mdp changé !");
         } catch (UtilisateurInexistantException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais pseudo !");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_PSEUDO);
         } catch (MdpIncorrecteException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais mdp !");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_MDP);
         }
     }
 
@@ -83,9 +84,9 @@ public class ControleurAuthentification {
             this.facadeAuth.supprimerUtilisateur(pseudo,mdp);
             return ResponseEntity.ok("Utilisateur supprimé");
         } catch (UtilisateurInexistantException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais pseudo !");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_PSEUDO);
         } catch (MdpIncorrecteException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mauvais mdp !");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_MDP);
         }
     }
 

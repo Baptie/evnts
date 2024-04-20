@@ -50,25 +50,22 @@ public class InteractionBDDAuthentification {
 
 
 
-    public void resetMDP(String pseudo, String nouveauMDP) throws SQLException {
+    public void resetMDP(String pseudo, String nouveauMDP) throws SQLException, UtilisateurInexistantException {
         Statement st = connecterAuthentificationSQL();
         pseudo = pseudo.replace("'", "\\'");
         ResultSet rs = st.executeQuery("SELECT * FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
         if (rs.next()) {
             String SQL = "UPDATE Utilisateur SET motDePasse = '" + nouveauMDP + "' WHERE pseudo = '" + pseudo + "'";
             st.executeUpdate(SQL);
-        } else {
-            System.out.println("La combinaison pseudo et ancien mot de passe n'existe pas.");
-        }
+        } else throw new UtilisateurInexistantException();
+
     }
-    public void supprimerUtilisateur(String pseudo) throws SQLException {
+    public void supprimerUtilisateur(String pseudo) throws SQLException, UtilisateurInexistantException {
         Statement st = connecterAuthentificationSQL();
         ResultSet rs = st.executeQuery("SELECT * FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
         if (rs.next()) {
             st.executeUpdate("DELETE FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
-        } else {
-            System.out.println("L'utilisateur avec le pseudo " + pseudo + " n'existe pas.");
-        }
+        } else throw new UtilisateurInexistantException();
     }
 
 }

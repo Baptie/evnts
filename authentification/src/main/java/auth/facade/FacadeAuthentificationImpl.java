@@ -51,12 +51,12 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
     }
 
     @Override
-    public void reSetMDP(String pseudo, String mdp, String nouveauMDP) {
+    public void reSetMDP(String pseudo, String mdp, String nouveauMDP) throws UtilisateurInexistantException {
         UtilisateurDTO.resetMDP(pseudo,passwordEncoder.encode(nouveauMDP));
     }
 
     @Override
-    public void supprimerUtilisateur(String pseudo, String mdp)  {
+    public void supprimerUtilisateur(String pseudo, String mdp) throws UtilisateurInexistantException {
         UtilisateurDTO.supprimerUtilisateur(pseudo);
     }
 

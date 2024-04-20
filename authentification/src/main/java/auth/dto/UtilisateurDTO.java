@@ -9,8 +9,9 @@ import java.sql.SQLException;
 
 public class UtilisateurDTO {
     private int id;
-    private String pseudo,mdp,email;
-
+    private String pseudo;
+    private String mdp;
+    private String email;
 
 
     public static void enregistrerUser(String email, String pseudo, String mdp) throws EMailDejaPrisException, EmailOuPseudoDejaPrisException {
@@ -32,7 +33,7 @@ public class UtilisateurDTO {
 
     }
 
-    public static void resetMDP(String pseudo, String nouveauMDP) {
+    public static void resetMDP(String pseudo, String nouveauMDP) throws UtilisateurInexistantException {
         InteractionBDDAuthentification bdd = new InteractionBDDAuthentification();
         try {
             bdd.resetMDP(pseudo, nouveauMDP);
@@ -41,7 +42,7 @@ public class UtilisateurDTO {
         }
     }
 
-    public static void supprimerUtilisateur(String pseudo) {
+    public static void supprimerUtilisateur(String pseudo) throws UtilisateurInexistantException {
         InteractionBDDAuthentification bdd = new InteractionBDDAuthentification();
         try {
             bdd.supprimerUtilisateur(pseudo);
