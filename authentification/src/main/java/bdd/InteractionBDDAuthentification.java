@@ -2,6 +2,7 @@ package bdd;
 
 import java.sql.*;
 
+import auth.exception.CombinaisonPseudoMdpIncorrect;
 import auth.exception.EMailDejaPrisException;
 import auth.exception.EmailOuPseudoDejaPrisException;
 import auth.exception.UtilisateurInexistantException;
@@ -50,7 +51,7 @@ public class InteractionBDDAuthentification {
 
 
 
-    public void resetMDP(String pseudo, String nouveauMDP) throws SQLException {
+    public void resetMDP(String pseudo, String nouveauMDP) throws SQLException, CombinaisonPseudoMdpIncorrect {
         Statement st = connecterAuthentificationSQL();
         pseudo = pseudo.replace("'", "\\'");
         ResultSet rs = st.executeQuery("SELECT * FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
@@ -58,16 +59,17 @@ public class InteractionBDDAuthentification {
             String SQL = "UPDATE Utilisateur SET motDePasse = '" + nouveauMDP + "' WHERE pseudo = '" + pseudo + "'";
             st.executeUpdate(SQL);
         } else {
-            System.out.println("La combinaison pseudo et ancien mot de passe n'existe pas.");
+            throw new CombinaisonPseudoMdpIncorrect();
         }
     }
-    public void supprimerUtilisateur(String pseudo) throws SQLException {
+    public void supprimerUtilisateur(String pseudo) throws SQLException, UtilisateurInexistantException {
         Statement st = connecterAuthentificationSQL();
         ResultSet rs = st.executeQuery("SELECT * FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
         if (rs.next()) {
+
             st.executeUpdate("DELETE FROM Utilisateur WHERE pseudo = '" + pseudo + "'");
         } else {
-            System.out.println("L'utilisateur avec le pseudo " + pseudo + " n'existe pas.");
+            throw new UtilisateurInexistantException();
         }
     }
 

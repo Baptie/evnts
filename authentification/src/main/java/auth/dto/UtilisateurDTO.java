@@ -1,5 +1,6 @@
 package auth.dto;
 
+import auth.exception.CombinaisonPseudoMdpIncorrect;
 import auth.exception.EMailDejaPrisException;
 import auth.exception.EmailOuPseudoDejaPrisException;
 import auth.exception.UtilisateurInexistantException;
@@ -32,7 +33,7 @@ public class UtilisateurDTO {
 
     }
 
-    public static void resetMDP(String pseudo, String nouveauMDP) {
+    public static void resetMDP(String pseudo, String nouveauMDP) throws CombinaisonPseudoMdpIncorrect {
         InteractionBDDAuthentification bdd = new InteractionBDDAuthentification();
         try {
             bdd.resetMDP(pseudo, nouveauMDP);
@@ -41,7 +42,7 @@ public class UtilisateurDTO {
         }
     }
 
-    public static void supprimerUtilisateur(String pseudo) {
+    public static void supprimerUtilisateur(String pseudo) throws UtilisateurInexistantException {
         InteractionBDDAuthentification bdd = new InteractionBDDAuthentification();
         try {
             bdd.supprimerUtilisateur(pseudo);
