@@ -4,7 +4,8 @@ import java.util.List;
 
 public class Conversation {
     private int idConversation;
-    private String utilisateurUn, utilisateurDeux;
+    private String utilisateurUn;
+    private String utilisateurDeux;
     private List<Message> lesMessagesDeLaConversation;
 
     public Conversation(int idConversation, String utilisateurUn, String utilisateurDeux, List<Message> lesMessagesDeLaConversation) {
