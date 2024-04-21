@@ -1,4 +1,4 @@
-//package gestUtil.facade;
+package gestUtil.facade;//package gestUtil.facade;
 //
 //import gestUtil.dto.UtilisateurPublicDTO;
 //import gestUtil.exceptions.EMailDejaPrisException;
@@ -159,3 +159,8 @@
 //        assertThrows(UtilisateurNonTrouveException.class, () -> facadeGestionUtilisateur.changerBio(emailNonExistant, "Nouvelle bio"));
 //    }
 //}
+
+
+
+
+

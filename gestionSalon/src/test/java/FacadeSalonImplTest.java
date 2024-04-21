@@ -913,69 +913,76 @@ class FacadeSalonImplTest {
         assertThrows(RuntimeException.class, () -> facadeSalon.getNomEvenementById(idEvent));
     }
 
-//    @Test
-//    void testGetSalonByUserSuccessfully() {
-//        // Prepare
-//        int idUser = 1;
-//        List<Integer> expectedSalonIds = new ArrayList<>();
-//        expectedSalonIds.add(101);
-//        expectedSalonIds.add(102);
-//
-//        // Mocking the static method to return the list of salon IDs
-//        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getSalonByUser(idUser))
-//                .thenReturn(expectedSalonIds);
-//
-//        // Act
-//        List<Integer> actualSalonIds = facadeSalon.getSalonByUser(idUser);
-//
-//        // Assert
-//        assertEquals(expectedSalonIds, actualSalonIds);
-//    }
+    @Test
+    void testGetSalonByUserSuccessfully() throws SQLException, NomUtilisateurVideException {
+        String nom = "validUser";
+        Utilisateur user = new Utilisateur();
+        user.setIdUtilisateur(1);
+        List<Integer> salonIds = List.of(101, 102);
+        List<Salon> expectedSalons = new ArrayList<>();
+        expectedSalons.add(new Salon());
+        expectedSalons.add(new Salon());
 
-//    @Test
-//    void testGetSalonByUserWithSQLException() {
-//        // Prepare
-//        int idUser = 1;
-//
-//        // Mocking the static method to throw an SQLException
-//        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getSalonByUser(idUser))
-//                .thenThrow(SQLException.class);
-//
-//        // Act & Assert
-//        assertThrows(RuntimeException.class, () -> facadeSalon.getSalonByUser(idUser));
-//    }
+        when(facadeSalon.getUtilisateurByPseudo(nom)).thenReturn(user);
+        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getSalonByUser(user.getIdUtilisateur())).thenReturn(salonIds);
+        when(facadeSalon.getSalonByNum(101)).thenReturn(expectedSalons.get(0));
+        when(facadeSalon.getSalonByNum(102)).thenReturn(expectedSalons.get(1));
 
-//    @Test
-//    void testGetEvenementUserSuccessfully() {
-//        // Prepare
-//        int idUser = 1;
-//        List<Integer> expectedEventIds = new ArrayList<>();
-//        expectedEventIds.add(201);
-//        expectedEventIds.add(202);
-//
-//        // Mocking the static method to return the list of event IDs
-//        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getEventByUser(idUser))
-//                .thenReturn(expectedEventIds);
-//
-//        // Act
-//        List<Integer> actualEventIds = facadeSalon.getEvenementUser(idUser);
-//
-//        // Assert
-//        assertEquals(expectedEventIds, actualEventIds);
-//    }
+        List<Salon> actualSalons = facadeSalon.getSalonByUser(nom);
 
-//    @Test
-//    void testGetEvenementUserWithSQLException() {
-//        // Prepare
-//        int idUser = 1;
-//
-//        // Mocking the static method to throw an SQLException
-//        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getEventByUser(idUser))
-//                .thenThrow(SQLException.class);
-//
-//        // Act & Assert
-//        assertThrows(RuntimeException.class, () -> facadeSalon.getEvenementUser(idUser));
-//    }
+        assertEquals(expectedSalons, actualSalons);
+
+    }
+
+    @Test
+    void testGetSalonByUserWithEmptyUsername() {
+        String nom = "";
+
+        assertThrows(NomUtilisateurVideException.class, () -> facadeSalon.getSalonByUser(nom));
+    }
+
+    @Test
+    void testGetSalonByUserSQLExceptionOnUserFetch() throws  NomUtilisateurVideException {
+        String nom = "validUser";
+        when(facadeSalon.getUtilisateurByPseudo(nom)).thenThrow(new SQLException("Database error"));
+
+        assertThrows(RuntimeException.class, () -> facadeSalon.getSalonByUser(nom));
+    }
+
+    @Test
+    void testGetEvenementsUserSuccessfully() throws SQLException, NomUtilisateurVideException {
+        String nom = "validUser";
+        Utilisateur user = new Utilisateur();
+        user.setIdUtilisateur(1);
+        List<Integer> eventIds = List.of(101, 102);
+        List<Evenement> expectedEvents = new ArrayList<>();
+        expectedEvents.add(new Evenement());
+        expectedEvents.add(new Evenement());
+
+        when(facadeSalon.getUtilisateurByPseudo(nom)).thenReturn(user);
+        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getEventByUser(user.getIdUtilisateur())).thenReturn(eventIds);
+        when(facadeSalon.getEventById(101)).thenReturn(expectedEvents.get(0));
+        when(facadeSalon.getEventById(102)).thenReturn(expectedEvents.get(1));
+
+        List<Evenement> actualEvents = facadeSalon.getEvenementsUser(nom);
+
+        assertEquals(expectedEvents, actualEvents);
+    }
+
+    @Test
+    void testGetEvenementsUserWithEmptyUsername() {
+        String nom = "";
+
+        assertThrows(NomUtilisateurVideException.class, () -> facadeSalon.getEvenementsUser(nom));
+    }
+
+    @Test
+    void testGetEvenementsUserSQLExceptionOnUserFetch() throws  NomUtilisateurVideException {
+        String nom = "validUser";
+        when(facadeSalon.getUtilisateurByPseudo(nom)).thenThrow(new SQLException("Database error"));
+
+        assertThrows(RuntimeException.class, () -> facadeSalon.getEvenementsUser(nom));
+    }
 
     @Test
     void testGetEventByIdSuccessfully() {
