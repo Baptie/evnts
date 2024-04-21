@@ -156,7 +156,7 @@ public class GoogleControleur {
                                    @RequestParam String location,
                                    @RequestParam String debut,
                                    @RequestParam String fin,
-                                   @RequestParam String description) throws GeneralSecurityException, IOException, AucunCalendrierTrouveException {
+                                   @RequestParam String description) throws GeneralSecurityException, IOException {
         try {
             facadeGoogle.ajouterEvenementCalendrier(authentication, nom, location, debut, fin, description);
 
@@ -178,7 +178,7 @@ public class GoogleControleur {
                                            @RequestParam String location,
                                            @RequestParam String debut,
                                            @RequestParam String fin,
-                                           @RequestParam String description) throws GeneralSecurityException, IOException, AucunCalendrierTrouveException {
+                                           @RequestParam String description) {
         try {
             String lien = facadeGoogle.ajouterEvenementCalendrierLink(nom, location, debut, fin, description);
 
@@ -210,7 +210,7 @@ public class GoogleControleur {
     }
 
     @GetMapping("/validation-mail")
-    public ResponseEntity<String> sendEmail(Authentication authentication) throws ProblemeEnvoiMailException {
+    public ResponseEntity<String> sendEmail(Authentication authentication) {
         try{
             facadeGoogle.envoyerMailValidationEvenement(authentication);
 
@@ -224,7 +224,7 @@ public class GoogleControleur {
     }
 
     @GetMapping("/email")
-    public ResponseEntity<String> sendEmailAvecContenu(String email, String objet, String contenu)throws ProblemeEnvoiMailException{
+    public ResponseEntity<String> sendEmailAvecContenu(String email, String objet, String contenu){
         try{
             facadeGoogle.envoyerMailParContenu(email,objet,contenu);
 
@@ -235,8 +235,5 @@ public class GoogleControleur {
                     .body("Probleme envoi mail");
         }
     }
-
-
-
 
 }

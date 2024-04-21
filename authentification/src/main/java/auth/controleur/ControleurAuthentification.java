@@ -63,7 +63,7 @@ public class ControleurAuthentification {
         } catch (UtilisateurInexistantException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_IDENTIFIANT);
         } catch (UtilisateurDejaDeconnecteException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Déjà connecté !");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Déjà déconnecté !");
         }
     }
 

@@ -76,7 +76,7 @@ public class ControleurSalon {
 
     }
 
-    @GetMapping("/utilisateur/{nomSalon}")
+    @GetMapping("/{nomSalon}")
     public ResponseEntity<Object> getSalonByNom(@PathVariable String nomSalon){
         try{
             Salon salon = facadeSalon.getSalonByNom(nomSalon);

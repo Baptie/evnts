@@ -28,7 +28,7 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
 
     @Override
     public void deconnexion(String pseudo) throws UtilisateurDejaDeconnecteException {
-        if(idConnection!=null){
+        if(idConnection==null){
             idConnection =null;
         }else{
             throw new UtilisateurDejaDeconnecteException();
