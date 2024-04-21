@@ -11,10 +11,8 @@ public class InteractionBDDUtilisateur {
         String jdbcUser = "root";
         String jdbcPassword = "root";
 
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
-             Statement statement = connection.createStatement()) {
-            return statement;
-        }
+        Connection connection = DriverManager.getConnection(jdbcUrl,jdbcUser,jdbcPassword);
+        return connection.createStatement();
 
     }
 

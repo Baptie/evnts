@@ -3,11 +3,13 @@ import Navbar from "../../components/Navbar/Navbar";
 import axios from 'axios';
 import Inscription from '../Inscription/Inscription';
 import Accueil from '../Accueil/Accueil';
+import { useNavigate } from 'react-router-dom';
 
 function Profil() {
 
     const API_URL = "http://localhost:8080/";
     const token = localStorage.getItem("token");
+    const navigate = useNavigate();
 
     const [newUsername, setNewUsername] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -96,12 +98,12 @@ function Profil() {
                             }
                         })
                         .then(response =>{
+                            console.log("caca")
                             localStorage.removeItem("username");
                             localStorage.removeItem("email");
                             localStorage.removeItem("token");
                             localStorage.setItem("register","no");
-                            window.location.reload();
-                            return(<Inscription/>)
+                            navigate("/");
                         })
                         .catch(error =>{
                             console.log("Erreur lors de la suppression google : ", error);           

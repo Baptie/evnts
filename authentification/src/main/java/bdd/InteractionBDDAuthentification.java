@@ -16,10 +16,9 @@ public class InteractionBDDAuthentification {
         String jdbcUser = "root";
         String jdbcPassword = "root";
 
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
-             Statement statement = connection.createStatement()) {
-            return statement;
-        }
+        Connection connection = DriverManager.getConnection(jdbcUrl,jdbcUser,jdbcPassword);
+        Statement statement = connection.createStatement();
+        return statement;
     }
 
     public void enregistrerUtilisateur(String email, String pseudo, String mdp) throws SQLException, EMailDejaPrisException, EmailOuPseudoDejaPrisException {
