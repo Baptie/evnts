@@ -119,18 +119,47 @@ public class GoogleControleur {
                 "</html>";
     }
 
-    @PostMapping("/new-user")
-    public ResponseEntity<String> newUser(@RequestParam String email){
-        try{
-            facadeGoogle.newUtilisateur(email);
 
-            return ResponseEntity.ok("Utilisateur ajoute");
+    @PostMapping("/utilisateur/{email}")
+    public ResponseEntity<String> newUser(@PathVariable String email) {
+        try {
+            facadeGoogle.newUtilisateur(email);
+            return ResponseEntity.ok("Utilisateur ajouté");
+        } catch (EmailDejaPritException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erreur Utilisateur Existant");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur");
         }
-        catch (EmailDejaPritException e) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Erreur Utilisateur Existant");
-        }catch (Exception e){
+    }
+//
+//    @PostMapping("/utilisateur/{email}")
+//    public ResponseEntity<String> newUser(@PathVariable String email){
+//        try{
+//            facadeGoogle.newUtilisateur(email);
+//
+//            return ResponseEntity.ok("Utilisateur ajouté");
+//        }
+//        catch (EmailDejaPritException e) {
+//            return ResponseEntity
+//                    .status(HttpStatus.CONFLICT)
+//                    .body("Erreur Utilisateur Existant");
+//        }catch (Exception e){
+//            return ResponseEntity
+//                    .status(HttpStatus.BAD_REQUEST)
+//                    .body("Erreur");
+//        }
+//
+//    }
+
+
+
+    @DeleteMapping("/utilisateur")
+    public ResponseEntity<String> deleteUser(@RequestParam String email){
+        try{
+            facadeGoogle.deleteUtilisateur(email);
+
+            return ResponseEntity.ok("Utilisateur supprimé");
+        } catch (Exception e){
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body("Erreur");

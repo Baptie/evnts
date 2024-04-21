@@ -11,7 +11,7 @@ public class InteractionBDDGoogle {
     }
 
     public static Statement connecterAuthentificationSQL() throws SQLException {
-        String jdbcUrl = "jdbc:mysql://dbAuthentification:3306/google";
+        String jdbcUrl = "jdbc:mysql://dbGoogle:3306/google";
         String jdbcUser = "root";
         String jdbcPassword = "root";
 
@@ -22,7 +22,13 @@ public class InteractionBDDGoogle {
 
     public void enregistrerUser(String email) throws SQLException {
         Statement st = connecterAuthentificationSQL();
-        String SQL = "insert into Utilisateur(email) VALUES ('"+email+"')";
+        String SQL = "insert into GoogleUser(email) VALUES ('"+email+"')";
+        st.executeUpdate(SQL);
+    }
+
+    public void deleteUtilisateur(String email) throws SQLException {
+        Statement st = connecterAuthentificationSQL();
+        String SQL = "DELETE FROM GoogleUser WHERE email = '"+email+"'";
         st.executeUpdate(SQL);
     }
 }

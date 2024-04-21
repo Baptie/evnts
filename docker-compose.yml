@@ -74,6 +74,7 @@ services:
 
   dbGoogle:
     image: mysql:latest
+    container_name: dbGoogle
     restart: always
     ports:
       - 3310:3306
