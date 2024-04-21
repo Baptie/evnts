@@ -88,6 +88,7 @@ public class SecurityConfig {
         return new NimbusJwtEncoder(jwks);
     }
 
+
     @Bean
     Function<Utilisateur,String> genereTokenFunction(JwtEncoder jwtEncoder) {
         return utilisateur -> {
