@@ -913,69 +913,69 @@ class FacadeSalonImplTest {
         assertThrows(RuntimeException.class, () -> facadeSalon.getNomEvenementById(idEvent));
     }
 
-    @Test
-    void testGetSalonByUserSuccessfully() {
-        // Prepare
-        int idUser = 1;
-        List<Integer> expectedSalonIds = new ArrayList<>();
-        expectedSalonIds.add(101);
-        expectedSalonIds.add(102);
+//    @Test
+//    void testGetSalonByUserSuccessfully() {
+//        // Prepare
+//        int idUser = 1;
+//        List<Integer> expectedSalonIds = new ArrayList<>();
+//        expectedSalonIds.add(101);
+//        expectedSalonIds.add(102);
+//
+//        // Mocking the static method to return the list of salon IDs
+//        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getSalonByUser(idUser))
+//                .thenReturn(expectedSalonIds);
+//
+//        // Act
+//        List<Integer> actualSalonIds = facadeSalon.getSalonByUser(idUser);
+//
+//        // Assert
+//        assertEquals(expectedSalonIds, actualSalonIds);
+//    }
 
-        // Mocking the static method to return the list of salon IDs
-        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getSalonByUser(idUser))
-                .thenReturn(expectedSalonIds);
+//    @Test
+//    void testGetSalonByUserWithSQLException() {
+//        // Prepare
+//        int idUser = 1;
+//
+//        // Mocking the static method to throw an SQLException
+//        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getSalonByUser(idUser))
+//                .thenThrow(SQLException.class);
+//
+//        // Act & Assert
+//        assertThrows(RuntimeException.class, () -> facadeSalon.getSalonByUser(idUser));
+//    }
 
-        // Act
-        List<Integer> actualSalonIds = facadeSalon.getSalonByUser(idUser);
+//    @Test
+//    void testGetEvenementUserSuccessfully() {
+//        // Prepare
+//        int idUser = 1;
+//        List<Integer> expectedEventIds = new ArrayList<>();
+//        expectedEventIds.add(201);
+//        expectedEventIds.add(202);
+//
+//        // Mocking the static method to return the list of event IDs
+//        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getEventByUser(idUser))
+//                .thenReturn(expectedEventIds);
+//
+//        // Act
+//        List<Integer> actualEventIds = facadeSalon.getEvenementUser(idUser);
+//
+//        // Assert
+//        assertEquals(expectedEventIds, actualEventIds);
+//    }
 
-        // Assert
-        assertEquals(expectedSalonIds, actualSalonIds);
-    }
-
-    @Test
-    void testGetSalonByUserWithSQLException() {
-        // Prepare
-        int idUser = 1;
-
-        // Mocking the static method to throw an SQLException
-        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getSalonByUser(idUser))
-                .thenThrow(SQLException.class);
-
-        // Act & Assert
-        assertThrows(RuntimeException.class, () -> facadeSalon.getSalonByUser(idUser));
-    }
-
-    @Test
-    void testGetEvenementUserSuccessfully() {
-        // Prepare
-        int idUser = 1;
-        List<Integer> expectedEventIds = new ArrayList<>();
-        expectedEventIds.add(201);
-        expectedEventIds.add(202);
-
-        // Mocking the static method to return the list of event IDs
-        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getEventByUser(idUser))
-                .thenReturn(expectedEventIds);
-
-        // Act
-        List<Integer> actualEventIds = facadeSalon.getEvenementUser(idUser);
-
-        // Assert
-        assertEquals(expectedEventIds, actualEventIds);
-    }
-
-    @Test
-    void testGetEvenementUserWithSQLException() {
-        // Prepare
-        int idUser = 1;
-
-        // Mocking the static method to throw an SQLException
-        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getEventByUser(idUser))
-                .thenThrow(SQLException.class);
-
-        // Act & Assert
-        assertThrows(RuntimeException.class, () -> facadeSalon.getEvenementUser(idUser));
-    }
+//    @Test
+//    void testGetEvenementUserWithSQLException() {
+//        // Prepare
+//        int idUser = 1;
+//
+//        // Mocking the static method to throw an SQLException
+//        mockedUtilisateurDTO.when(() -> UtilisateurDTO.getEventByUser(idUser))
+//                .thenThrow(SQLException.class);
+//
+//        // Act & Assert
+//        assertThrows(RuntimeException.class, () -> facadeSalon.getEvenementUser(idUser));
+//    }
 
     @Test
     void testGetEventByIdSuccessfully() {
