@@ -455,7 +455,7 @@ public class ControleurSalon {
     public ResponseEntity<?> ajouterMembre(@PathVariable String nomMembre, @RequestParam String email){
         try{
             facadeSalon.ajouterMembre(nomMembre,email);
-            return ResponseEntity.ok().body("Membre ajouté");
+            return ResponseEntity.created(null).body("Membre ajouté");
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Echec de l'ajout");
         }

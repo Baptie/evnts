@@ -23,7 +23,7 @@ public class ControleurUtilisateur {
     public ResponseEntity<String> inscription(@RequestParam String pseudo, @RequestParam String email, @RequestParam String bio, @RequestParam String photoDeProfil ) {
         try {
             this.facadeUtilisateur.creerCompte(pseudo,email,bio,photoDeProfil);
-            return ResponseEntity.ok("Compte créé !");
+            return ResponseEntity.created(null).body("Compte créé !");
         } catch (PseudoDejaPrisException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Pseudo "+pseudo+" déjà pris");
         }catch (EMailDejaPrisException e) {

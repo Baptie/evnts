@@ -141,7 +141,6 @@ public class GoogleControleur {
     public ResponseEntity<String> deleteUser(@RequestParam String email){
         try{
             facadeGoogle.deleteUtilisateur(email);
-
             return ResponseEntity.ok("Utilisateur supprimé");
         } catch (Exception e){
             return ResponseEntity

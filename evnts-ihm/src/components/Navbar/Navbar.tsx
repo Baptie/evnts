@@ -43,7 +43,7 @@ function Navbar() {
 
                 </div>
                 <div className="navbarProfileLabels">
-                    <span className="pseudoLabelNavbar" onClick={goToProfile}>Pseudo_Joueur12345678956785467456701234567890</span>
+                    <span className="pseudoLabelNavbar" onClick={goToProfile}>{localStorage.getItem("username")}</span>
                     <span className="logoutLabel" onClick={disconnect}>Se déconnecter</span>
                 
                 </div>

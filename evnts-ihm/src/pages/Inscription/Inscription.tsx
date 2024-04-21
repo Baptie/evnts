@@ -27,6 +27,7 @@ const Inscription = () => {
                         .then(response =>{
                             if(response.status.toString() === "201"){
                             localStorage.setItem("register", "no");
+                            localStorage.setItem("email",email);
                             alert("Succès");
                             window.location.reload();
                             }

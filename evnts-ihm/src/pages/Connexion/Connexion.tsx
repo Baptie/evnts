@@ -3,7 +3,7 @@ import './Connexion.scss';
 import { Link} from 'react-router-dom'
 import logo from '../../assets/logo/logo-black-nocurve.png';
 import{ useState } from 'react';
-import axios, { AxiosHeaders } from "axios";
+import axios from "axios";
 import config from '../../config';
 
 
