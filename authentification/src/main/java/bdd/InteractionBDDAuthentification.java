@@ -71,7 +71,6 @@ public class InteractionBDDAuthentification {
     }
 
     public UtilisateurDTO connexionUtilisateur(String pseudo, String mdp) throws SQLException {
-        System.out.println(pseudo + "    dfdsfsdfsdfdsfsdf " + mdp);
         Statement st = connecterAuthentificationSQL();
         UtilisateurDTO userDTO = new UtilisateurDTO();
         String SQLUser = "SELECT * FROM Utilisateur where pseudo='" + pseudo + "'AND motDePasse = '" + mdp + "'";
@@ -82,7 +81,6 @@ public class InteractionBDDAuthentification {
             String pseudoSQL = rs.getString("pseudo");
             String motDePasse = rs.getString("motDePasse");
 
-            System.out.println("email BDD : " + email);
 
             userDTO.setId(id);
             userDTO.setEmail(email);

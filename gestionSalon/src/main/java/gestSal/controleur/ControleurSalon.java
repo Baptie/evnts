@@ -472,7 +472,6 @@ public class ControleurSalon {
     @GetMapping("/utilisateurs/mail/{email}")
     public ResponseEntity<?> getUtilisateurByEmail(@PathVariable String email){
         try{
-            System.out.println("STEP1");
             Utilisateur user = facadeSalon.getUtilisateurByEmail(email);
             return ResponseEntity.ok().body(user);
         }catch (Exception e){

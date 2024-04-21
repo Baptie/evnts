@@ -117,17 +117,13 @@ public class InteractionBDDSalon {
         Utilisateur utilisateur = new Utilisateur();
         Statement st = connecterAuSalonSQL();
         String SQL = "select * from Membre where email='"+email+"'";
-        System.out.println("SQL :"+SQL);
         ResultSet rs = st.executeQuery(SQL);
 
         while (rs.next()) {
-            System.out.println("I'M INSIDE");
             utilisateur.setIdUtilisateur(rs.getInt("idMembre"));
             utilisateur.setPseudo(rs.getString("nomMembre"));
             utilisateur.setEmail(rs.getString("email"));
         }
-
-        System.out.println("PSEUDO "+utilisateur.getPseudo());
         return utilisateur;
     }
 

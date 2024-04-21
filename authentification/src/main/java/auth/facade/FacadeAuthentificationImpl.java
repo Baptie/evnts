@@ -75,7 +75,6 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
         utilisateur.setPseudo(utilisateurDTO.getPseudo());
         utilisateur.setMdp(utilisateurDTO.getMdp());
         utilisateur.seteMail(utilisateurDTO.getEmail());
-        System.out.println("email log : " + utilisateur.getEMail());
         return utilisateur;
     }
 
