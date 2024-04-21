@@ -143,7 +143,6 @@ services:
       - dbGoogle
       - consul
 
-
   frontend:
     build:
       context: ./evnts-ihm
