@@ -55,6 +55,7 @@ public class ControleurAuthentification {
         }
     }
 
+
     @PostMapping(value = "/deconnexion")
     public ResponseEntity<String> deconnexion (@RequestParam String pseudo){
         try {
