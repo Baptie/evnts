@@ -23,12 +23,12 @@ const Inscription = () => {
                 .then(response =>{
                     axios.post(API_URL + "salon/utilisateur/"+nom+"?email="+email)
                     .then(response =>{
-                        axios.post(API_URL + "google/new-user?email="+email)
+                        axios.post(API_URL + "google/utilisateur/"+email)
                         .then(response =>{
-                            if(response.status.toString() === "200"){
-                            window.location.reload();
+                            if(response.status.toString() === "201"){
                             localStorage.setItem("register", "no");
                             alert("Succès");
+                            window.location.reload();
                             }
                         })
                         .catch(error =>{

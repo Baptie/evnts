@@ -124,7 +124,6 @@ public class GoogleControleur {
     public ResponseEntity<String> newUser(@PathVariable String email) {
         try {
             facadeGoogle.newUtilisateur(email);
-
             return ResponseEntity.created(null).body("Compte créé !");
         }
         catch (EmailDejaPritException e) {

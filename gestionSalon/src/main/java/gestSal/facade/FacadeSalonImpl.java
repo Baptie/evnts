@@ -320,8 +320,4 @@ public class FacadeSalonImpl implements FacadeSalon {
         Random random = new Random();
         return 1000 + random.nextInt(9000);
     }
-
-
-
-
 }
