@@ -4,7 +4,6 @@ import auth.exception.CombinaisonPseudoMdpIncorrect;
 import auth.exception.EMailDejaPrisException;
 import auth.exception.EmailOuPseudoDejaPrisException;
 import auth.exception.UtilisateurInexistantException;
-import auth.modele.Utilisateur;
 import bdd.InteractionBDDAuthentification;
 
 import java.sql.SQLException;

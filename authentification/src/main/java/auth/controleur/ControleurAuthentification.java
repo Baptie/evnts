@@ -1,6 +1,5 @@
 package auth.controleur;
 
-import auth.dto.UtilisateurDTO;
 import auth.exception.*;
 import auth.facade.FacadeAuthentificationInterface;
 import auth.modele.Utilisateur;

@@ -14,13 +14,19 @@ import java.util.List;
 
 public class InteractionBDDSalon {
 
+    private static final String NOM_MEMBRE = "nomMembre";
+
+    private static final String EMAIL = "email";
+
     public static Statement connecterAuSalonSQL() throws SQLException {
         String jdbcUrl = "jdbc:mysql://dbSalonName:3306/salon";
         String jdbcUser = "root";
         String jdbcPassword = "root";
 
-        Connection connection = DriverManager.getConnection(jdbcUrl,jdbcUser,jdbcPassword);
-        return connection.createStatement();
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
+             Statement statement = connection.createStatement()) {
+            return statement;
+        }
 
     }
 
@@ -92,6 +98,9 @@ public class InteractionBDDSalon {
                 st.executeUpdate(SQL);
 
             }
+            default -> {
+                return null;
+            }
         }
         return getSalonById(id);
     }
@@ -105,8 +114,8 @@ public class InteractionBDDSalon {
 
         while (rs.next()) {
            userDTO.setIdUtilisateur(rs.getInt("idMembre"));
-           userDTO.setPseudo(rs.getString("nomMembre"));
-           userDTO.setEmail(rs.getString("email"));
+           userDTO.setPseudo(rs.getString(NOM_MEMBRE));
+           userDTO.setEmail(rs.getString(EMAIL));
         }
 
 
@@ -121,8 +130,8 @@ public class InteractionBDDSalon {
 
         while (rs.next()) {
             utilisateur.setIdUtilisateur(rs.getInt("idMembre"));
-            utilisateur.setPseudo(rs.getString("nomMembre"));
-            utilisateur.setEmail(rs.getString("email"));
+            utilisateur.setPseudo(rs.getString(NOM_MEMBRE));
+            utilisateur.setEmail(rs.getString(EMAIL));
         }
         return utilisateur;
     }
@@ -134,8 +143,8 @@ public class InteractionBDDSalon {
         ResultSet rs = st.executeQuery(SQL);
         while (rs.next()) {
             userDTO.setIdUtilisateur(rs.getInt("idMembre"));
-            userDTO.setPseudo(rs.getString("nomMembre"));
-            userDTO.setEmail(rs.getString("email"));
+            userDTO.setPseudo(rs.getString(NOM_MEMBRE));
+            userDTO.setEmail(rs.getString(EMAIL));
         }
 
         return userDTO;
@@ -204,6 +213,9 @@ public class InteractionBDDSalon {
                 evenement.setNomEvenement(valeur);
                 String SQL = "UPDATE Evenement SET nomEvenement = '" + valeur + "' WHERE idEvenement = " + idEvenement;
                 st.executeUpdate(SQL);
+            }
+            default -> {
+                return;
             }
         }
     }

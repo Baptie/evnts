@@ -3,12 +3,10 @@ package auth.facade;
 import auth.exception.*;
 import auth.modele.Utilisateur;
 
-import java.util.Map;
-
 public interface FacadeAuthentificationInterface {
 
         /**
-         * Inscription d'un nouveau utilisateur sur le site
+         * Inscription d'un nouvel utilisateur sur le site
          *
          * @param pseudo
          * @param mdp
@@ -44,8 +42,5 @@ public interface FacadeAuthentificationInterface {
         void reSetMDP(String pseudo, String mdp, String nouveauMDP) throws UtilisateurInexistantException, MdpIncorrecteException, CombinaisonPseudoMdpIncorrect;
 
         void supprimerUtilisateur(String pseudo, String mdp) throws UtilisateurInexistantException, MdpIncorrecteException;
-
-        Map<String, Utilisateur> getUtilisateurs();
-
 
 }

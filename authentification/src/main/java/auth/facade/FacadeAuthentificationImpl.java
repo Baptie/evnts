@@ -3,13 +3,8 @@ package auth.facade;
 import auth.dto.UtilisateurDTO;
 import auth.exception.*;
 import auth.modele.Utilisateur;
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTParser;
-import com.nimbusds.jwt.SignedJWT;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component("facadeAuth")
 public class FacadeAuthentificationImpl implements FacadeAuthentificationInterface {
@@ -63,11 +58,6 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
     @Override
     public void supprimerUtilisateur(String pseudo, String mdp) throws UtilisateurInexistantException {
         UtilisateurDTO.supprimerUtilisateur(pseudo);
-    }
-
-    @Override
-    public Map<String, Utilisateur> getUtilisateurs() {
-        return null;
     }
 
     private Utilisateur mapToUtilisateur(UtilisateurDTO utilisateurDTO, String mdp) throws MdpIncorrecteException {
