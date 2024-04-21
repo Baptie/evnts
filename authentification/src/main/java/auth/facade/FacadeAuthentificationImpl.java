@@ -23,12 +23,12 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
 
     @Override
     public void inscription(String pseudo, String mdp, String eMail) throws EMailDejaPrisException, EmailOuPseudoDejaPrisException {
-        UtilisateurDTO.enregistrerUser(eMail,pseudo,mdp);
+        UtilisateurDTO.enregistrerUser(eMail,pseudo,passwordEncoder.encode(mdp));
     }
 
     @Override
-    public Utilisateur connexion(String pseudo, String mdp){
-        return mapToUtilisateur(UtilisateurDTO.connexionUser(pseudo,mdp));
+    public Utilisateur connexion(String pseudo, String mdp) throws MdpIncorrecteException {
+        return mapToUtilisateur(UtilisateurDTO.connexionUser(pseudo),mdp);
     }
 
     @Override
@@ -70,13 +70,10 @@ public class FacadeAuthentificationImpl implements FacadeAuthentificationInterfa
         return null;
     }
 
-    private static Utilisateur mapToUtilisateur(UtilisateurDTO utilisateurDTO) {
-        Utilisateur utilisateur = new Utilisateur();
-        utilisateur.setPseudo(utilisateurDTO.getPseudo());
-        utilisateur.setMdp(utilisateurDTO.getMdp());
-        utilisateur.seteMail(utilisateurDTO.getEmail());
-        System.out.println("email log : " + utilisateur.getEMail());
-        return utilisateur;
+    private Utilisateur mapToUtilisateur(UtilisateurDTO utilisateurDTO, String mdp) throws MdpIncorrecteException {
+        if (passwordEncoder.matches(mdp, utilisateurDTO.getMdp()))
+            return new Utilisateur(utilisateurDTO.getPseudo(),utilisateurDTO.getEmail(), utilisateurDTO.getMdp());
+        throw new MdpIncorrecteException();
     }
 
 }

@@ -53,11 +53,11 @@ public class UtilisateurDTO {
         }
     }
 
-    public static UtilisateurDTO connexionUser(String pseudo, String mdp) {
+    public static UtilisateurDTO connexionUser(String pseudo) {
         InteractionBDDAuthentification bdd = new InteractionBDDAuthentification();
         UtilisateurDTO uDTO = new UtilisateurDTO();
         try {
-            uDTO = bdd.connexionUtilisateur(pseudo,mdp);
+            uDTO = bdd.connexionUtilisateur(pseudo);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

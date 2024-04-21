@@ -50,7 +50,7 @@ public class ControleurAuthentification {
         } catch (UtilisateurInexistantException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_IDENTIFIANT);
         } catch (MdpIncorrecteException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mauvais mot de passe");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(MAUVAIS_MDP);
         }
     }
 

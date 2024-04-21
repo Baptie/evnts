@@ -14,9 +14,6 @@ public class Utilisateur {
         this.status = false;
     }
 
-    public Utilisateur() {
-    }
-
     public String getPseudo() {
         return pseudo;
     }
