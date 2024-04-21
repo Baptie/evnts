@@ -1,3 +1,5 @@
+package auth.facade;
+
 //package auth.facade;
 //
 //import auth.exception.*;
@@ -133,3 +135,6 @@
 //        });
 //    }
 //}
+public class FacadeAuthentificationTest {
+
+}

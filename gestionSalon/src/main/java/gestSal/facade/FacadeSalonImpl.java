@@ -69,7 +69,6 @@ public class FacadeSalonImpl implements FacadeSalon {
 
         String baseUrl = "https://evnt.com/invitation?code=";
         String invitationCode = generateRandomCode(); // Vous pouvez ajuster la longueur du code ici
-        //TODO ENVOIE DE LA NOTIF A LA PERSONNE, MAIL ?
         return baseUrl + invitationCode;
 
     }
@@ -77,6 +76,9 @@ public class FacadeSalonImpl implements FacadeSalon {
     @Override
     public Utilisateur getUtilisateurByPseudo(String pseudoUtilisateur) throws NomUtilisateurVideException {
         Utilisateur utilisateur ;
+        if(pseudoUtilisateur.isBlank()){
+            throw new NomUtilisateurVideException();
+        }
         try {
             utilisateur = UtilisateurDTO.getUtilisateurByPseudo(pseudoUtilisateur);
         } catch (SQLException e) {
