@@ -29,7 +29,7 @@ public class GoogleControleur {
     FacadeGoogleImpl facadeGoogle;
 
     @Autowired
-    private OAuth2AuthorizedClientService authorizedClientService;
+    OAuth2AuthorizedClientService authorizedClientService;
 
 
     public GoogleControleur(OAuth2AuthorizedClientService authorizedClientService) {
@@ -124,7 +124,7 @@ public class GoogleControleur {
         try{
             facadeGoogle.newUtilisateur(email);
 
-            return ResponseEntity.ok("Utilisateur ajoute");
+            return ResponseEntity.created(null).body("Compte créé !");
         }
         catch (EmailDejaPritException e) {
             return ResponseEntity

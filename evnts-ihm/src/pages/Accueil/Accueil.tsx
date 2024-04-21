@@ -3,34 +3,29 @@ import Navbar from '../../components/Navbar/Navbar';
 import Connexion from '../Connexion/Connexion';
 import Inscription from '../Inscription/Inscription';
 import './Accueil.scss';
+import axios from 'axios';
 
 const Accueil =()=> {
 
-    // TODO : Fetch la liste des evenements de l'utilisateur
-    const events = [
-    {
-        nom:'Evenement1',
-        lieu:'Lieu1',
-        horaire:'horaire'
-    },
-    {
-        nom:'Evenement2',
-        lieu:'Lieu2',
-        horaire:'horaire'
-    },
-    {
-        nom:'Evenement3',
-        lieu:'Lieu3',
-        horaire:'horaire'
-    },
-    {
-        nom:'Evenement4',
-        lieu:'Lieu4',
-        horaire:'horaire'
-    },
-    
-]
+    const API_URL = "http://localhost:8080/salon/utilisateur/"+localStorage.getItem("username")+"/evenements"
 
+    const events: any[] = []; 
+
+
+    const token = localStorage.getItem("token");
+
+    axios.get(API_URL, {
+        headers: {
+            'Authorization': token
+        }
+    })
+    .then(response => {
+        events.push(response);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+   
     const listEvenementsRender = events.map(event => 
         <li className="rowSalon" key={event.nom}>
             <div className="salonNameContainer">
@@ -52,7 +47,7 @@ const Accueil =()=> {
         console.log(nomEvent,user)
     }
 
-    if (localStorage.getItem("authenticated")==="no"){
+    if (!localStorage.getItem("token")){
         if (localStorage.getItem("register")===("no")){
             return(<Connexion/>)
         }else{

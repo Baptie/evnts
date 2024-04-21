@@ -6,36 +6,48 @@ import axios from 'axios';
 
 import { Link } from 'react-router-dom'
 
-const API_URL = "http://localhost:8080/auth/";
+const API_URL = "http://localhost:8080/";
 
 const Inscription = () => {
     const [nom, setNom] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    async function connexion(login:string,pwd:string){
-        await axios
-                .post(API_URL + "connexion/pseudo="+login+"&mdp="+pwd)
-                .then(response =>{
-                    localStorage.setItem("user", JSON.stringify(response.data));
-                    localStorage.setItem("authenticated", "yes");
-                    window.location.reload();
-                })
-                .catch(error =>{
-                    console.log("Erreur lors de l'authentification : ", error);           
-                    alert("Erreur lors de l'authentification")
-                });
-    }
+   
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         await axios
-            .post(API_URL + "inscription?pseudo="+nom+"&mdp="+password+"&eMail="+email)
+            .post(API_URL + "auth/inscription?pseudo="+nom+"&mdp="+password+"&eMail="+email)
             .then(response =>{
-                connexion(nom,password);
-                
+                axios.post(API_URL + "utilisateurs/inscription?pseudo="+nom+"&mdp="+password+"&email="+email+"&bio="+null+"&photoDeProfil="+null)
+                .then(response =>{
+                    axios.post(API_URL + "salon/utilisateur/"+nom+"?email="+email)
+                    .then(response =>{
+                        axios.post(API_URL + "google/new-user?email="+email)
+                        .then(response =>{
+                            if(response.status.toString() === "200"){
+                            window.location.reload();
+                            localStorage.setItem("register", "no");
+                            alert("Succès");
+                            }
+                        })
+                        .catch(error =>{
+                            console.log("Erreur lors de l'authentification google : ", error);           
+                            alert("Erreur lors de l'authentification")
+                        });
+                    })
+                    .catch(error =>{
+                        console.log("Erreur lors de l'authentification salon : ", error);           
+                        alert("Erreur lors de l'authentification")
+                    });
+                })
+                .catch(error =>{
+                    console.log("Erreur lors de l'authentification utilsateurs : ", error);           
+                    alert("Erreur lors de l'authentification")
+                });
             })
             .catch(error =>{
-                console.log("Erreur lors de l'authentification : ", error);           
+                console.log("Erreur lors de l'authentification auth : ", error);           
                 alert("Erreur lors de l'authentification")
             });
     }

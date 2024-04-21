@@ -8,10 +8,11 @@ function goToProfile() {
     window.location.href = '/profile';
   }
 async function disconnect(){
-        localStorage.setItem("authenticated","no")
-        localStorage.setItem("user","")
-        localStorage.setItem("register","no")
-        window.location.href = '/'
+        localStorage.setItem("authenticated","no");
+        localStorage.setItem("user","");
+        localStorage.setItem("register","no");
+        localStorage.removeItem("token");
+        window.location.href = '/';
 }
 
 

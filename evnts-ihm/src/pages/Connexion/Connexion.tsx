@@ -3,22 +3,22 @@ import './Connexion.scss';
 import { Link} from 'react-router-dom'
 import logo from '../../assets/logo/logo-black-nocurve.png';
 import{ useState } from 'react';
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 import config from '../../config';
 
 
 const Connexion = () => {
 
     const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
+    const [pseudo, setEmail] = useState("");
 
-      const handleSubmit = async (event: { preventDefault: () => void; }) => {
+    const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         await axios
-            .post(config.url.root_api + config.url.auth.connexion+"?pseudo="+email+"&mdp="+password)
+            .post(config.url.root_api + config.url.auth.connexion+"?pseudo="+pseudo+"&mdp="+password)
             .then(response =>{
-                localStorage.setItem("user", JSON.stringify(response.data));
-                localStorage.setItem("authenticated", "yes");
+                localStorage.setItem("username", pseudo);
+                localStorage.setItem("token", response.data);
                 window.location.reload();
             })
             .catch(error =>{
@@ -26,6 +26,7 @@ const Connexion = () => {
                 alert("Erreur lors de l'authentification")
             });
     }
+
     const handleClick = () => {
         if(!(localStorage.getItem("register")===("yes"))){
             localStorage.setItem("register","yes")
@@ -53,7 +54,7 @@ const Connexion = () => {
      
                      <div className="field">
                          <label htmlFor="login">Login</label>
-                         <input type="text" name="login" id="login" required value={email} onChange={(event) => setEmail(event.target.value)}/>
+                         <input type="text" name="login" id="login" required value={pseudo} onChange={(event) => setEmail(event.target.value)}/>
                      </div>
                      
                      <div className="field">

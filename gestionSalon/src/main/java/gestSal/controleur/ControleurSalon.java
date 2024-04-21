@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -430,33 +430,25 @@ public class ControleurSalon {
     }
 
     @GetMapping("/utilisateur/{nomUtilisateur}/salons")
-    public List<Salon> recupererSalonDeLutilisateur(@PathVariable String nomUtilisateur) throws AucunSalonException, NomUtilisateurVideException, UtilisateurInexistantException, SalonInexistantException, NumeroSalonVideException {
-        int idUser = facadeSalon.getUtilisateurByPseudo(nomUtilisateur).getIdUtilisateur();
-        List<Integer> lesSalonsDeLUser = facadeSalon.getSalonByUser(idUser);
-        List<Salon> lesSalons = new ArrayList<>();
-        if(lesSalonsDeLUser.isEmpty()){
-            throw new AucunSalonException();
-        }else{
-            for(int idSalon : lesSalonsDeLUser){
-                lesSalons.add(facadeSalon.getSalonByNum(idSalon));
-            }
+    public ResponseEntity<?> recupererSalonsDeLutilisateur(@PathVariable String nomUtilisateur) {
+        try{
+            return ResponseEntity.ok(facadeSalon.getSalonByUser(nomUtilisateur));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (NomUtilisateurVideException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
-        return lesSalons;
     }
 
     @GetMapping("/utilisateur/{nomUtilisateur}/evenements")
-    public List<Evenement> recupererEventDeLutilisateur(@PathVariable String nomUtilisateur) throws NomUtilisateurVideException, UtilisateurInexistantException, SalonInexistantException, NumeroSalonVideException, AucunEventException {
-        int idUser = facadeSalon.getUtilisateurByPseudo(nomUtilisateur).getIdUtilisateur();
-        List<Integer> lesIdEvent = facadeSalon.getEvenementUser(idUser);
-        List<Evenement> lesEvents = new ArrayList<>();
-        if(lesIdEvent.isEmpty()){
-            throw new AucunEventException();
-        }else{
-            for(int idSalon : lesIdEvent){
-                lesEvents.add(facadeSalon.getEventById(idSalon));
-            }
+    public ResponseEntity<?> recupererEventDeLutilisateur(@PathVariable String nomUtilisateur) {
+        try{
+            return ResponseEntity.ok(facadeSalon.getEvenementsUser(nomUtilisateur));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (NomUtilisateurVideException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
-        return lesEvents;
     }
 
     @PostMapping("/utilisateur/{nomMembre}")
@@ -472,7 +464,6 @@ public class ControleurSalon {
     @GetMapping("/utilisateurs/mail/{email}")
     public ResponseEntity<?> getUtilisateurByEmail(@PathVariable String email){
         try{
-            System.out.println("STEP1");
             Utilisateur user = facadeSalon.getUtilisateurByEmail(email);
             return ResponseEntity.ok().body(user);
         }catch (Exception e){

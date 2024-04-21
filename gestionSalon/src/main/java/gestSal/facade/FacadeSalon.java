@@ -1,13 +1,12 @@
 package gestSal.facade;
 
-import gestSal.dto.SalonDTO;
-import gestSal.dto.UtilisateurDTO;
 import gestSal.facade.erreurs.*;
 import gestSal.modele.Evenement;
 import gestSal.modele.Message;
 import gestSal.modele.Salon;
 import gestSal.modele.Utilisateur;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface FacadeSalon {
@@ -181,9 +180,9 @@ public interface FacadeSalon {
 
     String getNomEvenementById(int idEvent);
 
-    List<Integer> getSalonByUser(int idUser);
+    List<Salon> getSalonByUser(String nom) throws NomUtilisateurVideException, SQLException;
 
-    List<Integer> getEvenementUser(int idUser);
+    List<Evenement> getEvenementsUser(String nom) throws NomUtilisateurVideException, SQLException;
 
     Evenement getEventById(int idEvent);
 

@@ -119,7 +119,8 @@ POST http://localhost:8080/salon/1/moderation?nomModerateur=Vince
 DELETE http://localhost:8080/salon/1/moderation?nomModerateur=Vince
 
 ### RECUPERER LES SALONS DE l'UTILISATEUR
-GET http://localhost:8080/salon/utilisateur/Vince/salons
+GET http://localhost:8080/salon/utilisateur/tomas/salons
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoidG9tYXMiLCJleHAiOjE3MTM3NDc5ODMsImlhdCI6MTcxMzcxMTk4Mywic2NvcGUiOiIifQ.AlEr7O25weBQsxHveHWbdOwUgYMqUyC_0dHjVLLZvAwSHEWL6Xn5RT10PfHOxYO_7FLEpubVPm-2l92LxKdDQURHoQLV1BCI6rKEkO1QaSP60AiiRtBw5-7LUCVJQcWq0jxLPXYnToByYE1domqBth2l_VZYRSdYMC--FNg2o24FTY6pA30WtwR7wtwTq4jJNyc0SvBAnj3EttVfIhqRZz1tft5HgEp_5stUTMHO_ZijXsueil-Q5rbh_WvvyIgl52fuZLZVO374ps0XBBFZ_KW1G4fZg3NTJFHjTsXvqO3I57jGfxsWidXitmO9hwZzOIVlp3IoRPb_I2mYyODNjw
 
 ### RECUPERER LES EVENEMENTS DE L'UTILISATEUR
 GET http://localhost:8080/salon/utilisateur/Vince/evenements

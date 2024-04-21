@@ -46,7 +46,8 @@ public class ControleurAuthentification {
     public ResponseEntity<String> connexion (@RequestParam String pseudo, @RequestParam String mdp){
         try {
             Utilisateur u = this.facadeAuth.connexion(pseudo,mdp);
-            return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + genereToken.apply(u)).build();
+            String token = genereToken.apply(u);
+            return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token ).body(TOKEN_PREFIX + token);
         } catch (UtilisateurInexistantException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MAUVAIS_IDENTIFIANT);
         } catch (MdpIncorrecteException e) {

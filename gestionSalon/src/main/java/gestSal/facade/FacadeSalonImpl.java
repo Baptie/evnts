@@ -269,21 +269,24 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     @Override
-    public List<Integer> getSalonByUser(int idUser) {
-        try {
-            return UtilisateurDTO.getSalonByUser(idUser);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public List<Salon> getSalonByUser(String nom) throws NomUtilisateurVideException, SQLException {
+        int idUser = getUtilisateurByPseudo(nom).getIdUtilisateur();
+        List<Integer> lesSalonsDeLUser = UtilisateurDTO.getSalonByUser(idUser);
+        List<Salon> lesSalons = new ArrayList<>();
+        for(int idSalon : lesSalonsDeLUser) lesSalons.add(getSalonByNum(idSalon));
+        return  lesSalons;
     }
 
     @Override
-    public List<Integer> getEvenementUser(int idUser) {
-        try {
-            return UtilisateurDTO.getEventByUser(idUser);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }    }
+    public List<Evenement> getEvenementsUser(String nom) throws NomUtilisateurVideException, SQLException {
+        int idUser = getUtilisateurByPseudo(nom).getIdUtilisateur();
+        List<Integer> lesIdEvent = UtilisateurDTO.getEventByUser(idUser);
+        List<Evenement> lesEvenements = new ArrayList<>();
+        for(int idE : lesIdEvent) lesEvenements.add(getEventById(idE));
+        return lesEvenements;
+    }
+
+
 
     @Override
     public Evenement getEventById(int idEvenement) {
