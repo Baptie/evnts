@@ -51,7 +51,7 @@ public class GoogleControleur {
                 "</html>";
     }
 
-    @GetMapping("/secured")
+    @GetMapping("/secure")
     public String secured(Authentication authentication, HttpServletRequest request) {
         OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
 
@@ -95,7 +95,7 @@ public class GoogleControleur {
                 "</html>";
     }
 
-    @GetMapping("/newAccount")
+    @GetMapping("/creation")
     public String newAccount(Authentication authentication,HttpServletRequest request){
         OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
         String email = oidcUser.getEmail();
@@ -226,7 +226,7 @@ public class GoogleControleur {
         }
     }
 
-    @GetMapping("/emailValidationEvenement")
+    @GetMapping("/validation-mail")
     public ResponseEntity<String> sendEmail(Authentication authentication) throws ProblemeEnvoiMailException {
         try{
             facadeGoogle.envoyerMailValidationEvenement(authentication);
