@@ -51,7 +51,7 @@ public class GoogleControleur {
                 "</html>";
     }
 
-    @GetMapping("/secured")
+    @GetMapping("/secure")
     public String secured(Authentication authentication, HttpServletRequest request) {
         OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
 
@@ -95,7 +95,7 @@ public class GoogleControleur {
                 "</html>";
     }
 
-    @GetMapping("/newAccount")
+    @GetMapping("/creation")
     public String newAccount(Authentication authentication,HttpServletRequest request){
         OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
         String email = oidcUser.getEmail();
@@ -119,9 +119,10 @@ public class GoogleControleur {
                 "</html>";
     }
 
-    @PostMapping("/new-user")
-    public ResponseEntity<String> newUser(@RequestParam String email){
-        try{
+
+    @PostMapping("/utilisateur/{email}")
+    public ResponseEntity<String> newUser(@PathVariable String email) {
+        try {
             facadeGoogle.newUtilisateur(email);
 
             return ResponseEntity.created(null).body("Compte créé !");
@@ -131,6 +132,19 @@ public class GoogleControleur {
                     .status(HttpStatus.CONFLICT)
                     .body("Erreur Utilisateur Existant");
         }catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Erreur");
+        }
+    }
+
+    @DeleteMapping("/utilisateur")
+    public ResponseEntity<String> deleteUser(@RequestParam String email){
+        try{
+            facadeGoogle.deleteUtilisateur(email);
+
+            return ResponseEntity.ok("Utilisateur supprimé");
+        } catch (Exception e){
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body("Erreur");
@@ -197,7 +211,7 @@ public class GoogleControleur {
         }
     }
 
-    @GetMapping("/emailValidationEvenement")
+    @GetMapping("/validation-mail")
     public ResponseEntity<String> sendEmail(Authentication authentication) throws ProblemeEnvoiMailException {
         try{
             facadeGoogle.envoyerMailValidationEvenement(authentication);

@@ -15,6 +15,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
+import dto.UtilisateurDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -174,10 +175,7 @@ public class FacadeGoogleImpl implements IFacadeGoogle {
         if (utilisateurs.containsKey(email)) {
             throw new EmailDejaPritException();
         }
-        Utilisateur utilisateur = new Utilisateur(email);
-        utilisateurs.put(email,utilisateur);
-        //TODO : BDD VINCENT ?
-        //interactionBDDGoogle.enregistrerUser(email);
+        UtilisateurDTO.ajouterUtilisateur(email);
 
     }
 
@@ -203,5 +201,13 @@ public class FacadeGoogleImpl implements IFacadeGoogle {
         rendu+="&location="+location;
         rendu=rendu.replace(" ","%20");
         return rendu;
+    }
+
+    public void deleteUtilisateur(String email) {
+        try {
+            UtilisateurDTO.deleteUtilisateur(email);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

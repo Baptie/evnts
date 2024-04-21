@@ -241,7 +241,6 @@ public class FacadeSalonImpl implements FacadeSalon {
     }
 
     public Utilisateur getUtilisateurByEmail(String email){
-        System.out.println("STEP2");
         try {
             return UtilisateurDTO.getUtilisateurByEmail(email);
         } catch (SQLException e) {
